@@ -434,15 +434,15 @@ const POLES = [
     ],
     "extraParts": [
       {
-        "n": 2,
+        "n": 4,
         "name": "Závesný kĺb (Praporec)",
         "jk": "235118",
         "note": "Horná + Spodná konzola"
       },
       {
-        "n": 1,
+        "n": 2,
         "name": "Závesný kĺb (Praporec)",
-        "jk": "235119",
+        "jk": "235119.2",
         "note": "Stredná konzola"
       },
       {
@@ -571,12 +571,6 @@ const POLES = [
         "otoceny": null
       },
       {
-        "n": 1,
-        "name": "Závesný kĺb (Praporec)",
-        "jk": "235119.2",
-        "otoceny": null
-      },
-      {
         "n": 2,
         "name": "Dvojité oko krížové",
         "jk": "231407",
@@ -597,15 +591,15 @@ const POLES = [
     ],
     "extraParts": [
       {
-        "n": 2,
+        "n": 4,
         "name": "Závesný kĺb (Praporec)",
         "jk": "235118",
         "note": "Horná+Stredná konzola"
       },
       {
-        "n": 1,
+        "n": 2,
         "name": "Závesný kĺb (Praporec)",
-        "jk": "235118.9",
+        "jk": "235119.2",
         "note": "Spodná konzola"
       },
       {
@@ -1207,13 +1201,13 @@ const POLES = [
     ],
     "extraParts": [
       {
-        "n": 2,
+        "n": 4,
         "name": "Závesný kĺb (Praporec)",
         "jk": "235118",
         "note": "Horná+Stredná konzola"
       },
       {
-        "n": 1,
+        "n": 2,
         "name": "Závesný kĺb (Praporec)",
         "jk": "235119.2",
         "note": "Spodná konzola"
@@ -1816,13 +1810,13 @@ const POLES = [
     ],
     "extraParts": [
       {
-        "n": 2,
+        "n": 4,
         "name": "Závesný kĺb (Praporec)",
         "jk": "235118",
         "note": "Horná+Stredná konzola"
       },
       {
-        "n": 1,
+        "n": 2,
         "name": "Závesný kĺb (Praporec)",
         "jk": "235119.2",
         "note": "Spodná konzola"
@@ -2077,13 +2071,13 @@ const POLES = [
     ],
     "extraParts": [
       {
-        "n": 2,
+        "n": 4,
         "name": "Závesný kĺb (Praporec)",
         "jk": "235118",
         "note": "Horná+Stredná konzola"
       },
       {
-        "n": 1,
+        "n": 2,
         "name": "Závesný kĺb (Praporec)",
         "jk": "235119.2",
         "note": "Spodná konzola"
@@ -2554,15 +2548,16 @@ function updateLoadOverlay(){
       if(!k) return;
       if(hasExtraPraporec && /praporec/i.test(k)) return;
       const isIzoP = /izol[aá]tor/i.test(k);
-      const aggKey = isIzoP ? k + '||' + String(p.otoceny) : k;
+      const aggKey = isIzoP ? k + '||' + (p.jk||'').trim() + '||' + String(p.otoceny) : k + '||' + (p.jk||'').trim();
       if(!agg[aggKey]) agg[aggKey] = {name:k, jk:p.jk||'', total:0, otoceny:p.otoceny};
       agg[aggKey].total += (p.n||1) * cc;
     });
     (pole.extraParts||[]).forEach(p => {
       const k = (p.name||'').trim();
       if(!k) return;
-      if(!agg[k]) agg[k] = {name:k, jk:p.jk||'', total:0};
-      agg[k].total += (p.n||1);
+      const ek = k + '||' + (p.jk||'').trim();
+      if(!agg[ek]) agg[ek] = {name:k, jk:p.jk||'', total:0};
+      agg[ek].total += (parseInt(p.n)||1);
     });
     // PN
     if((pole.pnCount||0) > 0 && pole.pnAno){
