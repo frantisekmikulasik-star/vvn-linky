@@ -340,7 +340,6 @@ const POLES = [
       "2× teplovod v zemi (V1–1a)"
     ],
     "notes": [
-      "Typ závesu: DDK – Dvojitý kotevný",
       "Pištole zostávajú staré (nemenia sa)",
       "Zmerať starý reťazec (+ použiť predĺženie alebo vydlicu)."
     ],
@@ -551,7 +550,6 @@ const POLES = [
       "2× teplovod v zemi (3a–4a)"
     ],
     "notes": [
-      "Typ závesu: DDK – Dvojitý kotevný",
       "Horná+Stredná konzola: Praporec 118",
       "Spodná konzola: Praporec 119",
       "Pištole zostávajú staré (nemenia sa)",
@@ -632,7 +630,6 @@ const POLES = [
       "2× teplovod v zemi (3a–4a)"
     ],
     "notes": [
-      "Typ závesu: DDK – Dvojitý kotevný",
       "Horná+Stredná konzola: Praporec 118",
       "Spodná konzola: Praporec 119",
       "Pištole zostávajú staré (nemenia sa)",
@@ -717,8 +714,7 @@ const POLES = [
     "warn": null,
     "cross": [],
     "notes": [
-      "Plašič – montáž na strmeň",
-      "Uchytenie cez strmeň"
+      "Plašič – montáž na strmeň"
     ],
     "parts": [
       {
@@ -1733,7 +1729,7 @@ const POLES = [
       "Poľná cesta (21a–22a)"
     ],
     "notes": [
-      "Iný typ plašiča: č.603 (montáž cez nový šrób)"
+      "Iný typ plašiča (ochranná tyč): č.603 (montáž cez nový šrób)"
     ],
     "parts": [
       {
@@ -2211,8 +2207,8 @@ const POLES = [
     "warn": null,
     "cross": [],
     "notes": [
-      "Posledný stožiar sekcie (koniec trasy)",
-      "Strmeň ide priamo na izolátor"
+      "Strmeň ide priamo na izolátor",
+      "Plašič – montáž na strmeň"
     ],
     "parts": [
       {
@@ -2597,8 +2593,9 @@ function updateLoadOverlay(){
     (pole.extraParts||[]).forEach(p => {
       const k = (p.name||'').trim();
       if(!k) return;
-      const ek = k + '||' + (p.jk||'').trim();
-      if(!agg[ek]) agg[ek] = {name:k, jk:p.jk||'', total:0};
+      const isIzoE = /izol[aá]tor/i.test(k);
+      const ek = k + '||' + (p.jk||'').trim() + (isIzoE ? '||' + String(p.otoceny??null) : '');
+      if(!agg[ek]) agg[ek] = {name:k, jk:p.jk||'', total:0, otoceny: isIzoE ? (p.otoceny??null) : undefined};
       agg[ek].total += (parseInt(p.n)||1);
     });
     // PN
@@ -2823,7 +2820,7 @@ function downloadTxtNakladanie(){
     +'<diagonal/></border>'
     +'</borders>'
     +'<cellStyleXfs count="1"><xf numFmtId="0" fontId="0" fillId="0" borderId="0"/></cellStyleXfs>'
-    +'<cellXfs>'
+    +'<cellXfs count="13">'
     // 0: normal
     +'<xf numFmtId="0" fontId="0" fillId="0" borderId="0" xfId="0"/>'
     // 1: title — white bold 13, deep navy bg, no border, center+vcenter
