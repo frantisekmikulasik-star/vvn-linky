@@ -1,0 +1,4002 @@
+<!DOCTYPE html>
+<html lang="sk">
+<head>
+<meta charset="UTF-8">
+<title>Projekt0log VVN</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#1a2840;--panel:#1e2d42;--border:#2e4260;
+  --text:#eaf2ff;--muted:#9ab8d8;--accent:#f7a600;
+  --ddK:#c084fc;--dkdk:#f87171;--pk:#60a5fa;--dn:#34d399;--jn:#fbbf24;--portal:#f7a600;
+  --input-bg:#111e30;--input-border:#2e4260;
+}
+body{background:var(--bg);color:var(--text);font-family:'Segoe UI',system-ui,sans-serif;font-size:13px;
+  height:100vh;display:flex;flex-direction:column;overflow:hidden}
+
+/* ─── HEADER ─── */
+header{
+  background:linear-gradient(180deg,#0e1725 0%,#07090f 100%);
+  border-bottom:1px solid #1a2940;
+  padding:6px 16px;display:flex;align-items:center;gap:10px;flex-shrink:0;
+  box-shadow:0 2px 12px rgba(0,0,0,0.5)}
+.logo{
+  background:linear-gradient(135deg,#f7a600,#e08800);
+  color:#000;font-weight:900;font-size:11px;letter-spacing:2px;
+  padding:5px 10px;border-radius:5px;
+  box-shadow:0 0 18px rgba(247,166,0,0.25)}
+.hdr-ver{font-size:10px;color:var(--muted);font-weight:600;letter-spacing:.3px}
+/* ─── PROJECT INFO BAR ─── */
+.proj-info-bar{
+  display:flex;align-items:center;justify-content:center;gap:10px;flex-wrap:wrap;
+  padding:6px 16px;background:#111e30;border-bottom:1px solid var(--border);flex-shrink:0}
+.proj-info-title{font-size:14px;font-weight:700;color:#eef6ff;letter-spacing:.2px}
+.proj-info-logo{font-size:10px;font-weight:700;color:var(--accent);
+  background:rgba(247,166,0,0.1);border:1px solid rgba(247,166,0,0.3);
+  border-radius:4px;padding:2px 7px;white-space:nowrap}
+.proj-info-route{font-size:11px;color:var(--muted)}
+
+/* ─── TABS ─── */
+.tab-bar{
+  display:flex;gap:4px;border-bottom:2px solid var(--border);flex-shrink:0;
+  background:#0d1420;padding:0 12px}
+.tab-btn{
+  padding:10px 20px;font-size:12px;font-weight:700;letter-spacing:.4px;
+  background:rgba(255,255,255,0.04);border:1px solid transparent;
+  border-bottom:none;color:#7a9abf;cursor:pointer;border-radius:6px 6px 0 0;
+  margin-bottom:-2px;transition:all .15s}
+.tab-btn:hover{color:var(--text);background:rgba(255,255,255,0.08)}
+.tab-btn.active{
+  color:#fff;background:#1e2d42;
+  border-color:var(--border);border-bottom-color:#1e2d42;
+  box-shadow:0 -2px 8px rgba(0,0,0,0.3)}
+
+/* ─── TAB CONTENT ─── */
+.tab-pane{display:none;flex:1;overflow:hidden}
+.tab-pane.active{display:flex}
+
+/* ─── FORMS / INPUTS ─── */
+.form-group{margin-bottom:14px}
+.form-label{display:block;font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;
+  color:var(--muted);margin-bottom:5px}
+.form-input,.form-select,.form-textarea{
+  width:100%;background:var(--input-bg);border:1px solid var(--input-border);
+  border-radius:5px;color:var(--text);font-size:13px;font-family:inherit;
+  padding:7px 10px;outline:none;transition:border-color .15s}
+.form-input:focus,.form-select:focus,.form-textarea:focus{border-color:var(--accent)}
+.form-input[readonly]{color:var(--muted);cursor:default}
+.form-textarea{resize:vertical;min-height:56px}
+.form-select{cursor:pointer}
+.form-select option{background:#1a2840}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+
+/* ─── TAB 1: PROJEKT ─── */
+.projekt-pane{padding:24px 28px;overflow-y:auto;flex:1}
+.projekt-pane .section-title{
+  font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;
+  color:var(--muted);padding-bottom:8px;border-bottom:1px solid var(--border);
+  margin-bottom:16px;margin-top:20px}
+.projekt-pane .section-title:first-child{margin-top:0}
+
+/* ─── TAB 2: STOŽIARE ─── */
+.stoziare-pane{flex:1;overflow:hidden;display:flex}
+.pole-sidebar{
+  width:210px;flex-shrink:0;background:#111827;border-right:1px solid var(--border);
+  display:flex;flex-direction:column;overflow:hidden}
+.sidebar-top{
+  padding:10px;border-bottom:1px solid var(--border);flex-shrink:0}
+.btn-add{
+  width:100%;padding:8px;background:rgba(247,166,0,0.1);border:1px solid rgba(247,166,0,0.3);
+  border-radius:5px;color:#f7a600;font-size:12px;font-weight:600;cursor:pointer;
+  transition:background .15s;display:flex;align-items:center;justify-content:center;gap:6px}
+.btn-add:hover{background:rgba(247,166,0,0.18)}
+.pole-list{flex:1;overflow-y:auto;padding:6px}
+.pole-list::-webkit-scrollbar{width:4px}
+.pole-list::-webkit-scrollbar-thumb{background:var(--border);border-radius:2px}
+.pole-item{
+  display:flex;align-items:center;gap:6px;padding:6px 8px;border-radius:5px;
+  cursor:pointer;margin-bottom:2px;transition:background .12s;
+  border:1px solid transparent;min-height:44px}
+.pole-item:hover{background:rgba(255,255,255,0.04)}
+.pole-item.selected{
+  background:rgba(247,166,0,0.16);
+  border-color:rgba(247,166,0,0.7);
+  box-shadow:0 0 0 1px rgba(247,166,0,0.25), 0 0 14px rgba(247,166,0,0.22), inset 0 0 12px rgba(247,166,0,0.07);
+}
+.pole-item.selected .pole-num{color:#f7a600}
+.pole-item.selected .pole-id-text{color:#ffe680}
+.pole-num{font-size:9px;color:#4a6a8a;font-weight:700;width:16px;flex-shrink:0;text-align:right}
+.pole-zt-badge{
+  font-size:8px;font-weight:700;padding:2px 5px;border-radius:8px;flex-shrink:0;letter-spacing:.3px}
+.pole-id-text{font-size:12px;font-weight:600;flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;line-height:1.3}
+.pole-actions{display:flex;gap:2px;flex-shrink:0}
+.btn-icon{background:none;border:none;cursor:pointer;padding:2px 3px;border-radius:3px;
+  font-size:11px;color:#4a6a8a;transition:color .12s}
+.btn-icon:hover{color:var(--text)}
+.btn-icon.del:hover{color:#f87171}
+
+/* ─── POLE EDITOR ─── */
+.pole-editor{flex:1;overflow-y:auto;padding:18px 20px}
+.pole-editor::-webkit-scrollbar{width:4px}
+.pole-editor::-webkit-scrollbar-thumb{background:var(--border);border-radius:2px}
+.editor-empty{height:100%;display:flex;align-items:center;justify-content:center;
+  color:#2a3a50;font-size:13px;flex-direction:column;gap:10px;text-align:center}
+.editor-section{margin-bottom:18px}
+.editor-section-title{
+  font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;
+  color:var(--muted);padding-bottom:6px;border-bottom:1px solid var(--border);margin-bottom:10px}
+
+/* Dynamic lists */
+.dyn-list{display:flex;flex-direction:column;gap:5px;margin-bottom:6px}
+.dyn-item{display:flex;gap:5px;align-items:center}
+.dyn-input{flex:1;background:var(--input-bg);border:1px solid var(--input-border);
+  border-radius:4px;color:var(--text);font-size:12px;padding:5px 8px;outline:none}
+.dyn-input:focus{border-color:var(--accent)}
+.btn-remove{background:rgba(248,113,113,0.1);border:1px solid rgba(248,113,113,0.2);
+  color:#f87171;border-radius:4px;padding:4px 7px;cursor:pointer;font-size:11px;flex-shrink:0}
+.btn-remove:hover{background:rgba(248,113,113,0.2)}
+.btn-add-item{background:rgba(96,165,250,0.1);border:1px solid rgba(96,165,250,0.2);
+  color:#60a5fa;border-radius:4px;padding:5px 10px;cursor:pointer;font-size:11px;
+  display:inline-flex;align-items:center;gap:5px}
+.btn-add-item:hover{background:rgba(96,165,250,0.18)}
+
+/* Parts table */
+.parts-table{width:100%;border-collapse:collapse;font-size:12px;margin-bottom:6px}
+.parts-table th{background:#0e1520;padding:5px 7px;text-align:left;
+  color:var(--muted);font-size:10px;letter-spacing:.5px;font-weight:600;border-bottom:1px solid var(--border)}
+.parts-table td{padding:4px 3px;border-bottom:1px solid rgba(46,66,96,0.5)}
+.parts-table td input{background:var(--input-bg);border:1px solid transparent;border-radius:3px;
+  color:var(--text);font-size:12px;padding:3px 5px;width:100%;outline:none}
+.parts-table td input:focus{border-color:var(--accent)}
+.parts-table td:first-child input{width:44px;text-align:center}
+.parts-reset-btn{background:rgba(251,191,36,0.1);border:1px solid rgba(251,191,36,0.25);
+  color:#fbbf24;border-radius:4px;padding:5px 10px;cursor:pointer;font-size:11px;margin-right:6px}
+.parts-reset-btn:hover{background:rgba(251,191,36,0.2)}
+
+/* ─── TAB 3: EXPORTOVAŤ ─── */
+.export-pane{flex:1;overflow-y:auto;padding:24px 28px}
+.export-card{background:var(--panel);border:1px solid var(--border);border-radius:8px;padding:18px 20px;margin-bottom:16px}
+.export-card-title{font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;
+  color:var(--muted);margin-bottom:14px}
+.stat-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:14px}
+.stat-card{background:#0e1520;border:1px solid var(--border);border-radius:6px;padding:10px 12px}
+.stat-v{font-size:18px;font-weight:800;color:var(--accent)}
+.stat-l{font-size:11px;color:var(--text);text-transform:uppercase;letter-spacing:1px;margin-top:3px;opacity:.75}
+.type-breakdown{display:flex;flex-wrap:wrap;gap:6px}
+.type-pill{display:inline-flex;align-items:center;gap:5px;padding:4px 9px;border-radius:10px;font-size:11px;font-weight:600}
+.btn-export{
+  padding:10px 18px;border-radius:6px;font-size:13px;font-weight:700;cursor:pointer;
+  display:inline-flex;align-items:center;gap:7px;border:none;transition:filter .15s;margin-right:8px;margin-bottom:8px}
+.btn-export:hover{filter:brightness(1.15)}
+.btn-gen{background:linear-gradient(135deg,#f7a600,#e08800);color:#000}
+.btn-json-save{background:rgba(96,165,250,0.15);border:1px solid rgba(96,165,250,0.3);color:#60a5fa}
+.btn-json-load{background:rgba(52,211,153,0.12);border:1px solid rgba(52,211,153,0.25);color:#34d399}
+.file-input-hidden{display:none}
+.btn-html-load{background:rgba(251,191,36,0.12);border:1px solid rgba(251,191,36,0.28);color:#fbbf24}
+
+/* ─── TOAST ─── */
+.toast{
+  position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(60px);
+  background:#1e3a28;border:1px solid #22543d;color:#6ee7b7;
+  padding:10px 18px;border-radius:8px;font-size:13px;font-weight:600;
+  box-shadow:0 4px 24px rgba(0,0,0,0.5);z-index:9999;
+  transition:transform .3s cubic-bezier(.34,1.56,.64,1),opacity .3s;opacity:0;white-space:nowrap}
+.toast.show{transform:translateX(-50%) translateY(0);opacity:1}
+.toast.err{background:#3a1a1a;border-color:#7f1d1d;color:#fca5a5}
+
+/* ─── TAB 4: ŠABLÓNY ─── */
+.sablony-pane{display:flex;flex:1;overflow:hidden}
+.sablony-sidebar{width:220px;flex-shrink:0;border-right:1px solid var(--border);display:flex;flex-direction:column;overflow:hidden;background:#111827}
+.sablony-editor{flex:1;display:flex;flex-direction:column;overflow:hidden}
+.sablony-editor .pole-editor{flex:1;overflow-y:auto;padding:18px 20px}
+
+/* ─── HTML-LOAD QUICK BUTTON (Tab 2 sidebar) ─── */
+.btn-html-quick{
+  width:100%;margin-top:6px;padding:7px;
+  background:rgba(251,191,36,0.08);border:1px solid rgba(251,191,36,0.22);
+  border-radius:5px;color:#fbbf24;font-size:11px;font-weight:600;cursor:pointer;
+  transition:background .15s;display:flex;align-items:center;justify-content:center;gap:5px}
+.btn-html-quick:hover{background:rgba(251,191,36,0.16)}
+
+/* ─── PROJECT ACTIONS ─── */
+.top-actions{
+  display:flex;align-items:center;gap:6px;flex-wrap:wrap;
+  padding:6px 16px;background:#0d1420;border-bottom:1px solid var(--border);flex-shrink:0}
+.top-actions-sep{flex:1}
+.project-actions{display:none}
+.btn-proj{
+  padding:8px 14px;border-radius:6px;font-size:12px;font-weight:600;cursor:pointer;
+  display:inline-flex;align-items:center;gap:6px;
+  background:rgba(96,165,250,0.1);border:1px solid rgba(96,165,250,0.25);
+  color:#60a5fa;transition:background .15s}
+.btn-proj:hover{background:rgba(96,165,250,0.2)}
+.btn-proj.danger{background:rgba(248,113,113,0.1);border-color:rgba(248,113,113,0.25);color:#f87171}
+.btn-proj.danger:hover{background:rgba(248,113,113,0.2)}
+.btn-proj.accent{background:rgba(247,166,0,0.15);border-color:rgba(247,166,0,0.45);color:#f7a600;font-weight:700}
+.btn-proj.accent:hover{background:rgba(247,166,0,0.28);box-shadow:0 0 10px rgba(247,166,0,0.2)}
+
+/* ─── DRAFT SAVE BAR ─── */
+.draft-bar{
+  display:flex;gap:8px;align-items:center;
+  background:rgba(247,166,0,0.07);border:1px solid rgba(247,166,0,0.25);
+  border-radius:7px;padding:10px 12px;margin-bottom:14px}
+.draft-bar-label{font-size:11px;color:#f7a600;font-weight:700;flex:1}
+.btn-save-draft{
+  background:linear-gradient(135deg,#f7a600,#e08800);color:#000;
+  border:none;border-radius:5px;padding:7px 16px;font-size:12px;
+  font-weight:800;cursor:pointer;display:flex;align-items:center;gap:5px}
+.btn-save-draft:hover{filter:brightness(1.1)}
+.btn-cancel-draft{
+  background:rgba(248,113,113,0.12);border:1px solid rgba(248,113,113,0.3);
+  color:#f87171;border-radius:5px;padding:7px 12px;font-size:12px;
+  font-weight:600;cursor:pointer}
+.btn-cancel-draft:hover{background:rgba(248,113,113,0.22)}
+
+/* ─── LINKA INFO BANNER ─── */
+.linka-banner{
+  display:flex;align-items:center;flex-wrap:wrap;gap:10px;
+  background:rgba(247,166,0,0.07);border:1px solid rgba(247,166,0,0.25);
+  border-radius:7px;padding:10px 14px;margin-bottom:16px;font-size:12px}
+.linka-banner-tag{
+  background:linear-gradient(135deg,#f7a600,#e08800);
+  color:#000;font-weight:900;font-size:10px;letter-spacing:1.5px;
+  padding:3px 8px;border-radius:4px;flex-shrink:0}
+.linka-banner-item{color:var(--muted)}
+.linka-banner-item b{color:var(--text)}
+.linka-info-card{
+  background:rgba(247,166,0,0.06);border:1px solid rgba(247,166,0,0.2);
+  border-radius:6px;padding:8px 10px;margin-bottom:12px}
+.linka-info-card .ck{font-size:10px;color:var(--muted);margin-bottom:2px;
+  text-transform:uppercase;letter-spacing:.8px;font-weight:700}
+.linka-info-card .cv{font-size:12px;font-weight:600;color:#f7a600}
+.kzl-hint{
+  background:rgba(96,165,250,0.08);border:1px solid rgba(96,165,250,0.25);
+  border-radius:5px;padding:7px 10px;margin-bottom:10px;
+  font-size:11px;color:#93c5fd;line-height:1.5}
+.kzl-hint b{color:#60a5fa}
+
+/* Scrollbars */
+::-webkit-scrollbar{width:6px;height:6px}
+::-webkit-scrollbar-track{background:#0e1825}
+::-webkit-scrollbar-thumb{background:#2e4260;border-radius:3px}
+::-webkit-scrollbar-thumb:hover{background:#4a6888}
+
+/* ── Material Picker ── */
+#mat-picker{position:fixed;z-index:400;background:#111e30;border:1px solid var(--border);
+  border-radius:8px;width:300px;max-height:340px;display:flex;flex-direction:column;
+  box-shadow:0 8px 32px rgba(0,0,0,0.7);overflow:hidden}
+#mat-picker-search{padding:7px 10px;background:#0d1624;border:none;border-bottom:1px solid var(--border);
+  color:var(--text);font-size:12px;outline:none;width:100%}
+#mat-picker-search::placeholder{color:var(--muted)}
+#mat-picker-body{overflow-y:auto;flex:1}
+.mp-cat{border-bottom:1px solid rgba(46,66,96,0.4)}
+.mp-cat-hdr{display:flex;align-items:center;gap:6px;padding:6px 10px;cursor:pointer;
+  font-size:10px;font-weight:700;letter-spacing:.8px;text-transform:uppercase;color:var(--muted);
+  background:#0d1624;user-select:none}
+.mp-cat-hdr:hover{color:var(--text)}
+.mp-cat-hdr .mp-arr{font-size:9px;transition:transform .15s}
+.mp-cat.open .mp-arr{transform:rotate(90deg)}
+.mp-items{display:none}
+.mp-cat.open .mp-items{display:block}
+.mp-item{display:flex;align-items:center;gap:6px;padding:5px 14px;cursor:pointer;font-size:11px;color:var(--text)}
+.mp-item:hover{background:rgba(247,166,0,0.08);color:#f7a600}
+.mp-item-jk{font-family:Consolas,monospace;font-size:10px;color:var(--muted);margin-left:auto;flex-shrink:0}
+.btn-mat-pick{padding:2px 6px;background:rgba(46,66,96,0.5);border:1px solid var(--border);
+  border-radius:3px;color:var(--muted);cursor:pointer;font-size:11px;flex-shrink:0}
+.btn-mat-pick:hover{background:rgba(247,166,0,0.15);color:#f7a600;border-color:rgba(247,166,0,0.4)}
+</style>
+</head>
+<body>
+
+<header>
+  <span class="hdr-ver">Projekt0log v1.0</span>
+</header>
+
+<div class="top-actions">
+  <button class="btn-proj danger" id="btnNewProject">📄 Nový projekt</button>
+  <div class="top-actions-sep"></div>
+  <button class="btn-proj" id="btnPreviewHTML">👁 Náhľad</button>
+  <button class="btn-proj accent" id="btnSaveAsHTML">💾 Uložiť</button>
+  <button class="btn-proj" id="btnLoadHTMLProj">📂 Otvoriť projekt</button>
+</div>
+
+<div class="proj-info-bar">
+  <span class="proj-info-logo" id="hdr-project-logo">ZSD VVN</span>
+  <span class="proj-info-title" id="hdr-project-title">Linka 8312 — Preizolácia</span>
+  <span class="proj-info-route" id="hdr-project-route"></span>
+</div>
+
+<div class="tab-bar">
+  <button class="tab-btn active" data-tab="projekt">Projekt</button>
+  <button class="tab-btn" data-tab="stoziare">Stožiare</button>
+  <button class="tab-btn" data-tab="krizovania">Krížovania</button>
+  <button class="tab-btn" data-tab="sablony">Šablóny</button>
+  <button class="tab-btn" data-tab="material">Materiál</button>
+  <button class="tab-btn" data-tab="exportovat">Sumár</button>
+</div>
+
+<!-- ═══════════════ TAB 1: PROJEKT ═══════════════ -->
+<div class="tab-pane active" id="pane-projekt">
+  <div class="projekt-pane">
+    <div class="section-title">Identifikácia projektu</div>
+    <div class="grid2">
+      <div class="form-group">
+        <label class="form-label">Názov (číslo) linky</label>
+        <input class="form-input" id="p-title" type="text" placeholder="napr. Linka 8312 — Preizolácia">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Názov firmy / prevádzkovateľa</label>
+        <input class="form-input" id="p-logo" type="text" placeholder="napr. ZSD VVN alebo SSE VVN">
+      </div>
+    </div>
+
+    <div class="section-title">Trasa</div>
+    <div class="grid2">
+      <div class="form-group">
+        <label class="form-label">Od (začiatok linky)</label>
+        <input class="form-input" id="p-from" type="text" placeholder="napr. Jaslovské Bohunice">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Do (koniec linky)</label>
+        <input class="form-input" id="p-to" type="text" placeholder="napr. Madunice">
+      </div>
+    </div>
+
+    <div class="section-title">Linka</div>
+    <div class="grid2">
+      <div class="form-group">
+        <label class="form-label">Typ linky</label>
+        <select class="form-select" id="p-typLinky">
+          <option value="1x3">1x3x... — Jednoduchá (3 fázy)</option>
+          <option value="2x3">2x3x... — Dvojitá (6 fáz)</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Vodič (priemer/typ)</label>
+        <div style="display:flex;gap:6px;align-items:center">
+          <select class="form-select" id="p-vodic-yn" style="width:80px;flex-shrink:0">
+            <option value="nie" selected>Nie</option>
+            <option value="ano">Áno</option>
+          </select>
+          <input class="form-input" id="p-vodic" type="text" placeholder="typ vodiča, napr. 243-AL alebo 185-AL1/30" style="flex:1;display:none">
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="form-label">KZL (Kombinované zemné lano)</label>
+        <div style="display:flex;gap:6px;align-items:center">
+          <select class="form-select" id="p-kzl-yn" style="width:80px;flex-shrink:0">
+            <option value="nie" selected>Nie</option>
+            <option value="ano">Áno</option>
+          </select>
+          <input class="form-input" id="p-kzl" type="text" placeholder="typ KZL, napr. OPGW alebo ADSS" style="flex:1;display:none">
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="form-label">ZL (Zemné lano)</label>
+        <div style="display:flex;gap:6px;align-items:center">
+          <select class="form-select" id="p-zl-yn" style="width:80px;flex-shrink:0">
+            <option value="nie" selected>Nie</option>
+            <option value="ano">Áno</option>
+          </select>
+          <input class="form-input" id="p-zl" type="text" placeholder="typ ZL, napr. ZL 185 alebo FeZn 50" style="flex:1;display:none">
+        </div>
+      </div>
+    </div>
+
+    <div class="section-title">Štatistiky</div>
+    <div class="grid2">
+      <div class="form-group">
+        <label class="form-label">Celková dĺžka úseku (m)</label>
+        <input class="form-input" id="p-length" type="number" placeholder="napr. 12500" step="1">
+        <div style="font-size:10px;color:var(--muted);margin-top:3px">Zadaj ručne, alebo sa vypočíta automaticky zo stožiarov</div>
+      </div>
+      <div class="form-group">
+        <label class="form-label" id="p-count-label">Počet stožiarov</label>
+        <input class="form-input" id="p-count" type="text" readonly>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════ TAB 2: STOŽIARE ═══════════════ -->
+<div class="tab-pane" id="pane-stoziare">
+  <div class="pole-sidebar">
+    <div class="sidebar-top">
+      <button class="btn-add" id="btnAddPole">➕ Pridať stožiar</button>
+    </div>
+    <div class="pole-list" id="poleList"></div>
+  </div>
+  <div class="pole-editor" id="poleEditor">
+    <div class="editor-empty">
+      <svg width="44" height="44" viewBox="0 0 50 50" fill="currentColor">
+        <rect x="22" y="6" width="6" height="30" rx="1.5"/>
+        <rect x="10" y="12" width="30" height="4" rx="1.5"/>
+        <line x1="12" y1="14" x2="22" y2="20" stroke="currentColor" stroke-width="2"/>
+        <line x1="38" y1="14" x2="28" y2="20" stroke="currentColor" stroke-width="2"/>
+        <rect x="6" y="40" width="38" height="4" rx="1.5"/>
+      </svg>
+      <p>Vyberte stožiar zo zoznamu<br>alebo pridajte nový</p>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════ TAB: MATERIÁL ═══════════════ -->
+<div class="tab-pane" id="pane-material">
+  <div class="export-pane">
+    <!-- Info -->
+    <div style="display:flex;gap:10px;margin-bottom:12px;flex-wrap:wrap">
+      <div class="export-card" style="flex:1;min-width:200px;border-color:rgba(247,166,0,0.3);background:rgba(247,166,0,0.04)">
+        <div style="font-size:11px;font-weight:700;color:#f7a600;margin-bottom:4px">⚡ Materiál vodičov</div>
+        <div style="font-size:11px;color:var(--muted)">Aktuálne nahraný zoznam — reťazce, svorky, izolátory pre vodiče</div>
+      </div>
+      <div class="export-card" style="flex:1;min-width:200px;border-color:rgba(96,165,250,0.3);background:rgba(96,165,250,0.04)">
+        <div style="font-size:11px;font-weight:700;color:#60a5fa;margin-bottom:4px">🔌 Materiál KZL / ZL</div>
+        <div style="font-size:11px;color:var(--muted)">Bude doplnený neskôr — úplne oddelená databáza</div>
+      </div>
+    </div>
+    <!-- Pridať nový materiál -->
+    <div class="export-card" style="margin-bottom:16px">
+      <div class="export-card-title">Pridať vlastný materiál</div>
+      <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:flex-end">
+        <div style="flex:1;min-width:140px">
+          <div style="font-size:10px;color:var(--muted);margin-bottom:4px">Kategória <span style="color:#4a6880;font-style:italic">(existujúca alebo nová)</span></div>
+          <input id="mat-new-cat" class="form-input" placeholder="napr. KZL — závesy" list="mat-cat-list" autocomplete="off" style="width:100%">
+          <datalist id="mat-cat-list"></datalist>
+        </div>
+        <div style="flex:2;min-width:180px">
+          <div style="font-size:10px;color:var(--muted);margin-bottom:4px">Názov</div>
+          <input id="mat-new-name" class="form-input" placeholder="napr. Nosná svorka výkyvná" style="width:100%">
+        </div>
+        <div style="flex:1;min-width:110px">
+          <div style="font-size:10px;color:var(--muted);margin-bottom:4px">Číslo / Typ</div>
+          <input id="mat-new-jk" class="form-input" placeholder="napr. 137224" style="width:100%">
+        </div>
+        <button id="mat-add-btn" class="btn-proj accent" style="height:32px;white-space:nowrap">➕ Pridať</button>
+      </div>
+    </div>
+    <!-- Zoznam všetkého materiálu -->
+    <div class="export-card">
+      <div class="export-card-title">Databáza materiálu — Vodiče</div>
+      <div id="mat-db-list"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════ TAB 3: EXPORTOVAŤ ═══════════════ -->
+<div class="tab-pane" id="pane-exportovat">
+  <div class="export-pane">
+    <div id="linka-banner-wrap"></div>
+    <div class="export-card">
+      <div class="export-card-title">Súhrn projektu</div>
+      <div class="stat-grid">
+        <div class="stat-card"><div class="stat-v" id="exp-length">—</div><div class="stat-l">Celková dĺžka</div></div>
+        <div class="stat-card"><div class="stat-v" id="exp-count">—</div><div class="stat-l" id="exp-count-label">Stožiarov</div></div>
+        <div class="stat-card"><div class="stat-v" id="exp-types">—</div><div class="stat-l">Typy závesov</div></div>
+      </div>
+      <div class="type-breakdown" id="exp-druh-breakdown" style="margin-bottom:8px"></div>
+      <div class="type-breakdown" id="exp-breakdown"></div>
+    </div>
+
+    <div id="exp-material-wrap"></div>
+    <input type="file" class="file-input-hidden" id="htmlFileInput" accept=".html">
+  </div>
+</div>
+
+<!-- ═══════════════ TAB 4: ŠABLÓNY ═══════════════ -->
+<div class="tab-pane" id="pane-krizovania">
+  <div style="overflow-y:auto;padding:14px 16px;display:flex;flex-direction:column;gap:12px;width:100%">
+    <div style="display:flex;align-items:center;justify-content:space-between;flex-shrink:0">
+      <div>
+        <div style="font-size:15px;font-weight:800;color:var(--accent)">🚧 Krížovania a prekážky</div>
+        <div style="font-size:11px;color:var(--muted);margin-top:2px">Objekty prechádzajúce trasou vedenia medzi stožiarmi</div>
+      </div>
+      <button class="btn-add-item" onclick="addCrossing()">➕ Pridať krížovanie</button>
+    </div>
+    <div style="display:flex;flex-wrap:wrap;gap:5px" id="cross-legend"></div>
+    <div id="crossings-rows" style="display:flex;flex-direction:column;gap:8px"></div>
+  </div>
+</div>
+
+<div class="tab-pane" id="pane-sablony">
+  <div class="sablony-pane">
+    <!-- Left: list of templates -->
+    <div class="sablony-sidebar">
+      <div class="sidebar-top">
+        <button class="btn-add" id="btnAddTemplate">➕ Nová šablóna</button>
+      </div>
+      <div id="templateList" class="pole-list"></div>
+    </div>
+    <!-- Right: template editor -->
+    <div class="sablony-editor">
+      <div class="pole-editor" id="templateEditor">
+        <div class="editor-empty">
+          <p>Vyberte šablónu zo zoznamu<br>alebo vytvorte novú</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+// ══════════════════════════════════════════════
+//  STATE
+// ══════════════════════════════════════════════
+const ZT_COLORS = {
+  portal:'#f7a600', DDK:'#9333ea', DK:'#f87171',
+  PK:'#60a5fa', DN:'#34d399', JN:'#fbbf24'
+};
+const ZT_LABELS = {
+  DDK: 'DDK – Dvojitý kotevný (4× izol./záves)',
+  DK:  'DK – Kotevný (2× izol./záves)',
+  PK:  'PK – Polokotevný (2× izol./záves)',
+  DN:  'DN – Dvojitý nosný (2× izol./záves)',
+  JN:  'JN – Jednoduchý nosný (1× izol./záves)',
+};
+const TYP_STOZIARA = [
+  '',
+  // N types
+  'N+0','N+3','N+4','N+6','N+9','N+12','N+16',
+  // I types
+  'I+0','I+3','I+4','I+6','I+9','I+12','I+16',
+  // II types
+  'II+0','II+3','II+4','II+6','II+9','II+12','II+16',
+  // III types
+  'III+0','III+3','III+4','III+6','III+9','III+12','III+16',
+  // IV types
+  'IV+0','IV+3','IV+4','IV+6','IV+9','IV+12','IV+16',
+  // V types
+  'V+0','V+3','V+4','V+6','V+9','V+12','V+16',
+  // VI types
+  'VI+0','VI+3','VI+4','VI+6','VI+9','VI+12','VI+16',
+  // VII types
+  'VII+0','VII+3','VII+4','VII+6','VII+9','VII+12','VII+16',
+  // Portál (always DK or DDK)
+  'Portál',
+];
+
+// ══════════════════════════════════════════════
+//  CROSSING TYPES
+// ══════════════════════════════════════════════
+const CROSS_TYPES = [
+  { id: 'vn22',    label: 'VN 22kV',           icon: '⚡', color: '#f59e0b', dash: '4,3' },
+  { id: 'vn35',    label: 'VN 35kV',           icon: '⚡', color: '#fb923c', dash: '4,3' },
+  { id: 'vvn110',  label: 'VVN 110kV',         icon: '🔶', color: '#f97316', dash: '6,3' },
+  { id: 'vvn400',  label: 'VVN 400kV',         icon: '🔴', color: '#ef4444', dash: '6,3' },
+  { id: 'nn',      label: 'NN 0.4kV',          icon: '💡', color: '#a3e635', dash: '2,3' },
+  { id: 'road',    label: 'Cesta',             icon: '🛣',  color: '#60a5fa', dash: '5,2' },
+  { id: 'highway', label: 'Diaľnica',          icon: '🛤',  color: '#ef4444', dash: '7,3' },
+  { id: 'rail',    label: 'Železnica ŽSR',     icon: '🚂', color: '#a78bfa', dash: '8,3' },
+  { id: 'river',   label: 'Vodný tok / rieka', icon: '🌊', color: '#38bdf8', dash: '3,3' },
+  { id: 'gas',     label: 'Plynovod',          icon: '🔥', color: '#fb923c', dash: '5,3' },
+  { id: 'tele',    label: 'Telekomunikácie',   icon: '📡', color: '#34d399', dash: '3,2' },
+  { id: 'cable',   label: 'Kábel (podzemný)',  icon: '🔌', color: '#84cc16', dash: '2,2' },
+  { id: 'other',   label: 'Iné',               icon: '◈',  color: '#9ab8d8', dash: '3,3' },
+];
+
+// ══════════════════════════════════════════════
+//  MATERIAL DATABASE (z rozpisu materiálu 8312)
+// ══════════════════════════════════════════════
+const MATERIAL_DB = [
+  { cat: 'Izolátory', items: [
+    { name: 'Izolátor CS120 T19L 550/3820/1300',  jk: 'SMH110/4Nymk-99/589' },
+    { name: 'Izolátor CS160 T19L 550/3820/1300',  jk: 'SMH110/4160kNNymk-16/030' },
+  ]},
+  { cat: 'Závesné kĺby', items: [
+    { name: 'Závesný kĺb (Praporec)', jk: '235118' },
+    { name: 'Závesný kĺb (Praporec)', jk: '235118.9' },
+    { name: 'Závesný kĺb (Praporec)', jk: '235119.2' },
+    { name: 'Závesný kĺb (Praporec)', jk: '235120' },
+    { name: 'Závesný kĺb (Praporec)', jk: '235125' },
+    { name: 'Závesný kĺb (Praporec)', jk: '235126' },
+    { name: 'Závesný kĺb (Praporec)', jk: '235132' },
+    { name: 'Závesný kĺb (Praporec)', jk: '235149.1' },
+    { name: 'Držiak závesného kĺbu',  jk: '162827' },
+  ]},
+  { cat: 'Oká a vidlice', items: [
+    { name: 'Dvojité oko priame',          jk: '231447' },
+    { name: 'Dvojité oko krížové',         jk: '231407' },
+    { name: 'Dvojité oko krížové',         jk: '241513.10' },
+    { name: 'Vidlica s okom nastaviteľná', jk: '231547' },
+    { name: 'Vidlica s okom nastaviteľná', jk: '231571' },
+    { name: 'Vidlica s okom priama a=150', jk: '231641.13' },
+    { name: 'Vidlica s okom priama a=150', jk: '231641.15' },
+    { name: 'Vidlica s okom krížová',      jk: '231561.6' },
+    { name: 'Predlžovacia vidlica',        jk: '231547' },
+  ]},
+  { cat: 'Svorky — nosné', items: [
+    { name: 'Nosná svorka s ochrannou špirálou', jk: '136400.22' },
+    { name: 'Nosná svorka s ochrannou špirálou', jk: '136400.25' },
+    { name: 'Nosná svorka s ochrannou špirálou', jk: '136400.26' },
+    { name: 'Nosná svorka s ochrannou špirálou', jk: '136400.27' },
+    { name: 'Nosná svorka s ochrannou špirálou', jk: '136401.22' },
+    { name: 'Nosná svorka výkyvná',              jk: '137224' },
+    { name: 'Nosná svorka výkyvná',              jk: '137245' },
+  ]},
+  { cat: 'Svorky — kotevné', items: [
+    { name: 'Kotevná svorka klinová',  jk: '157310' },
+    { name: 'Kotevná svorka klinová',  jk: '157702' },
+    { name: 'Kotevná svorka klinová',  jk: '157704' },
+    { name: 'Kotevná svorka lisovaná', jk: '175622.7' },
+  ]},
+  { cat: 'Svorky — prúdové', items: [
+    { name: 'Prúdová svorka rozoberateľná', jk: '167619' },
+    { name: 'Prúdová svorka rozoberateľná', jk: '167619.3' },
+    { name: 'Prúdová svorka rozoberateľná', jk: '167641' },
+    { name: 'Prúdová svorka rozoberateľná', jk: '167651' },
+    { name: 'Prúdová svorka lisovaná',      jk: '165624.1' },
+    { name: 'Prúdová svorka lisovaná',      jk: '165845' },
+    { name: 'T-prístrojová svorka', jk: '404918' },
+  ]},
+  { cat: 'Svorky — káblové a prípojnicové', items: [
+    { name: 'Káblové oko lisované',    jk: '616622.7' },
+    { name: 'Káblové oko lisované',    jk: '616713.2' },
+    { name: 'Odbočná svorka pre AlFe', jk: '405034' },
+  ]},
+  { cat: 'Platničky', items: [
+    { name: 'Dvojbolcňová platnička', jk: '' },
+  ]},
+  { cat: 'Rozperky', items: [
+    { name: 'Rozperka', jk: '233417' },
+  ]},
+  { cat: 'Strmeňe', items: [
+    { name: 'Strmeň', jk: '235502' },
+    { name: 'Strmeň', jk: '235542' },
+    { name: 'Strmeň', jk: '235543' },
+  ]},
+  { cat: 'Závažie', items: [
+    { name: 'Závažie', jk: '229501' },
+  ]},
+  { cat: 'Praporce / Ochranné tyče', items: [
+    { name: 'Praporec 235 118',   jk: '235118.9' },
+    { name: 'Praporec 235 119',   jk: '235119.2' },
+    { name: 'Praporec 235 125',   jk: '235125' },
+    { name: 'Praporec 235 126',   jk: '235126' },
+    { name: 'Praporec 235 132',   jk: '235132' },
+    { name: 'Ochranná tyč',       jk: '521509' },
+    { name: 'Ochranná tyč',       jk: '521601' },
+    { name: 'Ochranná tyč',       jk: '521603' },
+  ]},
+  { cat: 'Tlmiče vibrácií', items: [
+    { name: 'Tlmič vibrácií', jk: '228582.52' },
+    { name: 'Tlmič vibrácií', jk: '228583.54' },
+  ]},
+];
+
+const ZT_TEMPLATES = {
+  portal:[
+    {n:1, name:'Závesný kĺb (praporec)', jk:'235 119.2'},
+    {n:1, name:'Vidlica s okom nastaviteľná', jk:'231 547'},
+    {n:2, name:'Dvojité oko krížové', jk:'231 407'},
+    {n:2, name:'Rozperka', jk:'233 417'},
+    {n:4, name:'Izolátor', jk:''},
+    {n:2, name:'Dvojplatnička', jk:''},
+    {n:2, name:'Dvojité oko priame', jk:'231 447'},
+  ],
+  DDK:[
+    {n:1, name:'Závesný kĺb (praporec)', jk:'235 119.2'},
+    {n:1, name:'Vidlica s okom nastaviteľná', jk:'231 547'},
+    {n:2, name:'Dvojité oko krížové', jk:'231 407'},
+    {n:2, name:'Rozperka', jk:'233 417'},
+    {n:4, name:'Izolátor', jk:''},
+    {n:2, name:'Dvojplatnička', jk:''},
+    {n:2, name:'Dvojité oko priame', jk:'231 447'},
+  ],
+  DK:[
+    {n:1, name:'Závesný kĺb (praporec)', jk:'235 119.2'},
+    {n:1, name:'Vidlica s okom priama a=150', jk:'231 641.15'},
+    {n:2, name:'Dvojité oko krížové', jk:'231 407'},
+    {n:2, name:'Rozperka', jk:'233 417'},
+    {n:2, name:'Izolátor', jk:''},
+    {n:2, name:'Dvojité oko priame', jk:'231 447'},
+  ],
+  PK:[
+    {n:1, name:'Strmeň', jk:'235 542'},
+    {n:1, name:'Dvojité oko priame', jk:'231 447'},
+    {n:1, name:'Rozperka', jk:'233 417'},
+    {n:2, name:'Izolátor', jk:''},
+    {n:2, name:'Nosná svorka s ochrannou špirálou', jk:'136400.25'},
+    {n:1, name:'Plašič', jk:''},
+  ],
+  DN:[
+    {n:1, name:'Strmeň', jk:'235 542'},
+    {n:2, name:'Dvojité oko priame', jk:'231 447'},
+    {n:2, name:'Rozperka', jk:'233 417'},
+    {n:2, name:'Izolátor', jk:''},
+    {n:1, name:'Nosná svorka s ochrannou špirálou', jk:'136400.25'},
+    {n:1, name:'Plašič', jk:''},
+  ],
+  JN:[
+    {n:1, name:'Strmeň', jk:'235 542'},
+    {n:1, name:'Izolátor', jk:''},
+    {n:1, name:'Nosná svorka s ochrannou špirálou', jk:'136400.25'},
+    {n:1, name:'Plašič', jk:''},
+  ],
+};
+
+// ══════════════════════════════════════════════
+//  TEMPLATES
+// ══════════════════════════════════════════════
+// Templates keyed by "druh|zt|typ" or "druh|zt" or "zt"
+// Each template: { id, name, druh, zt, typ, parts, notes, warn }
+let templates = getDefaultTemplates();
+
+function getDefaultTemplates(){
+  return [
+    {
+      id:'portal-ddk',
+      name:'Portál – DDK',
+      druh:'Portál', zt:'DDK', typ:'',
+      parts:[
+        {n:1, name:'Závesný kĺb (praporec)', jk:'235 119.2'},
+        {n:1, name:'Vidlica s okom nastaviteľná', jk:'231 547'},
+        {n:2, name:'Dvojité oko krížové', jk:'231 407'},
+        {n:2, name:'Rozperka', jk:'233 417'},
+        {n:4, name:'Izolátor', jk:''},
+        {n:2, name:'Dvojplatnička', jk:''},
+        {n:2, name:'Dvojité oko priame', jk:'231 447'},
+      ],
+      notes:['Typ závesu: DDK – Dvojitý kotevný','Pištole zostávajú staré (nemenia sa)'],
+      warn:''
+    },
+    {
+      id:'kotevny-ddk',
+      name:'Kotevný – DDK',
+      druh:'Kotevný', zt:'DDK', typ:'',
+      parts:[
+        {n:1, name:'Závesný kĺb (praporec)', jk:'235 119.2'},
+        {n:1, name:'Vidlica s okom nastaviteľná', jk:'231 547'},
+        {n:2, name:'Dvojité oko krížové', jk:'231 407'},
+        {n:2, name:'Rozperka', jk:'233 417'},
+        {n:4, name:'Izolátor', jk:''},
+        {n:2, name:'Dvojplatnička', jk:''},
+        {n:2, name:'Dvojité oko priame', jk:'231 447'},
+      ],
+      notes:['Typ závesu: DDK – Dvojitý kotevný','Pištole zostávajú staré (nemenia sa)'],
+      warn:''
+    },
+    {
+      id:'kotevny-dk',
+      name:'Kotevný – DK',
+      druh:'Kotevný', zt:'DK', typ:'',
+      parts:[
+        {n:1, name:'Závesný kĺb (praporec)', jk:'235 119.2'},
+        {n:1, name:'Vidlica s okom priama a=150', jk:'231 641.15'},
+        {n:2, name:'Dvojité oko krížové', jk:'231 407'},
+        {n:2, name:'Rozperka', jk:'233 417'},
+        {n:2, name:'Izolátor', jk:''},
+        {n:2, name:'Dvojité oko priame', jk:'231 447'},
+      ],
+      notes:['Typ závesu: DK – Kotevný','Pištole zostávajú staré (nemenia sa)'],
+      warn:''
+    },
+    {
+      id:'polokotevny-pk',
+      name:'Polokotevný – PK',
+      druh:'Polokotevný', zt:'PK', typ:'',
+      parts:[
+        {n:1, name:'Strmeň', jk:'235 542'},
+        {n:1, name:'Dvojité oko priame', jk:'231 447'},
+        {n:1, name:'Rozperka', jk:'233 417'},
+        {n:2, name:'Izolátor', jk:''},
+        {n:2, name:'Nosná svorka s ochrannou špirálou', jk:'136400.25'},
+        {n:1, name:'Plašič', jk:''},
+      ],
+      notes:['Plašič – montáž na strmeň'],
+      warn:''
+    },
+    {
+      id:'nosny-dn',
+      name:'Nosný – DN',
+      druh:'Nosný', zt:'DN', typ:'',
+      parts:[
+        {n:1, name:'Strmeň', jk:'235 542'},
+        {n:2, name:'Dvojité oko priame', jk:'231 447'},
+        {n:2, name:'Rozperka', jk:'233 417'},
+        {n:2, name:'Izolátor', jk:''},
+        {n:1, name:'Nosná svorka s ochrannou špirálou', jk:'136400.25'},
+        {n:1, name:'Plašič', jk:''},
+      ],
+      notes:['Plašič – montáž na strmeň'],
+      warn:''
+    },
+    {
+      id:'nosny-jn',
+      name:'Nosný – JN',
+      druh:'Nosný', zt:'JN', typ:'',
+      parts:[
+        {n:1, name:'Strmeň', jk:'235 542'},
+        {n:1, name:'Izolátor', jk:''},
+        {n:1, name:'Nosná svorka s ochrannou špirálou', jk:'136400.25'},
+        {n:1, name:'Plašič', jk:''},
+      ],
+      notes:['Strmeň ide priamo na izolátor','Plašič – montáž na strmeň'],
+      warn:''
+    },
+  ];
+}
+
+function findTemplate(druh, zt, typ){
+  // 1. Exact match: druh + zt + typ
+  if(typ){
+    const exact = templates.find(t=> t.druh===druh && t.zt===zt && t.typ===typ);
+    if(exact) return exact;
+  }
+  // 2. druh + zt match (typ empty or any)
+  const partial = templates.find(t=> t.druh===druh && t.zt===zt && !t.typ);
+  if(partial) return partial;
+  // 3. zt only fallback
+  return templates.find(t=> !t.druh && t.zt===zt) || null;
+}
+
+function applyTemplate(pole, tpl){
+  pole.parts = tpl.parts.map(p=>{
+    const part = {...p};
+    if(/izol[aá]tor/i.test(part.name||'') && part.otoceny === undefined)
+      part.otoceny = izoDefaultOtoceny(pole.zt);
+    return part;
+  });
+  if(tpl.notes && tpl.notes.length) pole.notes = [...tpl.notes];
+  if(tpl.warn) pole.warn = tpl.warn;
+}
+
+let project = {
+  title: '',
+  logo: '',
+  from: '',
+  to: '',
+  totalLength: null,
+};
+
+let linkaInfo = {
+  napatie: '110 kV',
+  typLinky: '1x3',
+  vodic: '',
+  kzl: '',
+  zl: '',
+};
+
+let poles = [];
+let crossings = [];
+let selectedPoleIdx = -1;
+let draftPole = null;
+
+// ══════════════════════════════════════════════
+//  PERSISTENCE
+// ══════════════════════════════════════════════
+function saveState(){
+  try{
+    localStorage.setItem('vvn-konfig', JSON.stringify({project, poles, templates, linkaInfo, crossings}));
+  }catch(e){}
+}
+function loadState(){
+  try{
+    const raw = localStorage.getItem('vvn-konfig');
+    if(!raw) return false;
+    const data = JSON.parse(raw);
+    if(data.project) project = data.project;
+    if(data.poles) poles = data.poles;
+    if(data.templates) templates = data.templates;
+    else templates = getDefaultTemplates();
+    if(data.linkaInfo) linkaInfo = Object.assign(linkaInfo, data.linkaInfo);
+    if(data.crossings) crossings = data.crossings;
+    return true;
+  }catch(e){ return false; }
+}
+
+// ══════════════════════════════════════════════
+//  PROJECT FIELDS
+// ══════════════════════════════════════════════
+function updateHeaderDisplay(){
+  const t = document.getElementById('hdr-project-title');
+  const l = document.getElementById('hdr-project-logo');
+  const r = document.getElementById('hdr-project-route');
+  if(t) t.textContent = project.title || 'Nová linka';
+  if(l) l.textContent = project.logo  || '';
+  if(r) r.textContent = (project.from||'') + (project.to ? ' → '+project.to : '');
+}
+function bindProjectFields(){
+  ['title','logo','from','to'].forEach(k=>{
+    const el = document.getElementById('p-'+k);
+    if(!el) return;
+    el.addEventListener('input', ()=>{
+      project[k] = el.value;
+      updateHeaderDisplay();
+      updateAutoStats();
+      saveState();
+    });
+  });
+  // Manual total length — only saves if no poles have cum data
+  const lenEl = document.getElementById('p-length');
+  if(lenEl){
+    lenEl.addEventListener('input', ()=>{
+      const v = parseFloat(lenEl.value);
+      project.totalLength = isNaN(v) ? null : v;
+      saveState();
+    });
+  }
+}
+function fillProjectFields(){
+  document.getElementById('p-title').value = project.title||'';
+  document.getElementById('p-logo').value  = project.logo||'';
+  document.getElementById('p-from').value  = project.from||'';
+  document.getElementById('p-to').value    = project.to||'';
+  updateHeaderDisplay();
+  updateAutoStats();
+  fillLinkaFields();
+}
+function fillLinkaFields(){
+  const typEl = document.getElementById('p-typLinky');
+  if(typEl) typEl.value = linkaInfo.typLinky || '1x3';
+  const vodicYn = document.getElementById('p-vodic-yn');
+  const vodEl   = document.getElementById('p-vodic');
+  if(vodicYn && vodEl){
+    const hasVodic = !!(linkaInfo.vodic);
+    vodicYn.value = hasVodic ? 'ano' : 'nie';
+    vodEl.value = linkaInfo.vodic || '';
+    vodEl.style.display = hasVodic ? '' : 'none';
+  }
+  // KZL toggle
+  const kzlYn = document.getElementById('p-kzl-yn');
+  const kzlEl = document.getElementById('p-kzl');
+  if(kzlYn && kzlEl){
+    const hasKzl = !!(linkaInfo.kzl);
+    kzlYn.value = hasKzl ? 'ano' : 'nie';
+    kzlEl.value = linkaInfo.kzl || '';
+    kzlEl.style.display = hasKzl ? '' : 'none';
+  }
+  // ZL toggle
+  const zlYn = document.getElementById('p-zl-yn');
+  const zlEl  = document.getElementById('p-zl');
+  if(zlYn && zlEl){
+    const hasZl = !!(linkaInfo.zl);
+    zlYn.value = hasZl ? 'ano' : 'nie';
+    zlEl.value = linkaInfo.zl || '';
+    zlEl.style.display = hasZl ? '' : 'none';
+  }
+  updateLinkaBanner();
+}
+function bindLinkaFields(){
+  const typEl = document.getElementById('p-typLinky');
+  if(typEl) typEl.addEventListener('change', ()=>{ linkaInfo.typLinky = typEl.value; updateLinkaBanner(); saveState(); });
+  const vodicYn = document.getElementById('p-vodic-yn');
+  const vodEl   = document.getElementById('p-vodic');
+  if(vodicYn && vodEl){
+    vodicYn.addEventListener('change', ()=>{
+      const ano = vodicYn.value === 'ano';
+      vodEl.style.display = ano ? '' : 'none';
+      if(!ano){ linkaInfo.vodic = ''; vodEl.value = ''; updateLinkaBanner(); saveState(); }
+      else vodEl.focus();
+    });
+    vodEl.addEventListener('input', ()=>{ linkaInfo.vodic = vodEl.value.trim(); updateLinkaBanner(); saveState(); });
+  }
+  // KZL
+  const kzlYn = document.getElementById('p-kzl-yn');
+  const kzlEl = document.getElementById('p-kzl');
+  if(kzlYn && kzlEl){
+    kzlYn.addEventListener('change', ()=>{
+      const ano = kzlYn.value === 'ano';
+      kzlEl.style.display = ano ? '' : 'none';
+      if(!ano){ linkaInfo.kzl = ''; kzlEl.value = ''; updateLinkaBanner(); saveState(); }
+      else kzlEl.focus();
+    });
+    kzlEl.addEventListener('input', ()=>{ linkaInfo.kzl = kzlEl.value.trim(); updateLinkaBanner(); saveState(); });
+  }
+  // ZL
+  const zlYn = document.getElementById('p-zl-yn');
+  const zlEl  = document.getElementById('p-zl');
+  if(zlYn && zlEl){
+    zlYn.addEventListener('change', ()=>{
+      const ano = zlYn.value === 'ano';
+      zlEl.style.display = ano ? '' : 'none';
+      if(!ano){ linkaInfo.zl = ''; zlEl.value = ''; updateLinkaBanner(); saveState(); }
+      else zlEl.focus();
+    });
+    zlEl.addEventListener('input',  ()=>{ linkaInfo.zl  = zlEl.value.trim();  updateLinkaBanner(); saveState(); });
+  }
+}
+function updateLinkaBanner(){
+  const isDvojita = linkaInfo.typLinky === '2x3';
+  const ZT_ISO = {DDK:4, DK:2, PK:2, DN:2, JN:1};
+
+  let totalIso = 0;
+  poles.forEach(p=>{
+    const isoPerChain = ZT_ISO[p.zt] || 0;
+    const pnIso = p.pnCount || 0;
+    totalIso += (isoPerChain * poleChainCount(p.druh, p.zt, isDvojita)) + pnIso;
+  });
+
+  const wrap = document.getElementById('linka-banner-wrap');
+  if(!wrap) return;
+  const totalLen = poles.length ? poles[poles.length-1].cum : 0;
+  const cards = [];
+  const card = (val, lbl) => `<div class="stat-card"><div class="stat-v" style="font-size:14px">${val}</div><div class="stat-l">${lbl}</div></div>`;
+  if(project.logo)            cards.push(card(escHtml(project.logo), 'Prevádzkovateľ'));
+  if(project.from)            cards.push(card(escHtml(project.from), 'Od'));
+  if(project.to)              cards.push(card(escHtml(project.to), 'Do'));
+  cards.push(card(isDvojita?'Dvojitá':'Jednoduchá', 'Typ linky'));
+  if(linkaInfo.vodic)         cards.push(card(`${isDvojita?'2':'1'}×3×${escHtml(linkaInfo.vodic)}`, 'Vodič'));
+  if(linkaInfo.kzl)           cards.push(card(escHtml(linkaInfo.kzl), 'KZL'));
+  if(linkaInfo.zl)            cards.push(card(escHtml(linkaInfo.zl), 'ZL'));
+  if(totalLen)                cards.push(card(totalLen.toLocaleString('sk')+' m', 'Dĺžka trasy'));
+  cards.push(card(isDvojita?'6–12×':'3–6×', 'Záv./stožiar'));
+  if(totalIso)                cards.push(card(totalIso+' ks', 'Izolátorov celkom'));
+  wrap.innerHTML = cards.length
+    ? `<div class="export-card" style="margin-bottom:16px"><div class="export-card-title">Parametre linky</div><div class="stat-grid" style="grid-template-columns:repeat(auto-fill,minmax(130px,1fr))">${cards.join('')}</div></div>`
+    : '';
+}
+function poleChainCount(druh, zt, isDvojita){
+  // Rule: Kotevný DK/DDK → base×2; Portál always base; others base
+  // 1x3 base=3, 2x3 base=6
+  const base = isDvojita ? 6 : 3;
+  if(druh === 'Kotevný' && (zt === 'DK' || zt === 'DDK')) return base * 2;
+  return base;
+}
+function isoChainCount(pole){
+  const isDvojita = linkaInfo.typLinky === '2x3';
+  return poleChainCount(pole.druh, pole.zt, isDvojita);
+}
+function ztZavesType(zt){
+  const m = {DDK:'Dvojitý kotevný', DK:'Kotevný', PK:'Polokotevný', DN:'Dvojitý nosný', JN:'Jednoduchý nosný'};
+  return m[zt]||zt;
+}
+
+function updateAutoStats(){
+  // Total length: auto from last pole with cum, fallback to manual project.totalLength
+  const lastWithCum = [...poles].reverse().find(p => p.cum != null);
+  const autoTotal   = lastWithCum ? lastWithCum.cum : null;
+  const displayTotal = autoTotal ?? project.totalLength ?? null;
+  const lenEl = document.getElementById('p-length');
+  if(lenEl){
+    // Only overwrite the field when auto-calculated (so manual entry isn't lost)
+    if(autoTotal != null){ lenEl.value = autoTotal; }
+    else if(project.totalLength != null){ lenEl.value = project.totalLength; }
+    else { lenEl.value = ''; }
+  }
+  const portals   = poles.filter(p=>p.druh==='Portál').length;
+  const nonPortal = poles.length - portals;
+  const countStr  = portals
+    ? nonPortal + ' stož. + ' + portals + ' Portál'
+    : poles.length + ' stožiarov';
+  const countLabel = portals ? 'Stožiare + Portál' : 'Stožiarov';
+  document.getElementById('p-count').value = countStr;
+  const pcl = document.getElementById('p-count-label');
+  if(pcl) pcl.textContent = countLabel;
+
+  updateLinkaBanner();
+
+  // export tab stats
+  const totalStr = displayTotal != null ? displayTotal.toLocaleString('sk')+' m' : '—';
+  document.getElementById('exp-length').textContent = totalStr;
+  document.getElementById('exp-count').textContent = portals ? nonPortal+' + '+portals : poles.length;
+  const ecl = document.getElementById('exp-count-label');
+  if(ecl) ecl.textContent = countLabel;
+
+  // druh breakdown
+  const druhy = {};
+  poles.forEach(p=>{ const d=p.druh||'Stožiar'; druhy[d]=(druhy[d]||0)+1; });
+  const DRUH_COL = {'Portál':'#f7a600','Kotevný':'#c084fc','Polokotevný':'#60a5fa','Nosný':'#34d399','Stĺp':'#a78bfa','—':'#9ab8d8'};
+  const druhBd = document.getElementById('exp-druh-breakdown');
+  if(druhBd) druhBd.innerHTML = Object.entries(druhy).map(([d,cnt])=>{
+    const col = DRUH_COL[d]||'#9ab8d8';
+    return `<span class="type-pill" style="background:${col}18;color:${col};border:1px solid ${col}30">${d}: ${cnt}×</span>`;
+  }).join('');
+
+  // zt breakdown
+  const types = {};
+  poles.forEach(p=>{ types[p.zt]=(types[p.zt]||0)+1; });
+  document.getElementById('exp-types').textContent = Object.keys(types).length;
+  const bd = document.getElementById('exp-breakdown');
+  bd.innerHTML = Object.entries(types).map(([zt,cnt])=>{
+    const col = ZT_COLORS[zt]||'#9ab8d8';
+    return `<span class="type-pill" style="background:${col}18;color:${col};border:1px solid ${col}30">${zt}: ${cnt}×</span>`;
+  }).join('');
+
+  updateMaterialSummary();
+}
+
+function updateMaterialSummary(){
+  const wrap = document.getElementById('exp-material-wrap');
+  if(!wrap) return;
+  const isDvojita  = linkaInfo.typLinky === '2x3';
+  const agg = {};
+  poles.forEach(pole => {
+    const cc = poleChainCount(pole.druh, pole.zt, isDvojita);
+    const hasExtraPraporec = (pole.extraParts||[]).some(p => /praporec/i.test(p.name||''));
+    (pole.parts||[]).forEach(p => {
+      const k = (p.name||'').trim();
+      if(!k) return;
+      if(hasExtraPraporec && /praporec/i.test(k)) return;
+      const isIzoP = /izol[aá]tor/i.test(k);
+      const aggKey = isIzoP ? k + '||' + String(p.otoceny) : k;
+      if(!agg[aggKey]) agg[aggKey] = {name:k, jk:p.jk||'', total:0, otoceny:p.otoceny};
+      agg[aggKey].total += (p.n||1) * cc;
+    });
+    (pole.extraParts||[]).forEach(p => {
+      const k = (p.name||'').trim();
+      if(!k) return;
+      if(!agg[k]) agg[k] = {name:k, jk:p.jk||'', total:0};
+      agg[k].total += (p.n||1);
+    });
+    // PN insulators
+    if((pole.pnCount||0) > 0 && pole.pnAno){
+      const pnOtoc = pole.pnOtoceny === true;
+      const pnKey = 'Izolátor (PN)||' + String(pnOtoc);
+      if(!agg[pnKey]) agg[pnKey] = {name:'Izolátor (PN)', jk:'', total:0, otoceny:pnOtoc};
+      agg[pnKey].total += pole.pnCount;
+      if(!agg['Armatúra PN']) agg['Armatúra PN'] = {name:'Armatúra PN (podľa projektu)', jk:'', total:0};
+      agg['Armatúra PN'].total += pole.pnCount;
+    }
+  });
+  const entries = Object.values(agg).sort((a,b) => a.name.localeCompare(b.name,'sk'));
+  if(!entries.length){ wrap.innerHTML=''; return; }
+  const rows = entries.map((p, i) => {
+    const isIso  = /izol[aá]tor/i.test(p.name);
+    const col    = isIso ? '#60a5fa' : '#f7a600';
+    const jkTrim = (p.jk||'').trim();
+    const showJk = jkTrim && !p.name.includes(jkTrim);
+    const bg      = i % 2 === 0 ? 'transparent' : 'rgba(255,255,255,0.025)';
+    const isLast  = i === entries.length - 1;
+    const otocBadge = (isIso && p.otoceny === true)
+      ? `<span style="font-size:10px;background:rgba(96,165,250,0.15);color:#60a5fa;border-radius:3px;padding:1px 5px;margin-left:6px;flex-shrink:0">(Otočené)</span>` : '';
+    return `<div style="display:flex;align-items:center;padding:5px 12px;background:${bg};${isLast?'':'border-bottom:1px solid rgba(46,66,96,0.3)'}">
+      <span style="font-family:Consolas,monospace;font-weight:700;font-size:12px;color:${col};min-width:48px;text-align:right;padding-right:12px;flex-shrink:0">${p.total}×</span>
+      <span style="flex:1;font-size:11px;color:#c8d6e8">${escHtml(p.name)}</span>${otocBadge}${showJk ? `<span style="font-family:Consolas,monospace;font-size:10px;color:#4a6880;margin-left:10px;flex-shrink:0">${escHtml(jkTrim)}</span>` : ''}
+    </div>`;
+  }).join('');
+  wrap.innerHTML = `
+    <div class="export-card">
+      <div class="export-card-title">Celkový materiál linky — ${entries.length} položiek</div>
+      <div style="border:1px solid var(--border);border-radius:6px;overflow:hidden">${rows}</div>
+    </div>`;
+}
+
+// ══════════════════════════════════════════════
+//  TOWER ICON (sidebar mini SVG)
+// ══════════════════════════════════════════════
+function druhToShape(druh, zt){
+  if(druh==='Portál')      return 'portal';
+  if(druh==='Kotevný')     return (zt==='DK') ? 'DK' : 'DDK';
+  if(druh==='Polokotevný') return 'PK';
+  if(druh==='Nosný')       return (zt==='JN') ? 'JN' : 'DN';
+  if(druh==='Stĺp')        return 'JN';  // Stĺp: jednoduchý nosný tvar
+  return zt || 'JN';
+}
+function druhToColor(druh, zt){
+  if(druh==='Portál')      return '#f7a600';
+  if(druh==='Polokotevný') return '#60a5fa';
+  if(druh==='Stĺp')        return '#a78bfa';  // fialová pre stĺp
+  return ZT_COLORS[zt] || '#9ab8d8';
+}
+function towerIcon(zt, color){
+  const c = color || '#9ab8d8';
+  const shapes = {
+    portal: `<line x1="5" y1="8" x2="5" y2="28" stroke="${c}" stroke-width="1.5"/>
+             <line x1="19" y1="8" x2="19" y2="28" stroke="${c}" stroke-width="1.5"/>
+             <line x1="3" y1="8" x2="21" y2="8" stroke="${c}" stroke-width="1.5"/>
+             <line x1="2" y1="10" x2="22" y2="10" stroke="${c}" stroke-width="1"/>`,
+    DDK:   `<line x1="12" y1="4" x2="12" y2="28" stroke="${c}" stroke-width="1.5"/>
+             <line x1="2" y1="6" x2="22" y2="6" stroke="${c}" stroke-width="1.5"/>
+             <line x1="2" y1="6" x2="8" y2="14" stroke="${c}" stroke-width="1.2"/>
+             <line x1="22" y1="6" x2="16" y2="14" stroke="${c}" stroke-width="1.2"/>
+             <line x1="5" y1="28" x2="12" y2="16" stroke="${c}" stroke-width="1.2"/>
+             <line x1="19" y1="28" x2="12" y2="16" stroke="${c}" stroke-width="1.2"/>`,
+    DK:    `<line x1="12" y1="4" x2="12" y2="28" stroke="${c}" stroke-width="1.5"/>
+             <line x1="3" y1="7" x2="21" y2="7" stroke="${c}" stroke-width="1.5"/>
+             <line x1="3" y1="7" x2="9" y2="14" stroke="${c}" stroke-width="1.2"/>
+             <line x1="21" y1="7" x2="15" y2="14" stroke="${c}" stroke-width="1.2"/>
+             <line x1="6" y1="28" x2="12" y2="16" stroke="${c}" stroke-width="1.2"/>
+             <line x1="18" y1="28" x2="12" y2="16" stroke="${c}" stroke-width="1.2"/>`,
+    PK:    `<line x1="12" y1="6" x2="12" y2="28" stroke="${c}" stroke-width="1.5"/>
+             <line x1="4" y1="9" x2="20" y2="9" stroke="${c}" stroke-width="1.5"/>
+             <line x1="4" y1="9" x2="9" y2="15" stroke="${c}" stroke-width="1.2"/>
+             <line x1="20" y1="9" x2="15" y2="15" stroke="${c}" stroke-width="1.2"/>
+             <line x1="7" y1="28" x2="12" y2="18" stroke="${c}" stroke-width="1.2"/>
+             <line x1="17" y1="28" x2="12" y2="18" stroke="${c}" stroke-width="1.2"/>`,
+    DN:    `<line x1="12" y1="8" x2="12" y2="28" stroke="${c}" stroke-width="1.5"/>
+             <line x1="5" y1="10" x2="19" y2="10" stroke="${c}" stroke-width="1.5"/>
+             <line x1="5" y1="10" x2="10" y2="16" stroke="${c}" stroke-width="1.2"/>
+             <line x1="19" y1="10" x2="14" y2="16" stroke="${c}" stroke-width="1.2"/>
+             <line x1="8" y1="28" x2="12" y2="20" stroke="${c}" stroke-width="1.2"/>
+             <line x1="16" y1="28" x2="12" y2="20" stroke="${c}" stroke-width="1.2"/>`,
+    JN:    `<line x1="12" y1="8" x2="12" y2="28" stroke="${c}" stroke-width="1.5"/>
+             <line x1="6" y1="11" x2="18" y2="11" stroke="${c}" stroke-width="1.5"/>`,
+  };
+  const sh = shapes[zt] || shapes.JN;
+  return `<svg width="24" height="32" viewBox="0 0 24 32" style="flex-shrink:0">${sh}</svg>`;
+}
+
+// ══════════════════════════════════════════════
+//  POLE LIST (sidebar)
+// ══════════════════════════════════════════════
+function renderPoleList(){
+  const list = document.getElementById('poleList');
+  list.innerHTML = '';
+  poles.forEach((pole, i)=>{
+    const div = document.createElement('div');
+    const isSel = (i === selectedPoleIdx);
+    div.className = 'pole-item'+(isSel?' selected':'');
+    const ztDisplay = druhToShape(pole.druh, pole.zt);
+    const iconColor = isSel ? '#f7a600' : druhToColor(pole.druh, pole.zt);
+    div.innerHTML = `
+      <span class="pole-num">${i+1}</span>
+      ${towerIcon(ztDisplay, iconColor)}
+      <span class="pole-id-text" style="flex:1;min-width:0">${escHtml(pole.id||'—')}<br><span style="font-size:10px;color:${iconColor};opacity:${isSel?'1':'0.8'}">${pole.zt}${pole.druh?' · '+pole.druh:''}${pole.typ?' · '+pole.typ:''}</span></span>
+      <span class="pole-actions">
+        <button class="btn-icon" title="Hore" onclick="movePole(${i},-1,event)">⬆</button>
+        <button class="btn-icon" title="Dole" onclick="movePole(${i},1,event)">⬇</button>
+        <button class="btn-icon del" title="Odstrániť" onclick="deletePole(${i},event)">🗑</button>
+      </span>`;
+    div.addEventListener('click', ()=>selectPole(i));
+    list.appendChild(div);
+  });
+  updateAutoStats();
+}
+
+function selectPole(i){
+  selectedPoleIdx = i;
+  renderPoleList();
+  renderEditor();
+}
+
+function movePole(i, dir, e){
+  e.stopPropagation();
+  const j = i + dir;
+  if(j<0||j>=poles.length) return;
+  [poles[i],poles[j]] = [poles[j],poles[i]];
+  if(selectedPoleIdx===i) selectedPoleIdx=j;
+  else if(selectedPoleIdx===j) selectedPoleIdx=i;
+  saveState(); renderPoleList(); if(selectedPoleIdx>=0) renderEditor();
+}
+function deletePole(i, e){
+  e.stopPropagation();
+  if(!confirm('Odstrániť stožiar "'+poles[i].id+'"?')) return;
+  poles.splice(i,1);
+  if(selectedPoleIdx>=poles.length) selectedPoleIdx=poles.length-1;
+  saveState(); renderPoleList();
+  if(selectedPoleIdx>=0) renderEditor(); else clearEditor();
+}
+function addPole(){
+  draftPole = {
+    id: '', oldNum: '', typ: '', druh: '', zt: 'JN',
+    cum: poles.length ? poles[poles.length-1].cum+100 : 0,
+    color: ZT_COLORS.JN,
+    angle: null, warn: null, notes: [], cross: [],
+    isoN: 3,
+    pnCount: 0, pnAno: false, pnOtoceny: false,
+    parts: ZT_TEMPLATES.JN.map(p=>{
+      const part={...p};
+      if(/izol[aá]tor/i.test(part.name||'') && part.otoceny===undefined) part.otoceny=izoDefaultOtoceny('JN');
+      return part;
+    })
+  };
+  selectedPoleIdx = -1;
+  renderPoleList(); renderEditor();
+}
+function saveDraftPole(){
+  if(!draftPole) return;
+  if(!draftPole.id.trim()){ showToast('❌ Zadajte číslo stožiara', true); return; }
+  poles.push(draftPole);
+  selectedPoleIdx = poles.length-1;
+  draftPole = null;
+  saveState(); renderPoleList(); renderEditor();
+  showToast('✅ Stožiar "'+poles[selectedPoleIdx].id+'" uložený do projektu');
+}
+function cancelDraft(){
+  draftPole = null;
+  selectedPoleIdx = -1;
+  renderPoleList(); clearEditor();
+}
+function clearEditor(){
+  document.getElementById('poleEditor').innerHTML=`
+    <div class="editor-empty">
+      <svg width="44" height="44" viewBox="0 0 50 50" fill="currentColor">
+        <rect x="22" y="6" width="6" height="30" rx="1.5"/>
+        <rect x="10" y="12" width="30" height="4" rx="1.5"/>
+        <line x1="12" y1="14" x2="22" y2="20" stroke="currentColor" stroke-width="2"/>
+        <line x1="38" y1="14" x2="28" y2="20" stroke="currentColor" stroke-width="2"/>
+        <rect x="6" y="40" width="38" height="4" rx="1.5"/>
+      </svg>
+      <p>Vyberte stožiar zo zoznamu<br>alebo pridajte nový</p>
+    </div>`;
+}
+
+// ══════════════════════════════════════════════
+//  POLE EDITOR
+// ══════════════════════════════════════════════
+function renderEditor(){
+  const isDraft = (draftPole !== null);
+  if(!isDraft && (selectedPoleIdx<0||selectedPoleIdx>=poles.length)){ clearEditor(); return; }
+  const pole = isDraft ? draftPole : poles[selectedPoleIdx];
+  const ed = document.getElementById('poleEditor');
+
+  ed.innerHTML = `
+    ${isDraft ? `
+    <div class="draft-bar">
+      <span class="draft-bar-label">✦ Nový stožiar — nevložený do projektu</span>
+      <button class="btn-cancel-draft" onclick="cancelDraft()">✕ Zrušiť</button>
+      <button class="btn-save-draft" onclick="saveDraftPole()">💾 Uložiť do projektu</button>
+    </div>` : ''}
+  ` + `
+    <div class="editor-section">
+      <div class="editor-section-title">Základné údaje</div>
+      <div class="grid2">
+        <div class="form-group">
+          <label class="form-label">Nové číslo stožiara</label>
+          <input class="form-input" id="ef-id" type="text" value="${escHtml(pole.id||'')}">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Staré číslo</label>
+          <input class="form-input" id="ef-oldNum" type="text" value="${escHtml(pole.oldNum||'')}">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Druh stožiara</label>
+          <select class="form-select" id="ef-druh">
+            ${['','Portál','Kotevný','Polokotevný','Nosný','Stĺp'].map(opt=>`<option value="${opt}"${pole.druh===opt?' selected':''}>${opt||'— vybrať —'}</option>`).join('')}
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Typ závesu</label>
+          <select class="form-select" id="ef-zt">
+            ${(pole.druh==='Portál' ? ['DDK','DK'] : ['DDK','DK','PK','DN','JN']).map(zt=>`<option value="${zt}"${pole.zt===zt?' selected':''}>${ZT_LABELS[zt]||zt}</option>`).join('')}
+          </select>
+          ${pole.druh==='Portál' ? `<div style="font-size:10px;color:#f7a600;margin-top:4px">⚡ Portál: len DK alebo DDK záves</div>` : ''}
+        </div>
+        <div class="form-group" id="pn-group" style="grid-column:1/-1;display:none">
+          <label class="form-label">PN – Pomocný nosný záves</label>
+          <div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap">
+            <button id="btn-pn-nie" onclick="setPnAno(false)" style="padding:3px 12px;border-radius:10px;font-size:11px;font-weight:700;cursor:pointer;background:rgba(52,211,153,0.18);border:1px solid rgba(52,211,153,0.5);color:#34d399">Nie</button>
+            <button id="btn-pn-ano" onclick="setPnAno(true)"  style="padding:3px 12px;border-radius:10px;font-size:11px;font-weight:700;cursor:pointer;background:rgba(46,66,96,0.4);border:1px solid var(--border);color:var(--muted)">Áno</button>
+            <div id="pn-detail" style="display:none;align-items:center;gap:6px;flex-wrap:wrap">
+              <input class="form-input" id="ef-pn" type="number" min="1" max="9" value="1" style="width:60px">
+              <span id="pn-hint" style="font-size:10px;color:var(--muted)"></span>
+              <button id="btn-pn-neotoc" onclick="setPnOtoceny(false)" style="padding:3px 10px;border-radius:10px;font-size:11px;font-weight:700;cursor:pointer;background:rgba(52,211,153,0.18);border:1px solid rgba(52,211,153,0.5);color:#34d399">↕ Neotočený</button>
+              <button id="btn-pn-otoc"   onclick="setPnOtoceny(true)"  style="padding:3px 10px;border-radius:10px;font-size:11px;font-weight:700;cursor:pointer;background:rgba(46,66,96,0.4);border:1px solid var(--border);color:var(--muted)">🔄 Otočený</button>
+            </div>
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Typ stožiara</label>
+          <input class="form-input" id="ef-typ" list="typ-stoziara-list" placeholder="— vybrať alebo napísať —" autocomplete="off">
+          <datalist id="typ-stoziara-list">
+            ${[...new Set([...TYP_STOZIARA, ...poles.map(p=>p.typ||'')])]
+              .filter(t=>t).map(t=>`<option value="${escHtml(t)}">`).join('')}
+          </datalist>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Poloha (m, kumulatívne) <span style="color:#4a6880;font-weight:400;font-style:italic">— nepovinné</span></label>
+          <input class="form-input" id="ef-cum" type="number" step="0.1" placeholder="nepovinné" value="${pole.cum != null ? pole.cum : ''}">
+        </div>
+        <div class="form-group" style="grid-column:1/-1">
+          <label class="form-label">Uhol lomu (nepovinné)</label>
+          <input class="form-input" id="ef-angle" type="text" placeholder="uhol zlomu trasy, napr. 175°37'" value="${escHtml(pole.angle||'')}">
+        </div>
+      </div>
+    </div>
+
+    <div id="tpl-suggest-bar" style="display:none;align-items:center;gap:8px;background:rgba(96,165,250,0.08);border:1px solid rgba(96,165,250,0.25);border-radius:6px;padding:8px 12px;margin-bottom:12px">
+      <span style="font-size:11px;color:#93c5fd;flex:1">📋 Nájdená šablóna: <b class="tpl-suggest-name"></b></span>
+      <button class="btn-add-item" onclick="applyTemplateToPole()">↺ Aplikovať</button>
+    </div>
+
+    <div class="editor-section">
+      <div class="editor-section-title">Materiál Jedného závesu (časti)</div>
+      <table class="parts-table">
+        <thead><tr><th>Ks</th><th>Komponent</th><th>Číslo</th><th>Otočenie</th><th></th></tr></thead>
+        <tbody id="parts-tbody"></tbody>
+      </table>
+      <button class="parts-reset-btn" id="btn-reset-parts">↺ Reset podľa šablóny</button>
+      <button class="btn-add-item" id="btn-add-part">➕ Pridať riadok</button>
+    </div>
+
+    <div class="editor-section">
+      <div class="editor-section-title">Navyše na stožiar <span style="font-size:10px;color:var(--muted)">(praporce, vydlice — nie násobené závesom)</span></div>
+      <table class="parts-table">
+        <thead><tr><th>Ks</th><th>Komponent</th><th>Číslo</th><th>Konzola / poznámka</th><th></th></tr></thead>
+        <tbody id="extra-parts-tbody"></tbody>
+      </table>
+      <button class="btn-add-item" id="btn-add-extra">➕ Pridať</button>
+    </div>
+
+    <div class="editor-section">
+      <div class="editor-section-title">Upozornenie</div>
+
+      <textarea class="form-textarea" id="ef-warn" placeholder="napr. Stožiar v blízkosti cesty, nutná bezpečnostná ochrana...">${escHtml(pole.warn||'')}</textarea>
+    </div>
+
+    <div class="editor-section">
+      <div class="editor-section-title">Poznámky</div>
+      <div class="dyn-list" id="notes-list"></div>
+      <button class="btn-add-item" id="btn-add-note">➕ Pridať poznámku</button>
+    </div>
+
+    <div class="editor-section">
+      <div class="editor-section-title" style="color:var(--muted)">Krížovania</div>
+      <div style="font-size:11px;color:#4a6880;padding:6px 0">Krížovania spravujte v záložke <b style="color:var(--accent)">🚧 Krížovania</b>.</div>
+    </div>
+
+    <div id="linka-pole-info"></div>
+
+  `;
+
+  // Render dynamic lists
+  renderNotesList(pole);
+  renderPartsList(pole);
+  renderExtraPartsList(pole);
+  renderLinkaPoleInfo(pole);
+
+  // Bind basic fields
+  const bind = (id, key, transform) => {
+    const el = document.getElementById(id);
+    if(!el) return;
+    el.addEventListener('input', ()=>{
+      let val = el.value;
+      if(transform) val = transform(val);
+      pole[key] = val;
+      if(key==='id') renderPoleList();
+      if(key==='cum') updateAutoStats();
+      if(!isDraft) saveState();
+    });
+  };
+  bind('ef-id','id');
+  bind('ef-oldNum','oldNum');
+  // ef-druh handled manually for portal side-effects
+  document.getElementById('ef-druh').addEventListener('change', e=>{
+    const val = e.target.value;
+    pole.druh = val;
+    const ztEl = document.getElementById('ef-zt');
+    if(val === 'Portál'){
+      pole.color = '#f7a600';
+      // Portál: only DDK or DK allowed
+      if(pole.zt !== 'DDK' && pole.zt !== 'DK') pole.zt = 'DDK';
+      if(ztEl){
+        ztEl.innerHTML = ['DDK','DK'].map(zt=>`<option value="${zt}"${pole.zt===zt?' selected':''}>${ZT_LABELS[zt]||zt}</option>`).join('');
+        // add portal note
+        let note = ztEl.nextElementSibling;
+        if(!note || !note.dataset.portalNote){
+          note = document.createElement('div');
+          note.dataset.portalNote = '1';
+          note.style.cssText = 'font-size:10px;color:#f7a600;margin-top:4px';
+          note.textContent = '⚡ Portál: len DK alebo DDK záves';
+          ztEl.parentNode.insertBefore(note, ztEl.nextSibling);
+        }
+      }
+    } else {
+      // Remove portal note if present
+      if(ztEl){
+        const note = ztEl.nextElementSibling;
+        if(note && note.dataset.portalNote) note.remove();
+        // Restore full ZT list
+        ztEl.innerHTML = ['DDK','DK','PK','DN','JN'].map(zt=>`<option value="${zt}"${pole.zt===zt?' selected':''}>${ZT_LABELS[zt]||zt}</option>`).join('');
+      }
+      pole.color = ZT_COLORS[pole.zt] || '#9ab8d8';
+    }
+    renderPoleList();
+    updateTemplateSuggestion(pole);
+    updatePnVisibility();
+    renderLinkaPoleInfo(pole);
+    saveState();
+  });
+  // ef-typ: combobox — Chrome filters datalist by current value, so we clear on focus to show all options
+  const efTyp = document.getElementById('ef-typ');
+  efTyp.value = pole.typ || '';
+  efTyp._savedTyp = efTyp.value;
+  efTyp.addEventListener('focus', function(){
+    this._savedTyp = this.value;
+    this.value = '';
+  });
+  efTyp.addEventListener('blur', function(){
+    if(this.value.trim() === '') this.value = this._savedTyp;
+    pole.typ = this.value.trim();
+    updateTemplateSuggestion(pole);
+    saveState();
+  });
+  efTyp.addEventListener('input', e=>{
+    pole.typ = e.target.value.trim();
+    updateTemplateSuggestion(pole);
+    saveState();
+  });
+  bind('ef-cum','cum',v=>{ const n=parseFloat(v); return isNaN(n)?null:n; });
+  bind('ef-angle','angle',v=>v.trim()||null);
+  document.getElementById('ef-warn').addEventListener('input', e=>{
+    pole.warn = e.target.value.trim()||null; saveState();
+  });
+
+  // ZT change
+  document.getElementById('ef-zt').addEventListener('change', e=>{
+    const newZt = e.target.value;
+    pole.zt = newZt;
+    pole.color = ZT_COLORS[newZt] || '#9ab8d8';
+    renderPoleList();
+    // Update otoceny on existing insulator parts when ZT changes
+    (pole.parts||[]).forEach(p=>{
+      if(/izol[aá]tor/i.test(p.name||'')){
+        const def = izoDefaultOtoceny(newZt);
+        if(def !== null) p.otoceny = def; // only override if ZT has a fixed rule
+      }
+    });
+    // Auto-reset PN when switching to nosný type
+    if(newZt !== 'DDK' && newZt !== 'DK' && newZt !== 'PK'){
+      pole.pnCount = 0; pole.pnAno = false;
+    }
+    // ask before reset
+    if(confirm('Chcete resetovať materiál závesu podľa šablóny pre '+newZt+'?')){
+      pole.parts = (ZT_TEMPLATES[newZt]||[]).map(p=>({...p}));
+      renderPartsList(pole);
+    }
+    updateTemplateSuggestion(pole);
+    updatePnVisibility();
+    renderLinkaPoleInfo(pole);
+    saveState();
+  });
+
+  document.getElementById('btn-reset-parts').addEventListener('click', ()=>{
+    const tpl = findTemplate(pole.druh, pole.zt, pole.typ);
+    if(!tpl){ showToast('⚠ Žiadna šablóna nenájdená pre tento stožiar.', true); return; }
+    if(confirm('Resetovať materiál podľa šablóny "'+tpl.name+'"? Vlastné zmeny sa stratia.')) {
+      applyTemplate(pole, tpl);
+      renderPartsList(pole);
+      renderLinkaPoleInfo(pole);
+      saveState();
+    }
+  });
+  document.getElementById('btn-add-part').addEventListener('click', ()=>{
+    pole.parts.push({n:1,name:'',jk:''});
+    renderPartsList(pole);
+    renderLinkaPoleInfo(pole);
+    saveState();
+  });
+  document.getElementById('btn-add-extra').addEventListener('click', ()=>{
+    if(!pole.extraParts) pole.extraParts = [];
+    pole.extraParts.push({n:1,name:'',jk:'',note:''});
+    renderExtraPartsList(pole);
+    renderLinkaPoleInfo(pole);
+    saveState();
+  });
+  document.getElementById('btn-add-note').addEventListener('click', ()=>{
+    pole.notes.push('');
+    renderNotesList(pole);
+    saveState();
+  });
+
+  // PN Yes/No + Otočený/Neotočený controls
+  function syncPnButtons(){
+    const ano   = pole.pnAno === true;
+    const otoc  = pole.pnOtoceny === true;
+    const isDvojita = linkaInfo.typLinky === '2x3';
+    const btnNie   = document.getElementById('btn-pn-nie');
+    const btnAno   = document.getElementById('btn-pn-ano');
+    const detail   = document.getElementById('pn-detail');
+    const btnNeot  = document.getElementById('btn-pn-neotoc');
+    const btnOtoc  = document.getElementById('btn-pn-otoc');
+    const hint     = document.getElementById('pn-hint');
+    const pnEl     = document.getElementById('ef-pn');
+    if(!btnNie) return;
+    // Nie active
+    btnNie.style.background = !ano ? 'rgba(52,211,153,0.18)' : 'rgba(46,66,96,0.4)';
+    btnNie.style.borderColor= !ano ? 'rgba(52,211,153,0.5)'  : 'var(--border)';
+    btnNie.style.color      = !ano ? '#34d399' : 'var(--muted)';
+    // Áno active
+    btnAno.style.background = ano ? 'rgba(247,166,0,0.18)' : 'rgba(46,66,96,0.4)';
+    btnAno.style.borderColor= ano ? 'rgba(247,166,0,0.5)'  : 'var(--border)';
+    btnAno.style.color      = ano ? '#f7a600' : 'var(--muted)';
+    // detail panel
+    if(detail) detail.style.display = ano ? 'flex' : 'none';
+    // Otočený / Neotočený
+    if(btnNeot){
+      btnNeot.style.background = !otoc ? 'rgba(52,211,153,0.18)' : 'rgba(46,66,96,0.4)';
+      btnNeot.style.borderColor= !otoc ? 'rgba(52,211,153,0.5)'  : 'var(--border)';
+      btnNeot.style.color      = !otoc ? '#34d399' : 'var(--muted)';
+    }
+    if(btnOtoc){
+      btnOtoc.style.background = otoc ? 'rgba(247,166,0,0.18)' : 'rgba(46,66,96,0.4)';
+      btnOtoc.style.borderColor= otoc ? 'rgba(247,166,0,0.5)'  : 'var(--border)';
+      btnOtoc.style.color      = otoc ? '#f7a600' : 'var(--muted)';
+    }
+    // hint
+    if(hint){
+      hint.innerHTML = isDvojita
+        ? '<b style="color:#60a5fa">Dvojitá:</b> zvyčajne <b>3×</b>'
+        : '<b style="color:#34d399">Jednoduchá:</b> zvyčajne <b>1×</b>';
+    }
+    if(pnEl && ano) pnEl.value = pole.pnCount || 1;
+  }
+  window.setPnAno = function(val){
+    pole.pnAno = val;
+    if(!val){ pole.pnCount = 0; }
+    else if(!pole.pnCount){ pole.pnCount = (linkaInfo.typLinky==='2x3') ? 3 : 1; }
+    syncPnButtons();
+    renderLinkaPoleInfo(pole);
+    saveState();
+  };
+  window.setPnOtoceny = function(val){
+    pole.pnOtoceny = val;
+    syncPnButtons();
+    renderLinkaPoleInfo(pole);
+    saveState();
+  };
+  const pnEl = document.getElementById('ef-pn');
+  if(pnEl){
+    pnEl.addEventListener('input', e=>{
+      pole.pnCount = parseInt(e.target.value)||1;
+      renderLinkaPoleInfo(pole);
+      saveState();
+    });
+  }
+  // Show/hide pn-group + init buttons
+  function updatePnVisibility(){
+    const g = document.getElementById('pn-group');
+    const showPn = (pole.zt==='DDK'||pole.zt==='DK'||pole.zt==='PK');
+    if(g) g.style.display = showPn ? 'block' : 'none';
+    syncPnButtons();
+  }
+  updatePnVisibility();
+
+  // Show template suggestion
+  updateTemplateSuggestion(pole);
+}
+
+function updateTemplateSuggestion(pole){
+  const bar = document.getElementById('tpl-suggest-bar');
+  if(!bar) return;
+  const tpl = findTemplate(pole.druh, pole.zt, pole.typ);
+  if(tpl){
+    bar.style.display='flex';
+    bar.querySelector('.tpl-suggest-name').textContent = tpl.name;
+  } else {
+    bar.style.display='none';
+  }
+}
+
+function applyTemplateToPole(){
+  const isDraft = (draftPole !== null);
+  const pole = isDraft ? draftPole : (selectedPoleIdx>=0 ? poles[selectedPoleIdx] : null);
+  if(!pole) return;
+  const tpl = findTemplate(pole.druh, pole.zt, pole.typ);
+  if(!tpl) return;
+  applyTemplate(pole, tpl);
+  if(!isDraft) saveState();
+  renderEditor();
+  showToast('✅ Šablóna "'+tpl.name+'" aplikovaná');
+}
+
+function renderLinkaPoleInfo(pole){
+  const wrap = document.getElementById('linka-pole-info');
+  if(!wrap) return;
+
+  const isDvojita  = linkaInfo.typLinky === '2x3';
+  const chainCount = poleChainCount(pole.druh, pole.zt, isDvojita);
+  const pnCount    = (pole.pnAno ? pole.pnCount : 0) || 0;
+
+  // ZT label
+  const ZT_ISO = {DDK:4, DK:2, PK:2, DN:2, JN:1};
+  const isoPerChain = ZT_ISO[pole.zt] || 0;
+  const totalIsoMain = isoPerChain * chainCount;
+  const totalIsoPn   = pnCount;
+  const totalIso     = totalIsoMain + totalIsoPn;
+
+  // Is this last pole or portal?
+  const poleIndex  = poles.indexOf(pole);
+  const isLast     = poleIndex === poles.length - 1;
+  const isPortal   = pole.druh === 'Portál';
+  const showKzlHint = isLast || isPortal;
+
+  // ── Build aggregated material list (parts × chainCount) ──
+  const hasExtraPraporec = (pole.extraParts||[]).some(p => /praporec/i.test(p.name||''));
+  const partsAgg = {};
+  (pole.parts||[]).forEach(p=>{
+    const key = p.name.trim();
+    if(!key) return;
+    if(hasExtraPraporec && /praporec/i.test(key)) return;
+    const isIzoP = /izol[aá]tor/i.test(key);
+    const aggKey = isIzoP ? key + '||' + String(p.otoceny) : key;
+    if(!partsAgg[aggKey]) partsAgg[aggKey] = {name:key, jk:p.jk||'', total:0, otoceny:p.otoceny};
+    partsAgg[aggKey].total += (p.n||1) * chainCount;
+  });
+
+  // Add PN parts if pnAno + pnCount > 0
+  if(pnCount > 0 && pole.pnAno){
+    const pnOtoc = pole.pnOtoceny === true;
+    const pnIsoKey = 'Izolátor (PN)||' + String(pnOtoc);
+    if(!partsAgg[pnIsoKey]) partsAgg[pnIsoKey] = {name:'Izolátor (PN)', jk:'', total:0, otoceny:pnOtoc};
+    partsAgg[pnIsoKey].total += pnCount;
+    partsAgg['Armatúra PN (podľa projektu)'] = {name:'Armatúra PN (podľa projektu)', jk:'', total:pnCount};
+  }
+
+  const aggList = Object.values(partsAgg);
+
+  // ── HTML ──
+  let html = `<div style="margin-bottom:14px">
+    <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px">
+      <span style="font-size:13px;font-weight:800;color:var(--accent);letter-spacing:.3px">📦 Nakladanie — materiál na stožiar</span>
+    </div>`;
+
+  function otocLabelKonf(p){
+    if(!/izol[aá]tor/i.test(p.name)) return '';
+    if(p.otoceny === true)  return ` <span style="font-size:9px;background:rgba(247,166,0,0.15);color:#f7a600;border-radius:3px;padding:1px 5px;font-weight:700">🔄 Otočený</span>`;
+    if(p.otoceny === false) return '';
+    return '';
+  }
+
+  const rawParts = (pole.parts||[]).filter(p=>(p.name||'').trim());
+
+  if(rawParts.length > 0){
+    // ── 1 reťazec ──
+    html += `<div style="border:1px solid rgba(96,165,250,0.25);border-radius:7px;overflow:hidden;margin-bottom:10px">
+      <div style="background:rgba(96,165,250,0.10);padding:6px 10px;font-size:11px;font-weight:700;color:#93c5fd;letter-spacing:.4px;border-bottom:1px solid rgba(96,165,250,0.18)">
+        🔗 Jeden Reťazec (záves)
+      </div>
+      <table class="parts-table" style="margin:0;border-radius:0">
+        <thead><tr><th>Ks</th><th>Komponent</th><th>Číslo</th></tr></thead>
+        <tbody>`;
+    rawParts.forEach(p=>{
+      const isIso = /izol[aá]tor/i.test(p.name);
+      html += `<tr>
+        <td style="font-size:14px;font-weight:900;color:${isIso?'#60a5fa':'var(--accent)'}">${p.n||1}×</td>
+        <td>${escHtml(p.name)}${otocLabelKonf(p)}</td>
+        <td style="font-family:Consolas,monospace;font-size:11px;color:#c8d6e8">${escHtml(p.jk||'')}</td>
+      </tr>`;
+    });
+    html += `</tbody></table></div>`;
+  }
+
+  const extraList = (pole.extraParts||[]).filter(p=>(p.name||'').trim());
+
+  if(aggList.length > 0 || extraList.length > 0){
+    // ── celý stožiar ──
+    html += `<div style="border:2px solid rgba(247,166,0,0.6);border-radius:8px;overflow:hidden;margin-bottom:10px;box-shadow:0 2px 12px rgba(247,166,0,0.12)">
+      <div style="background:linear-gradient(135deg,rgba(247,166,0,0.28),rgba(247,166,0,0.18));padding:8px 12px;font-size:12px;font-weight:800;color:#f7a600;letter-spacing:.5px;border-bottom:1px solid rgba(247,166,0,0.35)">
+        📊 Celkom na stožiar (${chainCount}× záves)
+      </div>
+      <table class="parts-table" style="margin:0;border-radius:0;background:rgba(247,166,0,0.05)">
+        <thead style="background:rgba(247,166,0,0.12)"><tr>
+          <th style="color:#f7a600">Celkom ks</th>
+          <th style="color:#f7a600">Komponent</th>
+          <th style="color:#f7a600">Číslo</th>
+        </tr></thead>
+        <tbody>`;
+    aggList.forEach(p=>{
+      const isIso = /izol[aá]tor/i.test(p.name);
+      html += `<tr style="border-bottom:1px solid rgba(247,166,0,0.1)">
+        <td style="font-size:15px;font-weight:900;color:${isIso?'#60a5fa':'#f7a600'}">${p.total}×</td>
+        <td style="color:#eaf2ff;font-weight:600">${escHtml(p.name)}${otocLabelKonf(p)}</td>
+        <td style="font-family:Consolas,monospace;font-size:11px;color:#c8d6e8">${escHtml(p.jk)}</td>
+      </tr>`;
+    });
+    extraList.forEach(p=>{
+      const isIso = /izol[aá]tor/i.test(p.name);
+      const noteSpan = p.note ? ` <span style="font-size:10px;color:#9ab8d8">(${escHtml(p.note)})</span>` : '';
+      html += `<tr style="border-bottom:1px solid rgba(247,166,0,0.1)">
+        <td style="font-size:15px;font-weight:900;color:${isIso?'#60a5fa':'#f7a600'}">${p.n||1}×</td>
+        <td style="color:#eaf2ff;font-weight:600">${escHtml(p.name||'')}${noteSpan}</td>
+        <td style="font-family:Consolas,monospace;font-size:11px;color:#c8d6e8">${escHtml(p.jk||'')}</td>
+      </tr>`;
+    });
+    html += `</tbody></table></div>`;
+  }
+
+
+  html += `</div>`;
+  wrap.innerHTML = html;
+}
+
+function renderNotesList(pole){
+  const container = document.getElementById('notes-list');
+  if(!container) return;
+  container.innerHTML = '';
+  (pole.notes||[]).forEach((note,i)=>{
+    const row = document.createElement('div');
+    row.className = 'dyn-item';
+    row.innerHTML = `<input class="dyn-input" type="text" value="${escHtml(note)}" placeholder="napr. Pištole zostávajú pôvodné...">
+      <button class="btn-remove" title="Odstrániť">✕</button>`;
+    row.querySelector('input').addEventListener('input', e=>{
+      pole.notes[i]=e.target.value; saveState();
+    });
+    row.querySelector('button').addEventListener('click', ()=>{
+      pole.notes.splice(i,1); renderNotesList(pole); saveState();
+    });
+    container.appendChild(row);
+  });
+}
+
+function renderCrossList(pole){
+  const container = document.getElementById('cross-list');
+  if(!container) return;
+  container.innerHTML = '';
+  (pole.cross||[]).forEach((item,i)=>{
+    const row = document.createElement('div');
+    row.className = 'dyn-item';
+    row.innerHTML = `<input class="dyn-input" type="text" value="${escHtml(item)}" placeholder="napr. Krížovanie s cestou II. triedy...">
+      <button class="btn-remove" title="Odstrániť">✕</button>`;
+    row.querySelector('input').addEventListener('input', e=>{
+      pole.cross[i]=e.target.value; saveState();
+    });
+    row.querySelector('button').addEventListener('click', ()=>{
+      pole.cross.splice(i,1); renderCrossList(pole); saveState();
+    });
+    container.appendChild(row);
+  });
+}
+
+// Vráti default hodnotu otočenia izolátora podľa ZT
+// true = otočený, false = neotočený, null = PN (user decides)
+function izoDefaultOtoceny(zt){
+  // Otočené: DK, DDK, JN, Portál
+  if(['DK','DDK','JN','portal'].includes(zt)) return true;
+  // Neotočené: DN, PK
+  if(['DN','PK'].includes(zt)) return false;
+  // PN a ostatné → užívateľ rozhoduje
+  return null;
+}
+
+function renderPartsList(pole){
+  const tbody = document.getElementById('parts-tbody');
+  if(!tbody) return;
+  tbody.innerHTML = '';
+  (pole.parts||[]).forEach((part,i)=>{
+    const isIzo = /izol[aá]tor/i.test(part.name||'');
+    // auto-set otoceny if not yet set
+    if(isIzo && part.otoceny === undefined){
+      part.otoceny = izoDefaultOtoceny(pole.zt);
+    }
+    const otocenyBtn = isIzo ? buildOtocenyBtn(part, pole) : '';
+    const tr = document.createElement('tr');
+    tr.innerHTML = `
+      <td><input type="number" min="1" value="${part.n||1}" style="width:44px;text-align:center;background:var(--input-bg);border:1px solid transparent;border-radius:3px;color:var(--text);font-size:12px;padding:3px 5px;outline:none"></td>
+      <td style="display:flex;gap:3px;align-items:center">
+        <input type="text" value="${escHtml(part.name||'')}" placeholder="názov komponentu..." style="flex:1;min-width:0;background:var(--input-bg);border:1px solid transparent;border-radius:3px;color:var(--text);font-size:12px;padding:3px 5px;outline:none">
+        <button class="btn-mat-pick" title="Vybrať zo zoznamu">▾</button>
+      </td>
+      <td><input type="text" value="${escHtml(part.jk||'')}" placeholder="katalóg. číslo..." style="width:100%;background:var(--input-bg);border:1px solid transparent;border-radius:3px;color:var(--text);font-size:12px;padding:3px 5px;outline:none"></td>
+      <td>${otocenyBtn}</td>
+      <td><button class="btn-remove" style="padding:3px 6px">✕</button></td>`;
+    const inputs = tr.querySelectorAll('input');
+    inputs[0].addEventListener('input',e=>{ part.n=parseInt(e.target.value)||1; renderLinkaPoleInfo(pole); saveState(); });
+    inputs[1].addEventListener('input',e=>{
+      part.name=e.target.value;
+      // if just became izolátor, set default
+      if(/izol[aá]tor/i.test(part.name) && part.otoceny===undefined)
+        part.otoceny = izoDefaultOtoceny(pole.zt);
+      renderPartsList(pole); renderLinkaPoleInfo(pole); saveState();
+    });
+    inputs[2].addEventListener('input',e=>{ part.jk=e.target.value; renderLinkaPoleInfo(pole); saveState(); });
+    tr.querySelector('.btn-mat-pick').addEventListener('click',e=>{
+      openMatPicker(e.currentTarget, inputs[1], inputs[2]);
+    });
+    if(isIzo){
+      tr.querySelector('.btn-izo-otoc').addEventListener('click',()=>{
+        // cycle: true → false → null (PN only) → true
+        if(pole.zt === null || pole.zt === undefined || !['DK','DDK','JN','DN','PK','portal'].includes(pole.zt)){
+          part.otoceny = part.otoceny === true ? false : part.otoceny === false ? null : true;
+        } else {
+          part.otoceny = !part.otoceny;
+        }
+        renderPartsList(pole); saveState();
+      });
+    }
+    tr.querySelector('.btn-remove').addEventListener('click',()=>{
+      pole.parts.splice(i,1); renderPartsList(pole); renderLinkaPoleInfo(pole); saveState();
+    });
+    tbody.appendChild(tr);
+  });
+}
+
+function buildOtocenyBtn(part, pole){
+  const o = part.otoceny;
+  const isFixed = ['DK','DDK','JN','portal','DN','PK'].includes(pole.zt||'');
+  const title = isFixed ? 'Automaticky podľa ZT — klikni pre manuálnu zmenu' : 'Klikni pre zmenu';
+  if(o === true)  return `<button class="btn-izo-otoc" style="padding:2px 7px;border-radius:10px;font-size:9px;font-weight:700;cursor:pointer;background:rgba(247,166,0,0.15);border:1px solid rgba(247,166,0,0.5);color:#f7a600;white-space:nowrap" title="${title}">🔄 Otočený</button>`;
+  if(o === false) return `<button class="btn-izo-otoc" style="padding:2px 7px;border-radius:10px;font-size:9px;font-weight:700;cursor:pointer;background:rgba(100,116,139,0.15);border:1px solid rgba(100,116,139,0.35);color:#94a3b8;white-space:nowrap" title="${title}">↕ Neotočený</button>`;
+  return `<button class="btn-izo-otoc" style="padding:2px 7px;border-radius:10px;font-size:9px;font-weight:700;cursor:pointer;background:rgba(251,191,36,0.1);border:1px solid rgba(251,191,36,0.4);color:#fbbf24;white-space:nowrap" title="${title}">❓ PN — určiť</button>`;
+}
+
+function renderExtraPartsList(pole){
+  const tbody = document.getElementById('extra-parts-tbody');
+  if(!tbody) return;
+  tbody.innerHTML = '';
+  if(!pole.extraParts) pole.extraParts = [];
+  pole.extraParts.forEach((part,i)=>{
+    const tr = document.createElement('tr');
+    tr.innerHTML = `
+      <td><input type="number" min="1" value="${part.n||1}" style="width:44px;text-align:center;background:var(--input-bg);border:1px solid transparent;border-radius:3px;color:var(--text);font-size:12px;padding:3px 5px;outline:none"></td>
+      <td style="display:flex;gap:3px;align-items:center"><input type="text" value="${escHtml(part.name||'')}" placeholder="napr. Praporec 235 118..." style="flex:1;min-width:0;background:var(--input-bg);border:1px solid transparent;border-radius:3px;color:var(--text);font-size:12px;padding:3px 5px;outline:none"><button class="btn-mat-pick" title="Vybrať zo zoznamu">▾</button></td>
+      <td><input type="text" value="${escHtml(part.jk||'')}" placeholder="katalóg. číslo..." style="width:80px;background:var(--input-bg);border:1px solid transparent;border-radius:3px;color:var(--text);font-size:12px;padding:3px 5px;outline:none"></td>
+      <td><input type="text" value="${escHtml(part.note||'')}" placeholder="napr. Horná+Stredná konzola..." style="width:100%;background:var(--input-bg);border:1px solid transparent;border-radius:3px;color:var(--text);font-size:12px;padding:3px 5px;outline:none"></td>
+      <td><button class="btn-remove" style="padding:3px 6px">✕</button></td>`;
+    const einputs = tr.querySelectorAll('input');
+    einputs[0].addEventListener('input',e=>{ part.n=parseInt(e.target.value)||1; renderLinkaPoleInfo(pole); saveState(); });
+    einputs[1].addEventListener('input',e=>{ part.name=e.target.value; renderLinkaPoleInfo(pole); saveState(); });
+    einputs[2].addEventListener('input',e=>{ part.jk=e.target.value; renderLinkaPoleInfo(pole); saveState(); });
+    einputs[3].addEventListener('input',e=>{ part.note=e.target.value; renderLinkaPoleInfo(pole); saveState(); });
+    tr.querySelector('.btn-mat-pick').addEventListener('click',e=>{
+      openMatPicker(e.currentTarget, einputs[1], einputs[2]);
+    });
+    tr.querySelector('.btn-remove').addEventListener('click',()=>{
+      pole.extraParts.splice(i,1); renderExtraPartsList(pole); renderLinkaPoleInfo(pole); saveState();
+    });
+    tbody.appendChild(tr);
+  });
+}
+
+// ══════════════════════════════════════════════
+//  TEMPLATE LIST & EDITOR (Tab 4)
+// ══════════════════════════════════════════════
+let selectedTemplateIdx = -1;
+
+function renderTemplateList(){
+  const list = document.getElementById('templateList');
+  if(!list) return;
+  list.innerHTML = '';
+  templates.forEach((tpl, i)=>{
+    const div = document.createElement('div');
+    div.className = 'pole-item'+(i===selectedTemplateIdx?' selected':'');
+    const col = ZT_COLORS[tpl.zt]||'#9ab8d8';
+    div.innerHTML = `
+      <span class="pole-zt-badge" style="background:${col}18;color:${col};border:1px solid ${col}30;margin-right:6px;padding:2px 7px;border-radius:8px;font-size:10px;font-weight:700">${escHtml(tpl.zt||'—')}</span>
+      <span style="flex:1;font-size:12px">${escHtml(tpl.name)}</span>
+      <span class="pole-actions">
+        <button class="btn-icon del" title="Odstrániť" onclick="deleteTemplate(${i},event)">🗑</button>
+      </span>`;
+    div.addEventListener('click', ()=>selectTemplate(i));
+    list.appendChild(div);
+  });
+}
+
+function selectTemplate(i){
+  selectedTemplateIdx = i;
+  renderTemplateList();
+  renderTemplateEditor();
+}
+
+function deleteTemplate(i, e){
+  e.stopPropagation();
+  if(!confirm('Odstrániť šablónu "'+templates[i].name+'"?')) return;
+  templates.splice(i,1);
+  if(selectedTemplateIdx>=templates.length) selectedTemplateIdx=templates.length-1;
+  saveState(); renderTemplateList();
+  if(selectedTemplateIdx>=0) renderTemplateEditor();
+  else document.getElementById('templateEditor').innerHTML='<div class="editor-empty"><p>Vyberte šablónu</p></div>';
+}
+
+function resetTemplatesToDefault(){
+  if(!confirm('Obnoviť všetky šablóny na predvolené? Vlastné šablóny budú stratené.')) return;
+  templates = getDefaultTemplates();
+  selectedTemplateIdx = -1;
+  saveState();
+  renderTemplateList();
+  document.getElementById('templateEditor').innerHTML =
+    '<div class="editor-empty"><p>Šablóny boli obnovené na predvolené.<br>Vyberte šablónu zo zoznamu.</p></div>';
+  showToast('✅ Šablóny obnovené na predvolené');
+}
+
+function addTemplate(){
+  const tpl = {
+    id: 'tpl-'+Date.now(),
+    name: 'Nová šablóna',
+    druh:'', zt:'JN', typ:'',
+    parts: ZT_TEMPLATES.JN.map(p=>({...p})),
+    notes:[], warn:''
+  };
+  templates.push(tpl);
+  selectedTemplateIdx = templates.length-1;
+  saveState(); renderTemplateList(); renderTemplateEditor();
+}
+
+function renderTemplateEditor(){
+  if(selectedTemplateIdx<0||selectedTemplateIdx>=templates.length) return;
+  const tpl = templates[selectedTemplateIdx];
+  const ed = document.getElementById('templateEditor');
+  ed.innerHTML = `
+    <div class="editor-section">
+      <div class="editor-section-title">Identifikácia šablóny</div>
+      <div class="grid2">
+        <div class="form-group" style="grid-column:1/-1">
+          <label class="form-label">Názov šablóny</label>
+          <input class="form-input" id="tf-name" type="text" value="${escHtml(tpl.name||'')}">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Druh stožiara</label>
+          <select class="form-select" id="tf-druh">
+            ${['','Portál','Kotevný','Polokotevný','Nosný'].map(o=>`<option value="${o}"${tpl.druh===o?' selected':''}>${escHtml(o)||'— všetky —'}</option>`).join('')}
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Typ závesu</label>
+          <select class="form-select" id="tf-zt">
+            ${['DDK','DK','PK','DN','JN'].map(z=>`<option value="${z}"${tpl.zt===z?' selected':''}>${ZT_LABELS[z]||z}</option>`).join('')}
+          </select>
+        </div>
+      </div>
+    </div>
+    <div class="editor-section">
+      <div class="editor-section-title">Materiál Jedného závesu (časti)</div>
+      <table class="parts-table">
+        <thead><tr><th>Ks</th><th>Komponent</th><th>Číslo</th><th></th></tr></thead>
+        <tbody id="tparts-tbody"></tbody>
+      </table>
+      <button class="btn-add-item" id="tbtn-add-part">➕ Pridať riadok</button>
+    </div>
+  `;
+
+  // Simple field bindings
+  document.getElementById('tf-name').addEventListener('input', e=>{ tpl.name=e.target.value; renderTemplateList(); saveState(); });
+  document.getElementById('tf-druh').addEventListener('change', e=>{ tpl.druh=e.target.value; saveState(); });
+  document.getElementById('tf-zt').addEventListener('change', e=>{ tpl.zt=e.target.value; renderTemplateList(); saveState(); });
+
+  // Parts list
+  function renderTPartsList(){
+    const tb = document.getElementById('tparts-tbody');
+    if(!tb) return;
+    tb.innerHTML='';
+    (tpl.parts||[]).forEach((p,i)=>{
+      const tr=document.createElement('tr');
+      tr.innerHTML=`<td><input type="number" min="1" value="${p.n||1}" style="width:44px"></td><td style="display:flex;gap:3px;align-items:center"><input type="text" value="${escHtml(p.name||'')}" style="flex:1;min-width:0"><button class="btn-mat-pick" title="Vybrať zo zoznamu">▾</button></td><td><input type="text" value="${escHtml(p.jk||'')}" style="width:80px"></td><td><button class="btn-remove" style="padding:2px 6px">✕</button></td>`;
+      const tinputs = tr.querySelectorAll('input');
+      tinputs[0].addEventListener('input',e=>{p.n=parseInt(e.target.value)||1;saveState();});
+      tinputs[1].addEventListener('input',e=>{p.name=e.target.value;saveState();});
+      tinputs[2].addEventListener('input',e=>{p.jk=e.target.value;saveState();});
+      tr.querySelector('.btn-mat-pick').addEventListener('click',e=>{ openMatPicker(e.currentTarget, tinputs[1], tinputs[2]); });
+      tr.querySelector('.btn-remove').addEventListener('click',()=>{tpl.parts.splice(i,1);renderTPartsList();saveState();});
+      tb.appendChild(tr);
+    });
+  }
+  renderTPartsList();
+  document.getElementById('tbtn-add-part').addEventListener('click',()=>{ tpl.parts.push({n:1,name:'',jk:''}); renderTPartsList(); });
+}
+
+// ══════════════════════════════════════════════
+//  TABS
+// ══════════════════════════════════════════════
+//  CROSSINGS TAB
+// ══════════════════════════════════════════════
+function renderCrossingsTab(){
+  // legend
+  const legend = document.getElementById('cross-legend');
+  if(legend){
+    legend.innerHTML = CROSS_TYPES.map(t=>
+      `<div style="display:flex;align-items:center;gap:4px;background:rgba(30,45,66,0.8);border:1px solid ${t.color}55;border-radius:20px;padding:3px 9px;font-size:11px;color:${t.color};font-weight:600;cursor:default">
+        <span>${t.icon}</span><span>${t.label}</span>
+      </div>`
+    ).join('');
+  }
+  renderCrossingsRows();
+}
+function renderCrossingsRows(){
+  const container = document.getElementById('crossings-rows');
+  if(!container) return;
+  if(crossings.length === 0){
+    container.innerHTML = `<div style="color:var(--muted);font-size:12px;padding:24px;text-align:center;border:1px dashed var(--border);border-radius:8px;opacity:0.7">
+      Žiadne krížovania. Kliknite ➕ Pridať krížovanie.
+    </div>`;
+    return;
+  }
+  const poleIds = new Set(poles.map(p=>p.id));
+  container.innerHTML = '';
+  crossings.forEach(c => {
+    const ct = CROSS_TYPES.find(t=>t.id===c.typeId) || CROSS_TYPES[CROSS_TYPES.length-1];
+    const fromOk = c.fromPole && poleIds.has(c.fromPole);
+    const toOk   = c.toPole   && poleIds.has(c.toPole);
+    const hasErr = !fromOk || !toOk;
+    const poleOpts1 = ['<option value="">— vybrať —</option>',
+      ...poles.map(p=>`<option value="${escHtml(p.id||'')}"${c.fromPole===p.id?' selected':''}>${escHtml(p.id||'')}</option>`)
+    ].join('');
+    const poleOpts2 = ['<option value="">— vybrať —</option>',
+      ...poles.map(p=>`<option value="${escHtml(p.id||'')}"${c.toPole===p.id?' selected':''}>${escHtml(p.id||'')}</option>`)
+    ].join('');
+    const typeOpts = CROSS_TYPES.map(t=>`<option value="${t.id}"${c.typeId===t.id?' selected':''}>${t.icon} ${t.label}</option>`).join('');
+    const div = document.createElement('div');
+    const borderColor = hasErr ? '#ef4444' : ct.color;
+    div.style.cssText = `display:flex;align-items:center;gap:5px;background:rgba(20,33,54,0.7);border:1px solid ${borderColor}55;border-radius:6px;padding:5px 8px;border-left:3px solid ${borderColor};flex-wrap:wrap`;
+    const errMsg = hasErr ? `<div style="width:100%;font-size:10px;color:#ef4444;padding:2px 0 0 2px">⚠ Stožiar${!fromOk&&!toOk?' Od/Po':(!fromOk?' Od':' Po')} nenájdený — skontroluj výber!</div>` : '';
+    div.innerHTML = `
+      <span style="font-size:14px;flex-shrink:0">${ct.icon}</span>
+      <select class="form-select" style="flex:2;min-width:0;font-size:11px;padding:3px 5px" onchange="updateCrossing(${c.id},'typeId',this.value)">${typeOpts}</select>
+      <select class="form-select" style="flex:1;min-width:0;font-size:11px;padding:3px 5px;${!fromOk?'border-color:#ef4444;color:#fca5a5':''}" onchange="updateCrossing(${c.id},'fromPole',this.value)">${poleOpts1}</select>
+      <span style="color:var(--muted);font-size:11px">→</span>
+      <select class="form-select" style="flex:1;min-width:0;font-size:11px;padding:3px 5px;${!toOk?'border-color:#ef4444;color:#fca5a5':''}" onchange="updateCrossing(${c.id},'toPole',this.value)">${poleOpts2}</select>
+      <input class="form-input" style="flex:2;min-width:0;font-size:11px;padding:3px 5px" placeholder="Poznámka..." value="${escHtml(c.note||'')}" oninput="updateCrossing(${c.id},'note',this.value)">
+      <button onclick="deleteCrossing(${c.id})" style="background:none;border:none;color:#ef4444;cursor:pointer;font-size:13px;padding:0 3px;flex-shrink:0">✕</button>
+      ${errMsg}
+    `;
+    container.appendChild(div);
+  });
+}
+function addCrossing(){
+  const fromPole = poles.length > 0 ? poles[0].id : '';
+  const toPole   = poles.length > 1 ? poles[1].id : fromPole;
+  crossings.push({ id: Date.now(), fromPole, toPole, typeId: 'vn22', note: '' });
+  renderCrossingsRows();
+  saveState();
+}
+function deleteCrossing(id){
+  crossings = crossings.filter(c=>c.id!==id);
+  renderCrossingsRows();
+  saveState();
+}
+function updateCrossing(id, field, value){
+  const c = crossings.find(c=>c.id===id);
+  if(!c) return;
+  c[field] = value;
+  if(field === 'typeId') renderCrossingsRows();
+  saveState();
+}
+
+// ══════════════════════════════════════════════
+function initTabs(){
+  document.querySelectorAll('.tab-btn').forEach(btn=>{
+    btn.addEventListener('click',()=>{
+      document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
+      document.querySelectorAll('.tab-pane').forEach(p=>p.classList.remove('active'));
+      btn.classList.add('active');
+      document.getElementById('pane-'+btn.dataset.tab).classList.add('active');
+      if(btn.dataset.tab==='exportovat') updateAutoStats();
+      if(btn.dataset.tab==='sablony') renderTemplateList();
+      if(btn.dataset.tab==='material') renderMatDbList();
+      if(btn.dataset.tab==='krizovania') renderCrossingsTab();
+    });
+  });
+}
+
+// ══════════════════════════════════════════════
+//  HTML SAVE (project as self-contained HTML)
+// ══════════════════════════════════════════════
+function saveProjectAsHTML(){
+  let html = document.documentElement.outerHTML;
+  // Replace state initializations with current values
+  html = html.replace(/let project\s*=\s*(\{[\s\S]*?\});(?=\s*\n)/, 'let project = ' + JSON.stringify(project) + ';');
+  html = html.replace(/let linkaInfo\s*=\s*(\{[\s\S]*?\});(?=\s*\n)/, 'let linkaInfo = ' + JSON.stringify(linkaInfo) + ';');
+  html = html.replace(/let poles\s*=\s*(\[[\s\S]*?\]);(?=\s*\n)/, 'let poles = ' + JSON.stringify(poles) + ';');
+  html = html.replace(/let selectedPoleIdx\s*=\s*-?\d+;/, 'let selectedPoleIdx = -1;');
+  html = html.replace(/let templates\s*=.*?;(?=\s*\n)/, 'let templates = ' + JSON.stringify(templates) + ';');
+  html = html.replace(/let crossings\s*=\s*\[.*?\];(?=\s*\n)/, 'let crossings = ' + JSON.stringify(crossings) + ';');
+  const fname = 'Projekt0log-' + (project.title||'projekt').replace(/[^a-zA-Z0-9_\-]/g,'_') + '.html';
+  const blob = new Blob([html], {type:'text/html;charset=utf-8'});
+  const a = document.createElement('a'); a.href = URL.createObjectURL(blob);
+  a.download = fname; a.click(); URL.revokeObjectURL(a.href);
+  showToast('✅ Projekt uložený ako ' + fname);
+}
+
+// ══════════════════════════════════════════════
+//  TOAST
+// ══════════════════════════════════════════════
+let _toastTimer;
+function showToast(msg, isErr){
+  let el = document.getElementById('_toast');
+  if(!el){
+    el = document.createElement('div');
+    el.id = '_toast';
+    el.className = 'toast';
+    document.body.appendChild(el);
+  }
+  el.textContent = msg;
+  el.className = 'toast' + (isErr ? ' err' : '');
+  clearTimeout(_toastTimer);
+  requestAnimationFrame(()=>{ el.classList.add('show'); });
+  _toastTimer = setTimeout(()=>{ el.classList.remove('show'); }, 3400);
+}
+
+// ══════════════════════════════════════════════
+//  HTML LOADER
+// ══════════════════════════════════════════════
+function loadFromHTML(){
+  document.getElementById('htmlFileInput').click();
+}
+document.getElementById('htmlFileInput').addEventListener('change', e=>{
+  const f = e.target.files[0];
+  if(!f) return;
+  const reader = new FileReader();
+  reader.onload = ev=>{
+    try{
+      const text = ev.target.result;
+
+      // 1. Extract POLES/poles array — try output HTML format first, then configurator format
+      let polesStart = text.indexOf('const POLES = [');
+      let prefix = 'const POLES = ';
+      if(polesStart === -1){
+        // Try configurator saved format
+        polesStart = text.indexOf('let poles = [');
+        prefix = 'let poles = ';
+      }
+      if(polesStart === -1) throw new Error('Nenájdený blok stožiarov v súbore.');
+      const arrStart = polesStart + prefix.length; // points to '['
+      // find the closing '];' on its own line
+      const closingMatch = text.slice(arrStart).search(/\n\];/);
+      if(closingMatch === -1) throw new Error('Nenájdený koniec poľa stožiarov.');
+      const arrSrc = text.slice(arrStart, arrStart + closingMatch + 2); // includes ']'
+      const loadedPoles = new Function('return ' + arrSrc)();
+      if(!Array.isArray(loadedPoles) || !loadedPoles.length)
+        throw new Error('Pole stožiarov je prázdne alebo neplatné.');
+
+      // 2. Extract project from configurator saved format
+      const projMatch = text.match(/let project\s*=\s*(\{[\s\S]*?\});(?=\s*\n)/);
+      if(projMatch){
+        try{
+          const proj = JSON.parse(projMatch[1]);
+          if(proj.title) project.title = proj.title;
+          if(proj.logo)  project.logo  = proj.logo;
+          if(proj.from)  project.from  = proj.from;
+          if(proj.to)    project.to    = proj.to;
+        }catch(e){}
+      } else {
+        // Fall back to extracting from output HTML markup
+        const titleMatch  = text.match(/<h1>([^<]+)<\/h1>/);
+        const routeMatch  = text.match(/<p>([^<\n]+)\s*→\s*([^<\n]+)<\/p>/);
+        const logoMatch   = text.match(/<div class="logo">([^<]+)<\/div>/);
+        if(titleMatch)  project.title = titleMatch[1].trim();
+        if(logoMatch)   project.logo  = logoMatch[1].trim();
+        if(routeMatch){ project.from  = routeMatch[1].trim(); project.to = routeMatch[2].trim(); }
+      }
+
+      // 3. Try to extract templates from configurator saved format
+      const tplMatch = text.match(/let templates\s*=\s*(\[[\s\S]*?\]);(?=\s*\n)/);
+      if(tplMatch){ try{ templates = JSON.parse(tplMatch[1]); }catch(e){ templates = getDefaultTemplates(); } }
+
+      // 3b. Try to extract linkaInfo from configurator saved format
+      const linkaMatch = text.match(/let linkaInfo\s*=\s*(\{[\s\S]*?\});(?=\s*\n)/);
+      if(linkaMatch){ try{ linkaInfo = Object.assign(linkaInfo, JSON.parse(linkaMatch[1])); }catch(e){} }
+      fillLinkaFields();
+
+      // 3c. Try to extract crossings
+      const crossMatch = text.match(/let crossings\s*=\s*(\[[\s\S]*?\]);(?=\s*\n)/);
+      if(crossMatch){ try{ crossings = JSON.parse(crossMatch[1]); }catch(e){ crossings = []; } }
+
+      // 4. Load poles — map portal zt→DDK, auto-set druh:'Portál' if missing
+      poles = loadedPoles.map(p=>{
+        const isPortal = p.zt === 'portal';
+        const out = { druh: '', ...p };
+        out.zt   = isPortal ? 'DDK' : p.zt;
+        out.druh = isPortal ? 'Portál' : (p.druh || '');
+        return out;
+      });
+      selectedPoleIdx = -1;
+
+      saveState();
+      fillProjectFields();
+      renderPoleList();
+      clearEditor();
+      updateAutoStats();
+
+      showToast('✅ Načítané ' + poles.length + ' stožiarov z HTML súboru');
+    }catch(err){
+      showToast('❌ Chyba: ' + err.message, true);
+    }
+  };
+  reader.readAsText(f, 'UTF-8');
+  e.target.value = '';
+});
+
+// ══════════════════════════════════════════════
+//  HTML GENERATOR  (static, zero JS in output)
+// ══════════════════════════════════════════════
+function generateHTML(previewMode){
+  if(!poles.length){ alert('Žiadne stožiare. Najprv pridajte aspoň jeden.'); return; }
+
+  // ── data prep ──────────────────────────────
+  const lastCumPole    = [...poles].reverse().find(p=>p.cum!=null);
+  const total          = lastCumPole ? lastCumPole.cum : (project.totalLength || 0);
+  const isDvojita      = linkaInfo.typLinky === '2x3';
+  const baseChain      = isDvojita ? 6 : 3; // for display/static uses
+  const ZT_ISO         = {DDK:4, DK:2, PK:2, DN:2, JN:1, portal:4};
+  // per-pole chain count helper (inline, no closure over poleChainCount)
+  const getCC = (druh, zt) => (druh === 'Kotevný' && (zt === 'DK' || zt === 'DDK')) ? baseChain * 2 : baseChain;
+
+  const polesForOutput = poles.map(p => {
+    const out = Object.assign({}, p);
+    if(p.druh === 'Portál') out.zt = 'portal';
+    return out;
+  });
+
+  const portals        = polesForOutput.filter(p=>p.zt==='portal').length;
+  const nonPortal      = polesForOutput.length - portals;
+  const poleCountLabel = portals ? nonPortal+'+'+portals : polesForOutput.length;
+  const titleEsc       = escHtml(project.title||'Linka VVN');
+  const logoEsc        = escHtml(project.logo||'ZSD VVN');
+  const fromEsc        = escHtml(project.from||'Začiatok');
+  const toEsc          = escHtml(project.to||'Koniec');
+  const totalFmt       = total.toLocaleString('sk');
+
+  // total isolators across entire project
+  let projectTotalIso = 0;
+  polesForOutput.forEach(p => {
+    const ipc = ZT_ISO[p.zt] || 0;
+    projectTotalIso += (ipc * getCC(p.druh, p.zt)) + (p.pnCount || 0);
+  });
+
+  // ── build pole X map (generation-time) ─────
+  let curX = 55;
+  const xmap = new Map();
+  polesForOutput.forEach((p, i) => {
+    if(i === 0){ xmap.set(p.cum, 55); return; }
+    const rawGap = (p.cum - polesForOutput[i-1].cum) * 0.13;
+    curX += Math.max(rawGap, 42);
+    xmap.set(p.cum, curX);
+  });
+  const svgW = Math.max(curX + 55, 400);
+  const PX   = (cum) => xmap.get(cum) != null ? xmap.get(cum) : 55;
+
+  // interpolate X for a distance (km markers)
+  function interpX(d){
+    for(let i=0; i<polesForOutput.length-1; i++){
+      const a = polesForOutput[i], b = polesForOutput[i+1];
+      if(d >= a.cum && d <= b.cum){
+        const t = (b.cum === a.cum) ? 0 : (d - a.cum) / (b.cum - a.cum);
+        return PX(a.cum) + t * (PX(b.cum) - PX(a.cum));
+      }
+    }
+    return PX(polesForOutput[polesForOutput.length-1].cum);
+  }
+
+  // ── STATIC SVG ─────────────────────────────
+  const WY = 140, GY = 210, SVG_H = 300;
+
+  const SHAPES = {
+    portal: "M -14,-38 L -14,70  M 14,-38 L 14,70  M -14,-38 L 14,-38  M -18,-38 L 18,-38  M -14,-18 L -5,-12  M 14,-18 L 5,-12  M -14,-28 L 14,-28",
+    DDK:    "M -20,-48 L 20,-48  M -20,-48 L -4,-30  M 20,-48 L 4,-30  M 0,-48 L 0,0  M 0,0 L -15,70  M 0,0 L 15,70  M -8,50 L 8,50",
+    DK:     "M -18,-46 L 18,-46  M -18,-46 L -3,-28  M 18,-46 L 3,-28  M 0,-46 L 0,0  M -5,-14 L 5,-22  M 0,0 L -13,70  M 0,0 L 13,70  M -6,52 L 6,52",
+    PK:     "M -15,-42 L 15,-42  M -15,-42 L -2,-26  M 15,-42 L 2,-26  M 0,-42 L 0,0  M 0,0 L -10,70  M 0,0 L 10,70",
+    DN:     "M -13,-40 L 13,-40  M -13,-40 L -1,-24  M 13,-40 L 1,-24  M 0,-40 L 0,0  M 0,0 L -8,70  M 0,0 L 8,70",
+    JN:     "M -9,-34 L 9,-34  M 0,-34 L 0,70",
+  };
+  const ARM_Y = { portal:-38, DDK:-48, DK:-46, PK:-42, DN:-40, JN:-34 };
+  const ARM_X = { portal:14,  DDK:20,  DK:18,  PK:15,  DN:13,  JN:9  };
+  const ZT_COL = {
+    portal:'#f7a600', DDK:'#c084fc', DK:'#f87171',
+    PK:'#60a5fa',     DN:'#34d399', JN:'#fbbf24',
+  };
+
+  function buildStaticSVG(){
+    let s = '';
+    // defs + background
+    s += `<defs>
+  <linearGradient id="sky" x1="0" y1="0" x2="0" y2="1">
+    <stop offset="0%" stop-color="#1e3050"/>
+    <stop offset="60%" stop-color="#162438"/>
+    <stop offset="100%" stop-color="#101c2c"/>
+  </linearGradient>
+  <linearGradient id="gnd" x1="0" y1="0" x2="0" y2="1">
+    <stop offset="0%" stop-color="#0d1f0e"/>
+    <stop offset="100%" stop-color="#050b06"/>
+  </linearGradient>
+  <filter id="tw-glow" x="-60%" y="-60%" width="220%" height="220%">
+    <feGaussianBlur in="SourceGraphic" stdDeviation="3.5" result="blur"/>
+    <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+  </filter>
+</defs>`;
+    s += `<rect x="0" y="0" width="${svgW}" height="${SVG_H}" fill="url(#sky)"/>`;
+    // ground
+    s += `<rect x="0" y="${GY}" width="${svgW}" height="${SVG_H-GY}" fill="url(#gnd)"/>`;
+    s += `<line x1="0" y1="${GY}" x2="${svgW}" y2="${GY}" stroke="#1a3520" stroke-width="1.5"/>`;
+
+    // wire paths (3 offsets)
+    for(const off of [0, -3.5, 3.5]){
+      let d = '';
+      polesForOutput.forEach((p, i) => {
+        const px = PX(p.cum);
+        const py = WY + off;
+        if(i === 0){ d += `M ${px},${py}`; return; }
+        const prevX = PX(polesForOutput[i-1].cum);
+        const span  = px - prevX;
+        const sag   = Math.min(span * 0.038 + 2, 20);
+        d += ` C ${prevX + span*0.33},${py+sag} ${px - span*0.33},${py+sag} ${px},${py}`;
+      });
+      const isMain = off === 0;
+      s += `<path d="${d}" fill="none" stroke="${isMain?'#6a8060':'#3a4a38'}" stroke-width="${isMain?'1.8':'1'}" stroke-linecap="round" opacity="${isMain?'1':'0.5'}"/>`;
+    }
+
+    // crossings (from global crossings[])
+    crossings.forEach((cr, ci) => {
+      const ct = CROSS_TYPES.find(t=>t.id===cr.typeId) || CROSS_TYPES[CROSS_TYPES.length-1];
+      const fp = polesForOutput.find(p=>p.id===cr.fromPole);
+      const tp = polesForOutput.find(p=>p.id===cr.toPole);
+      if(!fp || !tp || fp.cum==null || tp.cum==null) return;
+      const cx = (PX(fp.cum) + PX(tp.cum)) / 2;
+      const cxs = cx.toFixed(1);
+
+      // pill label
+      const lbl = cr.note ? ct.label+': '+cr.note : ct.label;
+      const lblShort = lbl.length > 18 ? lbl.slice(0,17)+'…' : lbl;
+      const pillLabel = ct.icon + ' ' + lblShort;
+      const pillW = pillLabel.length * 5.6 + 14;
+      const pillY = 8, pillH = 14;
+      const pillBot = pillY + pillH;
+
+      s += `<g class="cross-grp" data-crossing="${ci}" style="--cx-col:${ct.color}">`;
+
+      // line segment ABOVE pill (from top to just before pill)
+      s += `<line x1="${cxs}" y1="0" x2="${cxs}" y2="${pillY - 1}" stroke="${ct.color}" stroke-width="1" stroke-dasharray="${ct.dash}" opacity="0.55"/>`;
+      // line segment BELOW pill (from just after pill down to ground)
+      s += `<line x1="${cxs}" y1="${pillBot + 1}" x2="${cxs}" y2="${GY + 6}" stroke="${ct.color}" stroke-width="1" stroke-dasharray="${ct.dash}" opacity="0.55"/>`;
+
+      // pill background + border
+      s += `<rect x="${(cx - pillW/2).toFixed(1)}" y="${pillY}" width="${pillW.toFixed(1)}" height="${pillH}" rx="${pillH/2}" fill="${ct.color}" opacity="0.15"/>`;
+      s += `<rect x="${(cx - pillW/2).toFixed(1)}" y="${pillY}" width="${pillW.toFixed(1)}" height="${pillH}" rx="${pillH/2}" fill="none" stroke="${ct.color}" stroke-width="0.9" opacity="0.65"/>`;
+      // centered text in pill
+      s += `<text x="${cxs}" y="${pillY + pillH - 3}" text-anchor="middle" font-size="9" fill="${ct.color}" font-weight="700" font-family="Segoe UI,sans-serif" opacity="0.95">${pillLabel}</text>`;
+
+      // small dot at wire crossing point
+      s += `<circle cx="${cxs}" cy="${WY}" r="2.5" fill="${ct.color}" opacity="0.8"/>`;
+      s += `<circle cx="${cxs}" cy="${WY}" r="5" fill="none" stroke="${ct.color}" stroke-width="0.8" opacity="0.3"/>`;
+
+      s += `</g>`;
+    });
+    // legacy pole.cross rendering (backward compat)
+    polesForOutput.forEach((pole, i) => {
+      if(!pole.cross || !pole.cross.length) return;
+      const nextPole = i < polesForOutput.length-1 ? polesForOutput[i+1] : pole;
+      if(!pole.cum || !nextPole.cum) return;
+      const cx = (PX(pole.cum) + PX(nextPole.cum)) / 2;
+      const txt = pole.cross.join(' ');
+      const isMajor = /400.kV|Diaľnica|D61|D1|ŽSR/.test(txt);
+      const isElec  = /kV|vedenie/.test(txt) && !isMajor;
+      const col = isMajor ? '#ef4444' : isElec ? '#f59e0b' : '#3b82f6';
+      const dsh = isMajor ? '5,3' : '3,3';
+      const icon = isMajor ? '⚠' : isElec ? '⚡' : '◈';
+      s += `<line x1="${cx}" y1="${WY+8}" x2="${cx}" y2="${GY-2}" stroke="${col}" stroke-width="1.4" stroke-dasharray="${dsh}" opacity="0.45"/>`;
+      s += `<text x="${cx}" y="${WY-4}" text-anchor="middle" font-size="11" fill="${col}" opacity="0.7" font-family="Segoe UI,sans-serif">${icon}</text>`;
+    });
+
+    // km markers
+    for(let d=1000; d<total; d+=1000){
+      const mx = interpX(d);
+      s += `<line x1="${mx.toFixed(1)}" y1="${GY+8}" x2="${mx.toFixed(1)}" y2="${GY+22}" stroke="#5a7898" stroke-width="1"/>`;
+      s += `<text x="${mx.toFixed(1)}" y="${GY+36}" text-anchor="middle" font-size="9" fill="#5a7898" font-family="Segoe UI,sans-serif">${d/1000} km</text>`;
+    }
+
+    // station labels — placed at bottom below km markers to avoid overlap with crossings
+    const x0  = PX(polesForOutput[0].cum);
+    const xN  = PX(polesForOutput[polesForOutput.length-1].cum);
+    const stY = GY + 52;
+    s += `<rect x="${x0}" y="${stY}" width="190" height="20" rx="4" fill="rgba(20,40,70,0.88)"/>`;
+    s += `<text x="${x0+8}" y="${stY+14}" text-anchor="start" font-size="12" fill="#f0d080" font-weight="700" font-family="Segoe UI, sans-serif">&#9654; ${fromEsc}</text>`;
+    s += `<rect x="${xN-135}" y="${stY}" width="134" height="20" rx="4" fill="rgba(20,40,70,0.88)"/>`;
+    s += `<text x="${xN-8}" y="${stY+14}" text-anchor="end" font-size="12" fill="#f0d080" font-weight="700" font-family="Segoe UI, sans-serif">${toEsc} &#9654;</text>`;
+
+    // build crossing pole set for badge rendering
+    const poleIdsWithCrossings = new Set();
+    crossings.forEach(cr => { poleIdsWithCrossings.add(cr.fromPole); poleIdsWithCrossings.add(cr.toPole); });
+
+    // tower symbols — each wrapped in <a data-pole="idx"> for JS click handling
+    polesForOutput.forEach((pole, idx) => {
+      const x     = PX(pole.cum);
+      const z     = pole.zt || 'JN';
+      const col   = ZT_COL[z] || '#9ab8d8';
+      const shape = SHAPES[z] || SHAPES.JN;
+      const ay    = ARM_Y[z] || -34;
+      const ax    = ARM_X[z] || 9;
+      const lblW  = (pole.id||'').length > 3 ? 36 : 28;
+      const hitH  = GY - (WY + ay) + 26;
+      const hasCross = poleIdsWithCrossings.has(pole.id);
+
+      s += `<a data-pole="${idx}" style="cursor:pointer">`;
+      // large invisible hit area (44px wide)
+      s += `<rect x="${x-22}" y="${WY+ay-10}" width="44" height="${hitH}" fill="transparent" stroke="none"/>`;
+      s += `<path d="${shape}" transform="translate(${x},${WY})" fill="none" stroke="${col}" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" opacity="0.85"/>`;
+      // arm dots
+      s += `<circle cx="${x-ax}" cy="${WY+ay}" r="2" fill="${col}" opacity="0.9"/>`;
+      s += `<circle cx="${x+ax}" cy="${WY+ay}" r="2" fill="${col}" opacity="0.9"/>`;
+      // wire dot
+      s += `<circle cx="${x}" cy="${WY}" r="2.8" fill="${col}" opacity="0.95"/>`;
+      // warning badge (right side)
+      if(pole.warn){
+        s += `<circle cx="${x+14}" cy="${WY+ay-10}" r="5" fill="#dc2626"/>`;
+        s += `<text x="${x+14}" y="${WY+ay-6}" text-anchor="middle" font-size="7" font-weight="900" fill="#fff" font-family="Segoe UI,sans-serif">!</text>`;
+      }
+      // crossing badge (left side, orange)
+      if(hasCross){
+        s += `<circle cx="${x-14}" cy="${WY+ay-10}" r="5.5" fill="#f97316" opacity="0.9"/>`;
+        s += `<text x="${x-14}" y="${WY+ay-6}" text-anchor="middle" font-size="9" font-weight="900" fill="#fff" font-family="Segoe UI,sans-serif">!</text>`;
+        s += `<circle cx="${x-14}" cy="${WY+ay-10}" r="7.5" fill="none" stroke="#f97316" stroke-width="1" opacity="0.35"/>`;
+      }
+      // label box — orange border when pole has crossings
+      const lblStroke = hasCross ? '#f97316' : '#4a7aaa';
+      const lblStrokeW = hasCross ? '1.8' : '1';
+      s += `<rect x="${x - lblW/2}" y="${GY-20}" width="${lblW}" height="16" rx="4" fill="#0d1e35" stroke="${lblStroke}" stroke-width="${lblStrokeW}"/>`;
+      s += `<text x="${x}" y="${GY-8}" text-anchor="middle" font-size="12" font-weight="800" fill="#e8f4ff" font-family="Segoe UI,system-ui,sans-serif">${escHtml(pole.id||'')}</text>`;
+      s += `</a>`;
+    });
+
+    return s;
+  }
+
+  // ── helpers (also serialised into output JS) ─
+  function ztLabel(zt){
+    const m={portal:'DDK – Dvojitý kotevný',DDK:'DDK – Dvojitý kotevný',DK:'DK – Kotevný',
+      PK:'PK – Polokotevný',DN:'DN – Dvojitý nosný',JN:'JN – Jednoduchý nosný'};
+    return m[zt]||zt;
+  }
+  function ztBadgeStyle(zt){
+    const m={
+      portal: 'background:rgba(247,166,0,.15);color:#f7a600;border:1px solid rgba(247,166,0,.3)',
+      DDK:    'background:rgba(147,51,234,.15);color:#c084fc;border:1px solid rgba(147,51,234,.3)',
+      DK:     'background:rgba(220,38,38,.15);color:#fca5a5;border:1px solid rgba(220,38,38,.3)',
+      PK:     'background:rgba(37,99,235,.15);color:#93c5fd;border:1px solid rgba(37,99,235,.3)',
+      DN:     'background:rgba(5,150,105,.15);color:#6ee7b7;border:1px solid rgba(5,150,105,.3)',
+      JN:     'background:rgba(217,119,6,.15);color:#fcd34d;border:1px solid rgba(217,119,6,.3)',
+    };
+    return m[zt]||'background:#111e2e;color:#9ab8d8';
+  }
+  function crossIconFn(t){
+    if(/400.kV|Diaľnica|D61|D1/.test(t)) return '⚡';
+    if(/kV|vedenie/.test(t))             return '⚡';
+    if(/ŽSR|trať/.test(t))              return '🚆';
+    if(/rieka|Dudváh/.test(t))          return '🌊';
+    if(/kanál/.test(t))                  return '💧';
+    if(/potrubie|teplovod/.test(t))      return '🔧';
+    if(/cesta/.test(t))                  return '🛤️';
+    if(/kábel/.test(t))                  return '🔌';
+    if(/plot/.test(t))                   return '🔲';
+    return '📍';
+  }
+
+  // ── build detail HTML for a single pole (used for both pre-render and runtime JS) ──
+  function buildDetailHTML(pole, idx){
+    const z          = pole.zt || 'JN';
+    const col        = ZT_COL[z] || '#9ab8d8';
+    const hasCum     = pole.cum != null;
+    const prevWithCum = idx > 0 ? polesForOutput.slice(0,idx).reverse().find(p=>p.cum!=null) : null;
+    const nextWithCum = idx < polesForOutput.length-1 ? polesForOutput.slice(idx+1).find(p=>p.cum!=null) : null;
+    const pct        = (hasCum && total > 0) ? (pole.cum / total * 100).toFixed(1) : null;
+    const spanPrev   = (hasCum && prevWithCum) ? (pole.cum - prevWithCum.cum).toFixed(1) : null;
+    const spanNext   = (hasCum && nextWithCum) ? (nextWithCum.cum - pole.cum).toFixed(1) : null;
+    const pnCount    = pole.pnCount || 0;
+    const isoPerChain= ZT_ISO[z] || 0;
+    const chainCount = getCC(pole.druh, pole.zt);
+    const totalIso   = (isoPerChain * chainCount) + pnCount;
+    const isLast     = idx === polesForOutput.length - 1;
+    const isPortalPole = pole.druh === 'Portál' || z === 'portal';
+
+    const headHtml = `
+    <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">
+      <div class="det-id" style="color:${col}">${escHtml(pole.id||String(idx+1))}</div>
+      <span class="det-badge" style="${ztBadgeStyle(z)}">${z.toUpperCase()}</span>
+      ${pole.warn ? '<span style="color:#ef4444;font-size:17px" title="Upozornenie">&#9888;&#65039;</span>' : ''}
+    </div>
+    <div class="det-sub">${pole.typ ? escHtml(pole.typ)+' &nbsp;&middot;&nbsp; ' : ''}${pole.oldNum ? 'Star&eacute; &ccaron;. <b style="color:#c8d6e8">'+escHtml(pole.oldNum)+'</b>' : ''}</div>`;
+
+    let bodyHtml = '';
+
+    // warn
+    if(pole.warn){
+      bodyHtml += `<div class="warn"><div class="warn-t">&#9888; Upozornenie</div>${escHtml(pole.warn)}</div>`;
+    }
+
+    // params grid
+    bodyHtml += `<div class="sec"><div class="sec-t">Parametre sto&#382;iara</div>
+<div class="grid2">
+  <div class="card"><div class="ck">Typ z&aacute;vesu</div><div class="cv">${escHtml(ztLabel(z))}</div></div>
+  ${pole.druh ? `<div class="card"><div class="ck">Druh sto&#382;iara</div><div class="cv">${escHtml(pole.druh)}</div></div>` : ''}
+  ${pole.typ  ? `<div class="card"><div class="ck">Typ sto&#382;iara</div><div class="cv">${escHtml(pole.typ)}</div></div>` : ''}
+  ${pole.oldNum ? `<div class="card"><div class="ck">Star&eacute; &ccaron;&iacute;slo</div><div class="cv mono">${escHtml(pole.oldNum)}</div></div>` : ''}
+  ${pole.angle? `<div class="card wide"><div class="ck">Uhol lomu</div><div class="cv mono">${escHtml(pole.angle)}</div></div>` : ''}
+  ${hasCum ? `<div class="card hi"><div class="ck">Poloha na trase</div><div class="cv mono">${pole.cum.toLocaleString('sk')} m</div></div>` : ''}
+  ${pct != null ? `<div class="card hi"><div class="ck">Poz&iacute;cia</div><div class="cv mono">${pct} % trasy</div></div>` : ''}
+  ${spanPrev != null ? `<div class="card"><div class="ck">&#8592; Pole od predch.</div><div class="cv mono">${spanPrev} m</div></div>` : ''}
+  ${spanNext != null ? `<div class="card"><div class="ck">&#8594; Pole k nasl.</div><div class="cv mono">${spanNext} m</div></div>` : ''}
+</div></div>`;
+
+    // nakladanie (comp-t table, aggregated parts × chainCount)
+    const hasExtraPraporec = (pole.extraParts||[]).some(p => /praporec/i.test(p.name||''));
+    const partsAgg = {};
+    (pole.parts||[]).forEach(p => {
+      const key = (p.name||'').trim();
+      if(!key) return;
+      if(hasExtraPraporec && /praporec/i.test(key)) return;
+      // for insulators, separate key by otoceny so they appear as distinct rows
+      const isIzoP = /izol[aá]tor/i.test(key);
+      const aggKey = isIzoP ? key + '||' + String(p.otoceny) : key;
+      if(!partsAgg[aggKey]) partsAgg[aggKey] = {name: key, jk: p.jk||'', total: 0, otoceny: p.otoceny};
+      partsAgg[aggKey].total += (p.n||1) * chainCount;
+    });
+    if(pnCount > 0 && pole.pnAno){
+      const pnOtoc = pole.pnOtoceny === true;
+      const pnKey = 'Izol&aacute;tor (PN)||' + String(pnOtoc);
+      partsAgg[pnKey] = {name:'Izolátor (PN)', jk:'', total: pnCount, otoceny: pnOtoc};
+      partsAgg['Armat&uacute;ra PN (pod&#318;a projektu)'] = {name:'Armatúra PN (podľa projektu)', jk:'', total: pnCount};
+    }
+    const aggList = Object.values(partsAgg);
+
+    function otocLabel(otoceny){
+      if(otoceny === true)  return ` <span style="font-size:10px;background:rgba(96,165,250,0.15);color:#60a5fa;border-radius:3px;padding:1px 5px;margin-left:4px">(Oto&#269;en&eacute;)</span>`;
+      if(otoceny === false) return '';
+      return ''; // null / undefined
+    }
+
+    const rawParts = (pole.parts||[]).filter(p => (p.name||'').trim());
+
+    if(rawParts.length > 0 || aggList.length > 0){
+      // ── 1 reťazec ──
+      let chainRows = '';
+      rawParts.forEach(p => {
+        const isIso = /izol[aá]tor/i.test(p.name);
+        const nameCell = escHtml(p.name) + (isIso ? otocLabel(p.otoceny) : '');
+        chainRows += `<tr><td style="font-size:13px;font-weight:800;color:${isIso?'#60a5fa':'var(--accent)'}">${p.n||1}&times;</td><td>${nameCell}</td><td style="font-family:Consolas,monospace;font-size:11px;color:#c8d6e8">${escHtml(p.jk||'')}</td></tr>`;
+      });
+
+      // ── celý stožiar ──
+      let aggRows = '';
+      aggList.forEach(p => {
+        const isIso = /izol[aá]tor/i.test(p.name);
+        const nameCell = escHtml(p.name) + (isIso ? otocLabel(p.otoceny) : '');
+        aggRows += `<tr><td style="font-size:13px;font-weight:800;color:${isIso?'#60a5fa':'var(--accent)'}">${p.total}&times;</td><td>${nameCell}</td><td style="font-family:Consolas,monospace;font-size:11px;color:#c8d6e8">${escHtml(p.jk)}</td></tr>`;
+      });
+
+      // ── extra parts (praporce, vydlice — nie násobené závesom) ──
+      let extraRows = '';
+      (pole.extraParts||[]).forEach(p => {
+        const isIso = /izol[aá]tor/i.test(p.name||'');
+        const noteSpan = p.note ? ` <span style="font-size:10px;color:#5a7898">(${escHtml(p.note)})</span>` : '';
+        extraRows += `<tr><td style="font-size:13px;font-weight:800;color:${isIso?'#60a5fa':'var(--accent)'}">${p.n||1}&times;</td><td>${escHtml(p.name||'')}${noteSpan}</td><td style="font-family:Consolas,monospace;font-size:11px;color:#c8d6e8">${escHtml(p.jk||'')}</td></tr>`;
+      });
+
+      // ── 1 reťazec — samostatná info sekcia ──
+      if(chainRows){
+        bodyHtml += `<div class="sec">
+  <div class="sec-t">Jeden Re&#357;azec (z&aacute;ves)</div>
+  <table class="comp-t">
+    <thead><tr><th>Ks</th><th>Komponent</th><th>&Ccaron;&iacute;slo</th></tr></thead>
+    <tbody>${chainRows}</tbody>
+  </table>
+</div>`;
+      }
+
+      // ── nakladanie — celý stožiar ──
+      if(aggRows || extraRows){
+        bodyHtml += `<div class="naklad-box">
+  <div class="naklad-title">&#128230; Nakladanie &#8212; celkom na sto&#382;iar (${chainCount}&times; z&aacute;ves)</div>
+  <table class="comp-t">
+    <thead><tr><th>Celkom</th><th>Komponent</th><th>&Ccaron;&iacute;slo</th></tr></thead>
+    <tbody>${aggRows}${extraRows}</tbody>
+  </table>
+</div>`;
+      }
+    }
+
+    // kzl hint
+    if(isLast || isPortalPole){
+      bodyHtml += `<div class="kzl-hint"><b>&#9889; KZL + ZL:</b> Na tomto sto&#382;iari je zvy&#269;ajne KZL aj ZL. <span style="opacity:.7">${escHtml(linkaInfo.kzl||'KZL')} + ${escHtml(linkaInfo.zl||'ZL')}</span></div>`;
+    }
+
+    // crossings
+    if(pole.cross && pole.cross.length){
+      bodyHtml += `<div class="sec"><div class="sec-t">Prek&aacute;&#382;ky v poli</div><div class="cross-list">`;
+      pole.cross.forEach(c => {
+        bodyHtml += `<div class="cross-row"><span class="cross-ico">${crossIconFn(c)}</span><span>${escHtml(c)}</span></div>`;
+      });
+      bodyHtml += `</div></div>`;
+    }
+
+    // notes
+    if(pole.notes && pole.notes.filter(n=>n).length){
+      bodyHtml += `<div class="sec"><div class="sec-t">Pozn&aacute;mky</div>`;
+      pole.notes.filter(n=>n).forEach(n => {
+        bodyHtml += `<div class="note-row">${escHtml(n)}</div>`;
+      });
+      bodyHtml += `</div>`;
+    }
+
+    return { headHtml, bodyHtml };
+  }
+
+  // pre-render first pole detail
+  const firstDetail = buildDetailHTML(polesForOutput[0], 0);
+
+  // ── linka info bar ──────────────────────────
+  const linkaBarHtml = `<div style="display:flex;align-items:center;flex-wrap:wrap;gap:10px;background:rgba(247,166,0,0.07);border:1px solid rgba(247,166,0,0.25);padding:7px 16px;font-size:12px;flex-shrink:0">
+  <span style="background:linear-gradient(135deg,#f7a600,#e08800);color:#000;font-weight:900;font-size:10px;letter-spacing:1.5px;padding:3px 8px;border-radius:4px;flex-shrink:0">110 kV VVN</span>
+  <span style="color:var(--muted)">Vodi&#269;: <b style="color:var(--text)">${escHtml(linkaInfo.vodic||'—')}</b></span>
+  <span style="color:var(--muted)">${isDvojita?'Dvojit&aacute; linka':'Jednoduch&aacute; linka'}</span>
+  <span style="color:var(--muted)">KZL: <b style="color:var(--text)">${escHtml(linkaInfo.kzl||'—')}</b></span>
+  <span style="color:var(--muted)">ZL: <b style="color:var(--text)">${escHtml(linkaInfo.zl||'—')}</b></span>
+  <span style="color:var(--muted)">Z&aacute;v./sto&#382;iar: <b style="color:var(--text)">${isDvojita?'6–12':'3–6'}&times;</b></span>
+  <span style="color:var(--muted)">Celkom izol&aacute;torov: <b style="color:var(--accent)">${projectTotalIso} ks</b></span>
+</div>`;
+
+  const crossingsSummaryHtml = '';
+
+  // ── serialise POLES data for output JS ─────
+  const polesJSON = JSON.stringify(polesForOutput.map(p => ({
+    id:         p.id,
+    zt:         p.zt,
+    typ:        p.typ||'',
+    druh:       p.druh||'',
+    oldNum:     p.oldNum||'',
+    cum:        p.cum,
+    angle:      p.angle||null,
+    warn:       p.warn||null,
+    cross:      p.cross||[],
+    notes:      p.notes||[],
+    parts:      (p.parts||[]).map(x=>({n:x.n,name:x.name,jk:x.jk||'',otoceny:x.otoceny??null})),
+    extraParts: (p.extraParts||[]).map(x=>({n:x.n,name:x.name,jk:x.jk||'',note:x.note||''})),
+    pnCount:    p.pnCount||0,
+    pnAno:      p.pnAno||false,
+    pnOtoceny:  p.pnOtoceny||false,
+  })), null, 2);
+
+  // ── assemble full HTML ──────────────────────
+  const svgMarkup = buildStaticSVG();
+
+  const html = `<!DOCTYPE html>
+<html lang="sk">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>${titleEsc} | 110kV VVN</title>
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,${encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32"><circle cx="16" cy="16" r="15" fill="white" stroke="#cc0000" stroke-width="1.5"/><text x="16" y="21" text-anchor="middle" font-size="10.5" font-weight="900" fill="#cc0000" font-family="Arial,sans-serif" letter-spacing="0.5">VVN</text></svg>')}">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#1a2840;--panel:#1e2d42;--border:#2e4260;
+  --text:#eaf2ff;--muted:#9ab8d8;--accent:#f7a600;
+  --ddK:#c084fc;--dkdk:#f87171;--pk:#60a5fa;--dn:#34d399;--jn:#fbbf24;--portal:#f7a600;
+}
+body{background:var(--bg);color:var(--text);font-family:'Segoe UI',system-ui,sans-serif;font-size:13px;
+  height:100vh;height:100svh;display:flex;flex-direction:column;overflow:hidden}
+
+/* ─── HEADER ─── */
+header{
+  background:linear-gradient(180deg,#0e1725 0%,#07090f 100%);
+  border-bottom:1px solid #1a2940;
+  padding:8px 20px;display:flex;align-items:center;gap:14px;flex-shrink:0;
+  box-shadow:0 4px 24px rgba(0,0,0,0.6)}
+.logo{
+  background:linear-gradient(135deg,#f7a600,#e08800);
+  color:#000;font-weight:900;font-size:11px;letter-spacing:2px;
+  padding:5px 10px;border-radius:5px;
+  box-shadow:0 0 18px rgba(247,166,0,0.25)}
+.hdr-title h1{font-size:15px;font-weight:700;color:#eef6ff;letter-spacing:.3px}
+.hdr-title p{font-size:11px;color:var(--muted);margin-top:2px}
+.hdr-stats{
+  margin-left:auto;display:flex;gap:0;
+  border:1px solid rgba(255,255,255,0.07);border-radius:7px;overflow:hidden}
+.hs{
+  text-align:center;padding:5px 16px;
+  border-right:1px solid rgba(255,255,255,0.07)}
+.hs:last-child{border-right:none}
+.hs .v{font-size:15px;font-weight:700;color:var(--accent);font-variant-numeric:tabular-nums}
+.hs .l{font-size:8px;color:var(--muted);text-transform:uppercase;letter-spacing:1.5px}
+
+/* ─── MAIN ─── */
+.main{display:flex;flex:1;overflow:hidden;min-height:0}
+.schematic-area{flex:1;display:flex;flex-direction:column;overflow:hidden;min-width:0;min-height:0}
+
+/* Legend */
+.legend-bar{
+  padding:5px 16px;display:flex;gap:12px;flex-wrap:wrap;align-items:center;
+  border-bottom:1px solid var(--border);flex-shrink:0;background:#090c13}
+.leg{display:flex;align-items:center;gap:5px;font-size:11px;color:var(--text);white-space:nowrap}
+.leg-sq{width:9px;height:9px;border-radius:2px;flex-shrink:0}
+
+/* SVG scroll area */
+.svg-wrap{
+  flex:1;overflow-x:auto;overflow-y:hidden;
+  position:relative;background:var(--bg);
+  min-height:120px}
+.svg-wrap::-webkit-scrollbar{height:10px}
+.svg-wrap::-webkit-scrollbar-track{background:#111e30}
+.svg-wrap::-webkit-scrollbar-thumb{background:#3a6090;border-radius:5px}
+.svg-wrap::-webkit-scrollbar-thumb:hover{background:#5a88b8}
+.cross-grp{cursor:pointer;transition:opacity .18s,filter .18s}
+.cross-grp.cx-active{filter:saturate(2.5) brightness(1.25) drop-shadow(0 0 7px var(--cx-col,#7cf)) drop-shadow(0 0 14px var(--cx-col,#7cf))}
+.cross-grp.cx-dimmed{opacity:.1;pointer-events:none}
+
+/* Hint */
+.hint-bar{
+  padding:5px 16px;font-size:11px;color:#8ab0d0;
+  border-top:1px solid var(--border);background:#1a2840;
+  flex-shrink:0;display:flex;justify-content:space-between}
+
+/* ─── DETAIL PANEL ─── */
+.det-panel{
+  width:345px;flex-shrink:0;background:var(--panel);
+  border-left:1px solid var(--border);display:flex;flex-direction:column;overflow:hidden}
+.det-head{
+  padding:14px 16px;border-bottom:1px solid var(--border);
+  flex-shrink:0;background:#0b1120}
+.det-id{font-size:30px;font-weight:900;line-height:1;letter-spacing:-1px}
+.det-sub{font-size:11px;color:var(--muted);margin-top:3px}
+.det-badge{
+  display:inline-block;padding:2px 9px;border-radius:10px;
+  font-size:9.5px;font-weight:700;letter-spacing:.5px;margin-top:7px}
+.prog-wrap{margin-top:10px}
+.prog-bg{background:#111e2e;border-radius:3px;height:3px}
+.prog-fg{height:3px;border-radius:3px;background:linear-gradient(90deg,#f7a600,#ff7700);transition:width .4s}
+.prog-lbl{display:flex;justify-content:space-between;font-size:8.5px;color:var(--muted);margin-top:3px}
+
+.det-body{flex:1;overflow-y:auto;padding:12px 13px}
+.det-body::-webkit-scrollbar{width:3px}
+.det-body::-webkit-scrollbar-thumb{background:var(--border);border-radius:2px}
+
+/* Sections */
+.sec{margin-bottom:14px}
+.sec-t{
+  font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;
+  color:var(--muted);padding-bottom:5px;border-bottom:1px solid var(--border);margin-bottom:8px}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:5px}
+.card{
+  background:#0e1520;border:1px solid var(--border);border-radius:6px;
+  padding:7px 9px}
+.card .ck{font-size:10px;color:var(--muted);margin-bottom:3px;text-transform:uppercase;letter-spacing:.8px}
+.card .cv{font-size:13px;font-weight:600;color:var(--text)}
+.card .cv.mono{font-family:Consolas,monospace;font-size:12px}
+.card.wide{grid-column:1/-1}
+.card.hi{border-color:rgba(247,166,0,.2);background:rgba(247,166,0,.04)}
+.card.hi .cv{color:var(--accent)}
+
+.warn{
+  background:rgba(220,38,38,.1);border:1px solid rgba(220,38,38,.3);
+  border-radius:6px;padding:8px 10px;margin-bottom:10px;font-size:12px;
+  color:#fca5a5;line-height:1.5}
+.warn-t{color:#f87171;font-weight:700;font-size:10px;text-transform:uppercase;
+  letter-spacing:1px;margin-bottom:3px}
+
+.cross-list{display:flex;flex-direction:column;gap:4px}
+.cross-row{
+  display:flex;align-items:center;gap:7px;
+  background:#0e1520;border:1px solid var(--border);
+  border-radius:5px;padding:5px 8px;font-size:11px}
+.cross-ico{font-size:13px;flex-shrink:0;line-height:1}
+
+.comp-t{width:100%;border-collapse:collapse;font-size:12px;table-layout:fixed}
+.comp-t th{
+  background:#1a2840;padding:5px 7px;text-align:left;
+  color:var(--muted);font-size:10px;letter-spacing:.5px;font-weight:600;white-space:nowrap}
+.comp-t th:first-child{text-align:center;width:42px}
+.comp-t th:last-child{width:88px}
+.comp-t td{padding:3px 7px;border-bottom:1px solid rgba(46,66,96,0.5);color:var(--text);font-size:11px;vertical-align:middle}
+.comp-t td:first-child{color:var(--accent);font-weight:700;text-align:center;font-family:Consolas;white-space:nowrap;width:42px}
+.comp-t td:last-child{font-family:Consolas,monospace;font-size:10px;color:#c8d6e8;white-space:nowrap;width:88px;overflow:hidden;text-overflow:ellipsis}
+.comp-t td:nth-child(2){word-break:break-word;line-height:1.35}
+.comp-t tr:last-child td{border-bottom:none}
+
+.mat-list-wrap{border:1px solid var(--border);border-radius:6px;overflow:hidden}
+.mat-row{display:flex;align-items:baseline;gap:0;padding:5px 12px;border-bottom:1px solid rgba(46,66,96,0.25)}
+.mat-row:last-child{border-bottom:none}
+.mat-row:nth-child(odd){background:rgba(255,255,255,0.015)}
+.mat-col-n{font-family:Consolas,monospace;font-weight:700;font-size:12px;min-width:46px;text-align:right;flex-shrink:0;padding-right:10px}
+.mat-col-nm{flex:1;font-size:11px;color:var(--text)}
+.mat-col-jk{font-family:Consolas,monospace;font-size:10px;color:#4a6880;margin-left:8px;flex-shrink:0}
+.note-row{
+  font-size:12px;color:var(--muted);padding:3px 0;
+  display:flex;align-items:flex-start;gap:6px;line-height:1.4}
+.note-row::before{content:'›';color:#60a5fa;font-size:14px;flex-shrink:0;line-height:1.2}
+
+/* nakladanie box */
+.naklad-box{
+  background:rgba(247,166,0,.05);border:1px solid rgba(247,166,0,.2);
+  border-radius:8px;padding:10px 12px;margin-bottom:10px}
+.naklad-title{
+  font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:1.5px;
+  color:var(--accent);margin-bottom:8px}
+.naklad-iso{font-size:20px;font-weight:900;color:#60a5fa;margin-bottom:8px}
+.naklad-iso span{font-size:11px;font-weight:400;color:var(--muted)}
+
+/* ─── NAKLADANIE VÝBER ─── */
+.btn-load-mode{
+  display:inline-flex;align-items:center;gap:6px;
+  padding:5px 14px;border-radius:16px;font-size:11.5px;font-weight:700;cursor:pointer;
+  background:rgba(239,68,68,0.12);border:1px solid rgba(239,68,68,0.45);color:#f87171;
+  transition:all .2s;letter-spacing:.2px;white-space:nowrap;
+  box-shadow:0 0 8px rgba(239,68,68,0.12)}
+.btn-load-mode:hover{background:rgba(239,68,68,0.22);box-shadow:0 0 14px rgba(239,68,68,0.28)}
+.btn-load-mode.active{
+  background:rgba(239,68,68,0.28);border-color:#ef4444;color:#fff;
+  box-shadow:0 0 18px rgba(239,68,68,0.45),inset 0 0 8px rgba(239,68,68,0.15)}
+.btn-clear-sel{
+  padding:2px 8px;border-radius:10px;font-size:10px;cursor:pointer;
+  background:rgba(239,68,68,0.12);border:1px solid rgba(239,68,68,0.35);color:#f87171;font-weight:700}
+.btn-clear-sel:hover{background:rgba(239,68,68,0.25)}
+.btn-hide-overlay{
+  padding:2px 8px;border-radius:10px;font-size:10px;cursor:pointer;
+  background:rgba(90,120,160,0.15);border:1px solid rgba(90,120,160,0.35);color:#9ab8d8;font-weight:700;
+  display:inline-block}
+.btn-hide-overlay:hover{background:rgba(90,120,160,0.3)}
+.btn-restore-overlay{
+  position:fixed;bottom:18px;right:18px;z-index:199;
+  display:none;align-items:center;gap:6px;
+  padding:9px 16px;border-radius:22px;
+  background:#1a0808;border:1.5px solid rgba(239,68,68,0.7);color:#fca5a5;
+  font-size:12px;font-weight:700;cursor:pointer;letter-spacing:.2px;
+  box-shadow:0 4px 20px rgba(239,68,68,0.35),0 0 0 3px rgba(239,68,68,0.08)}
+.btn-restore-overlay:hover{background:#2a0a0a;box-shadow:0 4px 24px rgba(239,68,68,0.5)}
+.btn-restore-overlay.visible{display:inline-flex}
+.naklad-overlay{
+  position:fixed;top:0;bottom:0;right:0;width:400px;
+  background:#0d1827;border-left:1px solid rgba(239,68,68,0.4);
+  box-shadow:-4px 0 32px rgba(0,0,0,0.7),0 0 0 1px rgba(239,68,68,0.1);
+  display:flex;flex-direction:column;z-index:200;
+  animation:slideIn .22s ease}
+@keyframes slideIn{from{transform:translateX(30px);opacity:0}to{transform:translateX(0);opacity:1}}
+.naklad-overlay-head{
+  padding:10px 14px;border-bottom:1px solid rgba(239,68,68,0.2);
+  display:flex;align-items:center;gap:8px;flex-shrink:0}
+.naklad-overlay-title{
+  font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:1.5px;color:#ef4444;flex:1}
+.naklad-overlay-body{overflow-y:auto;padding:12px 14px;flex:1}
+.naklad-overlay-body::-webkit-scrollbar{width:3px}
+.naklad-overlay-body::-webkit-scrollbar-thumb{background:#2a3a50;border-radius:2px}
+.naklad-pole-tags{display:flex;flex-wrap:wrap;gap:4px;margin-bottom:10px}
+.naklad-pole-tag{
+  padding:2px 8px;border-radius:8px;font-size:10px;font-weight:700;
+  background:rgba(239,68,68,0.15);border:1px solid rgba(239,68,68,0.4);color:#fca5a5;cursor:pointer}
+.naklad-pole-tag:hover{background:rgba(239,68,68,0.3)}
+
+/* ─── MOBILE ─── */
+@media (max-width:700px){
+  html{overflow:auto;-webkit-overflow-scrolling:touch}
+  body{height:auto !important;overflow:auto !important;-webkit-overflow-scrolling:touch}
+  header{padding:6px 12px;gap:8px}
+  .hdr-title h1{font-size:13px}
+  .hdr-title p{font-size:10px}
+  .hs{padding:4px 10px}
+  .hs .v{font-size:13px}
+  .hs .l{font-size:7px}
+  .legend-bar{padding:4px 10px;gap:8px}
+  .leg{font-size:10px}
+  .main{flex-direction:column;height:auto;overflow:visible;flex:none}
+  .schematic-area{height:auto;overflow:visible;flex:none}
+  .svg-wrap{
+    height:260px;
+    min-height:260px;
+    max-height:260px;
+    flex:none;
+    overflow-x:auto;
+    overflow-y:hidden;
+    touch-action:pan-x;
+    -webkit-overflow-scrolling:touch
+  }
+  .hint-bar{display:none}
+  .det-panel{
+    width:100% !important;
+    border-left:none;
+    border-top:1px solid var(--border);
+    height:auto;
+    max-height:none;
+    flex-shrink:0;
+    overflow:visible
+  }
+  .det-body{
+    padding:10px;
+    max-height:none;
+    overflow-y:auto;
+    -webkit-overflow-scrolling:touch
+  }
+  .grid2{grid-template-columns:1fr 1fr}
+  /* overlay full-width on tablet/mobile */
+  .naklad-overlay{width:100%;left:0;right:0;border-left:none;border-top:1px solid rgba(239,68,68,0.4)}
+}
+@media (max-width:420px){
+  .hdr-stats{display:none}
+  /* skryť iba legendu, NIE celý bar — tlačidlo nakladania musí zostať */
+  .leg{display:none}
+  .legend-bar{padding:4px 10px;gap:6px;justify-content:flex-end}
+  .svg-wrap{height:220px;min-height:220px;max-height:220px}
+  .btn-load-mode{font-size:10.5px;padding:4px 11px}
+}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo">${logoEsc||'VVN'}</div>
+  <div class="hdr-title">
+    <h1>${titleEsc}</h1>
+    <p>${fromEsc} &rarr; ${toEsc}</p>
+  </div>
+  <div class="hdr-stats">
+    <div class="hs"><div class="v" style="font-size:12px;letter-spacing:.3px">${isDvojita?'Dvojit&aacute;':'Jednoduch&aacute;'} linka ${isDvojita?'2':'1'}&times;3&times;${escHtml(linkaInfo.vodic||'—')}</div><div class="l">Typ linky</div></div>
+    <div class="hs"><div class="v">${poleCountLabel}</div><div class="l">Sto&#382;iarov${portals?' + Port&aacute;l':''}</div></div>
+    <div class="hs"><div class="v">${totalFmt} m</div><div class="l">Celkov&aacute; d&#318;&#382;ka</div></div>
+  </div>
+</header>
+
+<div class="main">
+  <div class="schematic-area">
+    <div class="legend-bar">
+      <span style="font-size:9px;color:#7a9abf;font-weight:700;letter-spacing:1.5px;text-transform:uppercase">Legenda:</span>
+      <div class="leg"><div class="leg-sq" style="background:var(--portal)"></div>Port&aacute;l</div>
+      <div class="leg"><div class="leg-sq" style="background:var(--ddK)"></div>DDK &#8211; Dvojit&yacute; kotevn&yacute;</div>
+      <div class="leg"><div class="leg-sq" style="background:var(--dkdk)"></div>DK &#8211; Kotevn&yacute;</div>
+      <div class="leg"><div class="leg-sq" style="background:var(--pk)"></div>PK &#8211; Polokotevn&yacute;</div>
+      <div class="leg"><div class="leg-sq" style="background:var(--dn)"></div>DN &#8211; Dvojit&yacute; nosn&yacute;</div>
+      <div class="leg"><div class="leg-sq" style="background:var(--jn)"></div>JN &#8211; Jednoduch&yacute; nosn&yacute;</div>
+      <button class="btn-load-mode" id="btnLoadMode" onclick="toggleLoadMode()" style="margin-left:auto">&#128230; Vybrať pre nakladanie</button>
+    </div>
+
+    <div class="svg-wrap" id="svgWrap">
+      <svg id="diagram" xmlns="http://www.w3.org/2000/svg" width="${svgW}" height="${SVG_H}" viewBox="0 0 ${svgW} ${SVG_H}" style="display:block">
+${svgMarkup}
+      </svg>
+    </div>
+
+    <div class="hint-bar">
+      <span>&#8592; Pos&uacute;vajte horizont&aacute;lne pre zobrazenie celej trasy</span>
+      <span>Kliknite na sto&#382;iar pre detailn&eacute; inform&aacute;cie &rarr;</span>
+    </div>
+  </div>
+${crossingsSummaryHtml}
+
+  <div class="det-panel">
+    <div class="det-head" id="detHead" style="display:flex;align-items:center;justify-content:center;min-height:80px">
+      <span style="color:#7a9abf;font-size:13px;text-align:center;line-height:1.6">Kliknite na stožiar<br>pre detailn&eacute; inform&aacute;cie</span>
+    </div>
+    <div class="det-body" id="detBody"></div>
+  </div>
+</div>
+
+<script>
+// ══════════════════════════════════════════════
+//  POLES DATA
+// ══════════════════════════════════════════════
+const POLES = ${polesJSON};
+const CROSSINGS = ${JSON.stringify(crossings)};
+
+const TOTAL       = ${total};
+const BASE_CHAIN  = ${baseChain};
+const IS_DVOJITA  = ${isDvojita};
+function getChainCount(pole){
+  if(pole.druh === 'Kotevný' && (pole.zt === 'DK' || pole.zt === 'DDK')) return BASE_CHAIN * 2;
+  return BASE_CHAIN;
+}
+const FROM_LABEL  = ${JSON.stringify(project.from||'Začiatok')};
+const PROJ_TITLE  = ${JSON.stringify(project.title||'Projekt')};
+const PROJ_FROM   = ${JSON.stringify(project.from||'')};
+const PROJ_TO     = ${JSON.stringify(project.to||'')};
+let currentLoadAgg   = {};
+let currentLoadPoles = [];
+const TOTAL_FMT   = ${JSON.stringify(totalFmt)};
+
+const ZT_ISO = {DDK:4, DK:2, PK:2, DN:2, JN:1, portal:4};
+const ZT_COL = {
+  portal:'#f7a600', DDK:'#c084fc', DK:'#f87171',
+  PK:'#60a5fa', DN:'#34d399', JN:'#fbbf24',
+};
+
+function ztLabel(zt){
+  const m={portal:'DDK – Dvojitý kotevný',DDK:'DDK – Dvojitý kotevný',DK:'DK – Kotevný',
+    PK:'PK – Polokotevný',DN:'DN – Dvojitý nosný',JN:'JN – Jednoduchý nosný'};
+  return m[zt]||zt;
+}
+function ztBadgeStyle(zt){
+  const m={
+    portal: 'background:rgba(247,166,0,.15);color:#f7a600;border:1px solid rgba(247,166,0,.3)',
+    DDK:    'background:rgba(147,51,234,.15);color:#c084fc;border:1px solid rgba(147,51,234,.3)',
+    DK:     'background:rgba(220,38,38,.15);color:#fca5a5;border:1px solid rgba(220,38,38,.3)',
+    PK:     'background:rgba(37,99,235,.15);color:#93c5fd;border:1px solid rgba(37,99,235,.3)',
+    DN:     'background:rgba(5,150,105,.15);color:#6ee7b7;border:1px solid rgba(5,150,105,.3)',
+    JN:     'background:rgba(217,119,6,.15);color:#fcd34d;border:1px solid rgba(217,119,6,.3)',
+  };
+  return m[zt]||'background:#111e2e;color:#9ab8d8';
+}
+function crossIcon(t){
+  if(/400.kV|Diaľnica|D61|D1/.test(t)) return '⚡';
+  if(/kV|vedenie/.test(t))             return '⚡';
+  if(/ŽSR|trať/.test(t))              return '🚆';
+  if(/rieka|Dudváh/.test(t))          return '🌊';
+  if(/kanál/.test(t))                  return '💧';
+  if(/potrubie|teplovod/.test(t))      return '🔧';
+  if(/cesta/.test(t))                  return '🛤️';
+  if(/kábel/.test(t))                  return '🔌';
+  if(/plot/.test(t))                   return '🔲';
+  return '📍';
+}
+
+// ══════════════════════════════════════════════
+//  DETAIL PANEL
+// ══════════════════════════════════════════════
+let selIdx = -1;
+
+function showDetail(idx){
+  selIdx = idx;
+  const pole = POLES[idx];
+  const z    = pole.zt || 'JN';
+  const col  = ZT_COL[z] || '#9ab8d8';
+  const hasCum = pole.cum != null;
+  const prevWithCum = idx > 0 ? POLES.slice(0,idx).reverse().find(p=>p.cum!=null) : null;
+  const nextWithCum = idx < POLES.length-1 ? POLES.slice(idx+1).find(p=>p.cum!=null) : null;
+  const pct  = (hasCum && TOTAL > 0) ? (pole.cum / TOTAL * 100).toFixed(1) : null;
+  const spanPrev = (hasCum && prevWithCum) ? (pole.cum - prevWithCum.cum).toFixed(1) : null;
+  const spanNext = (hasCum && nextWithCum) ? (nextWithCum.cum - pole.cum).toFixed(1) : null;
+  const isoPerChain = ZT_ISO[z] || 0;
+  const pnCount = pole.pnCount || 0;
+  const CHAIN_COUNT = getChainCount(pole);
+  const totalIso = (isoPerChain * CHAIN_COUNT) + pnCount;
+  const isLast = idx === POLES.length - 1;
+  const isPortalPole = pole.druh === 'Portál' || z === 'portal';
+
+  // head
+  const poleCrossings = CROSSINGS.filter(c => c.fromPole === pole.id || c.toPole === pole.id);
+  const CROSS_TYPE_MAP = {
+    vn22:'⚡ VN 22kV', vn35:'⚡ VN 35kV', vvn110:'🔶 VVN 110kV', vvn400:'🔴 VVN 400kV',
+    nn:'💡 NN 0.4kV', road:'🛣 Cesta', highway:'🛤 Diaľnica', rail:'🚂 Železnica ŽSR',
+    river:'🌊 Vodný tok', gas:'🔥 Plynovod', tele:'📡 Telekomunikácie', cable:'🔌 Kábel', other:'◈ Iné'
+  };
+  const CROSS_COLOR_MAP = {
+    vn22:'#f59e0b', vn35:'#fb923c', vvn110:'#f97316', vvn400:'#ef4444',
+    nn:'#a3e635', road:'#60a5fa', highway:'#ef4444', rail:'#a78bfa',
+    river:'#38bdf8', gas:'#fb923c', tele:'#34d399', cable:'#84cc16', other:'#9ab8d8'
+  };
+
+  const headHtml = \`
+    <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">
+      <div class="det-id" style="color:\${col}">\${pole.id}</div>
+      <span class="det-badge" style="\${ztBadgeStyle(z)}">\${z.toUpperCase()}</span>
+      \${pole.warn ? '<span style="color:#ef4444;font-size:17px" title="Upozornenie">⚠️</span>' : ''}
+      \${poleCrossings.length ? '<span style="background:rgba(249,115,22,0.18);color:#f97316;border:1px solid rgba(249,115,22,0.4);border-radius:10px;padding:2px 8px;font-size:10px;font-weight:800">🚧 '+poleCrossings.length+'× prekážka</span>' : ''}
+    </div>
+    <div class="det-sub">\${pole.typ ? pole.typ + ' &nbsp;·&nbsp; ' : ''}\${pole.oldNum ? 'Staré č. <b style="color:#c8d6e8">' + pole.oldNum + '</b>' : ''}</div>\`;
+
+  document.getElementById('detHead').innerHTML = headHtml;
+
+  // body
+  let html = '';
+
+  if(pole.warn){
+    html += \`<div class="warn"><div class="warn-t">⚠ Upozornenie</div>\${pole.warn}</div>\`;
+  }
+
+  if(poleCrossings.length){
+    html += \`<div style="margin-bottom:12px;border-radius:8px;overflow:hidden;border:2px solid rgba(251,146,60,0.45);box-shadow:0 2px 12px rgba(251,146,60,0.1)">
+      <div style="background:linear-gradient(135deg,rgba(251,146,60,0.22),rgba(251,146,60,0.12));padding:8px 12px;display:flex;align-items:center;gap:6px;border-bottom:1px solid rgba(251,146,60,0.25)">
+        <span style="font-size:15px">🚧</span>
+        <span style="font-size:12px;font-weight:800;color:#fb923c;letter-spacing:.5px">PREKÁŽKY V POLI</span>
+        <span style="margin-left:auto;background:rgba(251,146,60,0.25);color:#fb923c;font-size:10px;font-weight:800;border-radius:10px;padding:1px 8px">\${poleCrossings.length}×</span>
+      </div>\`;
+    poleCrossings.forEach(c => {
+      const lbl = CROSS_TYPE_MAP[c.typeId] || ('◈ '+c.typeId);
+      const col = CROSS_COLOR_MAP[c.typeId] || '#9ab8d8';
+      const icon = lbl.split(' ')[0];
+      const name = lbl.replace(/^\\S+\\s*/,'');
+      const noteSpan = c.note ? \`<div style="font-size:10px;color:#9ab8d8;margin-top:3px;font-style:italic">\${c.note}</div>\` : '';
+      html += \`<div style="display:flex;align-items:flex-start;gap:10px;padding:10px 12px;border-bottom:1px solid rgba(251,146,60,0.1);background:rgba(15,25,45,0.6);border-left:3px solid \${col}">
+        <span style="font-size:22px;flex-shrink:0;line-height:1.1">\${icon}</span>
+        <div style="flex:1;min-width:0">
+          <div style="font-weight:800;color:\${col};font-size:13px">\${name}</div>
+          <div style="font-size:11px;color:#7a9abf;margin-top:2px">&#128279; \${c.fromPole} <b style="color:#9ab8d8">→</b> \${c.toPole}</div>
+          \${noteSpan}
+        </div>
+      </div>\`;
+    });
+    html += \`</div>\`;
+  }
+
+  html += \`<div class="sec"><div class="sec-t">Parametre stožiara</div>
+  <div class="grid2">
+    <div class="card"><div class="ck">Typ závesu</div><div class="cv">\${ztLabel(z)}</div></div>
+    \${pole.typ ? \`<div class="card"><div class="ck">Typ stožiara</div><div class="cv">\${pole.typ}</div></div>\` : ''}
+    \${pole.oldNum ? \`<div class="card"><div class="ck">Staré číslo</div><div class="cv mono">\${pole.oldNum}</div></div>\` : ''}
+    \${pole.angle ? \`<div class="card wide"><div class="ck">Uhol lomu</div><div class="cv mono">\${pole.angle}</div></div>\` : ''}
+    \${hasCum ? \`<div class="card hi"><div class="ck">Poloha na trase</div><div class="cv mono">\${pole.cum.toLocaleString('sk')} m</div></div>\` : ''}
+    \${pct != null ? \`<div class="card hi"><div class="ck">Pozícia</div><div class="cv mono">\${pct} % trasy</div></div>\` : ''}
+    \${spanPrev != null ? \`<div class="card"><div class="ck">← Pole od predch.</div><div class="cv mono">\${spanPrev} m</div></div>\` : ''}
+    \${spanNext != null ? \`<div class="card"><div class="ck">→ Pole k nasl.</div><div class="cv mono">\${spanNext} m</div></div>\` : ''}
+  </div></div>\`;
+
+  // nakladanie
+  function otocLabel(otoceny){
+    if(otoceny === true) return \` <span style="font-size:10px;background:rgba(96,165,250,0.15);color:#60a5fa;border-radius:3px;padding:1px 5px;margin-left:4px">(Otočené)</span>\`;
+    return '';
+  }
+
+  const rawParts = (pole.parts||[]).filter(p => (p.name||'').trim());
+  const hasExtraPraporec = (pole.extraParts||[]).some(p => /praporec/i.test(p.name||''));
+  const partsAgg = {};
+  rawParts.forEach(p => {
+    const key = p.name.trim();
+    if(hasExtraPraporec && /praporec/i.test(key)) return;
+    const isIzoP = /izol[aá]tor/i.test(key);
+    const aggKey = isIzoP ? key + '||' + String(p.otoceny) : key;
+    if(!partsAgg[aggKey]) partsAgg[aggKey] = {name: key, jk: p.jk||'', total: 0, otoceny: p.otoceny};
+    partsAgg[aggKey].total += (p.n||1) * CHAIN_COUNT;
+  });
+  if(pnCount > 0 && pole.pnAno){
+    const pnOtoc = pole.pnOtoceny === true;
+    partsAgg['Izolátor (PN)||' + String(pnOtoc)] = {name:'Izolátor (PN)', jk:'', total: pnCount, otoceny: pnOtoc};
+    partsAgg['Armatúra PN (podľa projektu)'] = {name:'Armatúra PN (podľa projektu)', jk:'', total: pnCount};
+  }
+  const aggList = Object.values(partsAgg);
+
+  if(rawParts.length > 0 || aggList.length > 0){
+    // 1 reťazec
+    let chainRows = '';
+    rawParts.forEach(p => {
+      const isIso = /izol[aá]tor/i.test(p.name);
+      const nameCell = p.name + (isIso ? otocLabel(p.otoceny) : '');
+      chainRows += \`<tr>
+        <td style="font-size:13px;font-weight:800;color:\${isIso?'#60a5fa':'var(--accent)'}">\${p.n||1}×</td>
+        <td>\${nameCell}</td>
+        <td style="font-family:Consolas,monospace;font-size:11px;color:#c8d6e8">\${p.jk||''}</td>
+      </tr>\`;
+    });
+    // celý stožiar
+    let aggRows = '';
+    aggList.forEach(p => {
+      const isIso = /izol[aá]tor/i.test(p.name);
+      const nameCell = p.name + (isIso ? otocLabel(p.otoceny) : '');
+      aggRows += \`<tr>
+        <td style="font-size:13px;font-weight:800;color:\${isIso?'#60a5fa':'var(--accent)'}">\${p.total}×</td>
+        <td>\${nameCell}</td>
+        <td style="font-family:Consolas,monospace;font-size:11px;color:#c8d6e8">\${p.jk}</td>
+      </tr>\`;
+    });
+    // ── extra parts (praporce, vydlice — nie násobené závesom) ──
+    let extraRows = '';
+    (pole.extraParts||[]).forEach(p => {
+      const isIso = /izol[aá]tor/i.test(p.name||'');
+      const noteSpan = p.note ? \` <span style="font-size:10px;color:#5a7898">(\${p.note})</span>\` : '';
+      extraRows += \`<tr>
+        <td style="font-size:13px;font-weight:800;color:\${isIso?'#60a5fa':'var(--accent)'}">\${p.n||1}×</td>
+        <td>\${p.name||''}\${noteSpan}</td>
+        <td style="font-family:Consolas,monospace;font-size:11px;color:#c8d6e8">\${p.jk||''}</td>
+      </tr>\`;
+    });
+    // ── 1 reťazec — samostatná info sekcia ──
+    if(chainRows){
+      html += \`<div class="sec">
+  <div class="sec-t">Jeden Reťazec (záves)</div>
+  <table class="comp-t">
+    <thead><tr><th>Ks</th><th>Komponent</th><th>Číslo</th></tr></thead>
+    <tbody>\${chainRows}</tbody>
+  </table>
+</div>\`;
+    }
+    // ── nakladanie — celý stožiar ──
+    if(aggRows || extraRows){
+      html += \`<div class="naklad-box">
+  <div class="naklad-title">📦 Nakladanie — celkom na stožiar (\${CHAIN_COUNT}× záves)</div>
+  <table class="comp-t">
+    <thead><tr><th>Celkom</th><th>Komponent</th><th>Číslo</th></tr></thead>
+    <tbody>\${aggRows}\${extraRows}</tbody>
+  </table>
+</div>\`;
+    }
+  }
+
+
+  if(pole.notes && pole.notes.filter(n=>n).length){
+    html += \`<div class="sec"><div class="sec-t">Poznámky</div>\`;
+    pole.notes.filter(n=>n).forEach(n => { html += \`<div class="note-row">\${n}</div>\`; });
+    html += \`</div>\`;
+  }
+
+  document.getElementById('detBody').innerHTML = html;
+
+  updateAllHighlights();
+}
+
+// ══════════════════════════════════════════════
+//  NAKLADANIE — MULTI-VÝBER
+// ══════════════════════════════════════════════
+let selectedForLoad = new Set();
+let loadMode = false;
+
+function toggleLoadMode(){
+  loadMode = !loadMode;
+  const btn = document.getElementById('btnLoadMode');
+  if(loadMode){
+    btn.classList.add('active');
+    btn.textContent = '📦 Výber aktívny — kliknite na stožiar';
+  } else {
+    btn.classList.remove('active');
+    btn.textContent = '📦 Vybrať pre nakladanie';
+  }
+}
+
+function togglePoleSelection(idx){
+  if(selectedForLoad.has(idx)) selectedForLoad.delete(idx);
+  else selectedForLoad.add(idx);
+  updateAllHighlights();
+  updateLoadOverlay();
+}
+
+function clearSelection(){
+  selectedForLoad.clear();
+  updateAllHighlights();
+  updateLoadOverlay();
+  const rb = document.getElementById('btnRestoreOverlay');
+  if(rb) rb.classList.remove('visible');
+}
+
+function hideOverlay(){
+  const ov = document.getElementById('nakladOverlay');
+  if(ov) ov.style.display = 'none';
+  const rb = document.getElementById('btnRestoreOverlay');
+  if(rb && selectedForLoad.size > 0) rb.classList.add('visible');
+}
+
+function showOverlay(){
+  const rb = document.getElementById('btnRestoreOverlay');
+  if(rb) rb.classList.remove('visible');
+  updateLoadOverlay();
+}
+
+function updateAllHighlights(){
+  document.querySelectorAll('[data-pole]').forEach(a => {
+    const pIdx   = parseInt(a.getAttribute('data-pole'));
+    const isSel  = pIdx === selIdx;
+    const isLoad = selectedForLoad.has(pIdx);
+    const pZt    = POLES[pIdx] ? (POLES[pIdx].zt || 'JN') : 'JN';
+    const origCol = ZT_COL[pZt] || '#9ab8d8';
+    const col = isLoad ? '#ef4444' : isSel ? '#f7a600' : origCol;
+    Array.from(a.querySelectorAll('rect'))
+      .filter(r => r.getAttribute('fill') !== 'transparent')
+      .forEach(r => {
+        r.setAttribute('fill',   isLoad ? '#3a0a0a' : isSel ? '#f7a600' : '#0d1e35');
+        r.setAttribute('stroke', col);
+      });
+    a.querySelectorAll('text').forEach(t => {
+      if(t.getAttribute('fill') === '#fff') return;
+      t.setAttribute('fill',        isLoad ? '#fca5a5' : isSel ? '#000' : '#e8f4ff');
+      t.setAttribute('font-weight', (isLoad||isSel) ? '900' : '800');
+    });
+    a.querySelectorAll('path').forEach(p => {
+      p.setAttribute('stroke',  col);
+      p.setAttribute('opacity', (isLoad||isSel) ? '1' : '0.85');
+    });
+    a.querySelectorAll('circle').forEach(c => {
+      if(c.getAttribute('fill') === '#dc2626') return;
+      c.setAttribute('fill', col);
+    });
+    a.setAttribute('filter', (isLoad||isSel) ? 'url(#tw-glow)' : '');
+  });
+}
+
+function otocLabelGlobal(otoceny){
+  if(otoceny === true) return \` <span style="font-size:10px;background:rgba(96,165,250,0.15);color:#60a5fa;border-radius:3px;padding:1px 5px;margin-left:4px">(Otočené)</span>\`;
+  return '';
+}
+
+function updateLoadOverlay(){
+  let overlay = document.getElementById('nakladOverlay');
+  const rc = document.getElementById('restoreCount');
+  if(rc) rc.textContent = selectedForLoad.size;
+  if(selectedForLoad.size === 0){
+    if(overlay) overlay.style.display = 'none';
+    const rb = document.getElementById('btnRestoreOverlay');
+    if(rb) rb.classList.remove('visible');
+    return;
+  }
+  const agg = {};
+  selectedForLoad.forEach(idx => {
+    const pole = POLES[idx];
+    if(!pole) return;
+    const cc = getChainCount(pole);
+    const hasExtraPraporec = (pole.extraParts||[]).some(p => /praporec/i.test(p.name||''));
+    (pole.parts||[]).forEach(p => {
+      const k = (p.name||'').trim();
+      if(!k) return;
+      if(hasExtraPraporec && /praporec/i.test(k)) return;
+      const isIzoP = /izol[aá]tor/i.test(k);
+      const aggKey = isIzoP ? k + '||' + String(p.otoceny) : k;
+      if(!agg[aggKey]) agg[aggKey] = {name:k, jk:p.jk||'', total:0, otoceny:p.otoceny};
+      agg[aggKey].total += (p.n||1) * cc;
+    });
+    (pole.extraParts||[]).forEach(p => {
+      const k = (p.name||'').trim();
+      if(!k) return;
+      if(!agg[k]) agg[k] = {name:k, jk:p.jk||'', total:0};
+      agg[k].total += (p.n||1);
+    });
+    // PN
+    if((pole.pnCount||0) > 0 && pole.pnAno){
+      const pnOtoc = pole.pnOtoceny === true;
+      const pnKey = 'Izolátor (PN)||' + String(pnOtoc);
+      if(!agg[pnKey]) agg[pnKey] = {name:'Izolátor (PN)', jk:'', total:0, otoceny:pnOtoc};
+      agg[pnKey].total += pole.pnCount;
+      if(!agg['Armatúra PN']) agg['Armatúra PN'] = {name:'Armatúra PN (podľa projektu)', jk:'', total:0};
+      agg['Armatúra PN'].total += pole.pnCount;
+    }
+  });
+  const sortedIdx = Array.from(selectedForLoad).sort((a,b)=>a-b);
+  currentLoadAgg   = agg;
+  currentLoadPoles = sortedIdx.map(i => POLES[i]?.id || String(i));
+  const tags = sortedIdx.map(i =>
+    \`<span class="naklad-pole-tag" title="Odznačiť" onclick="togglePoleSelection(\${i})">\${POLES[i]?.id||i} ✕</span>\`
+  ).join('');
+  let rows = '';
+  Object.values(agg).forEach(p => {
+    const isIso = /izol[aá]tor/i.test(p.name);
+    const nameCell = p.name + (isIso ? otocLabelGlobal(p.otoceny) : '');
+    rows += \`<tr>
+      <td style="font-size:13px;font-weight:800;color:\${isIso?'#60a5fa':'#f7a600'}">\${p.total}×</td>
+      <td>\${nameCell}</td>
+      <td><span style="font-family:Consolas;font-size:11px;color:#c8d6e8">\${p.jk}</span></td>
+    </tr>\`;
+  });
+  const html2 = \`
+    <div class="naklad-overlay-head">
+      <span class="naklad-overlay-title">📦 Nakladanie — \${selectedForLoad.size} stožiar\${selectedForLoad.size===1?'':'e'}</span>
+      <button class="btn-hide-overlay" onclick="printNakladanie()" style="background:rgba(96,165,250,0.15);border-color:rgba(96,165,250,0.4);color:#93c5fd">👁 Zobraziť</button>
+      <button class="btn-hide-overlay" onclick="downloadTxtNakladanie()" style="background:rgba(52,211,153,0.12);border-color:rgba(52,211,153,0.35);color:#6ee7b7">💾 Uložiť</button>
+      <button class="btn-hide-overlay" onclick="hideOverlay()">Skryť ▼</button>
+      <button class="btn-clear-sel" onclick="clearSelection()">✕ Zrušiť výber</button>
+    </div>
+    <div class="naklad-overlay-body">
+      <div class="naklad-pole-tags">\${tags}</div>
+      <table class="comp-t">
+        <thead><tr><th>Celkom</th><th>Komponent</th><th>Číslo</th></tr></thead>
+        <tbody>\${rows}</tbody>
+      </table>
+    </div>\`;
+  if(!overlay){
+    overlay = document.createElement('div');
+    overlay.id = 'nakladOverlay';
+    overlay.className = 'naklad-overlay';
+    document.body.appendChild(overlay);
+  }
+  overlay.innerHTML = html2;
+  overlay.style.display = 'flex';
+  overlay.style.flexDirection = 'column';
+}
+
+function buildNakladanieHTML(){
+  const items = Object.values(currentLoadAgg);
+  if(!items.length) return null;
+  const poleList = currentLoadPoles.join(', ');
+  let trs = '';
+  items.forEach(p => {
+    const ot = p.otoceny === true ? ' <span style="display:inline-block;font-size:10px;font-weight:900;background:#dc2626;color:#fff;border-radius:4px;padding:1px 7px;letter-spacing:.5px;text-transform:uppercase;box-shadow:0 0 6px rgba(220,38,38,.5)">Oto\u010den\u00e9</span>' : '';
+    trs += '<tr><td style="font-weight:800;font-size:15px;padding:5px 10px;white-space:nowrap">' + p.total + 'x</td>'
+         + '<td style="padding:5px 10px">' + p.name + ot + '</td>'
+         + '<td style="padding:5px 10px;font-family:Consolas,monospace;font-size:11px;color:#555">' + (p.jk||'') + '</td></tr>';
+  });
+  const route = PROJ_FROM ? PROJ_FROM + ' &rarr; ' + PROJ_TO : '';
+  return [
+    '<!DOCTYPE html><html lang="sk"><head><meta charset="UTF-8">',
+    '<title>Nakladanie - ' + PROJ_TITLE + '</title>',
+    '<style>*{box-sizing:border-box;margin:0;padding:0}',
+    'body{font-family:Segoe UI,Arial,sans-serif;font-size:13px;color:#111;padding:20px}',
+    'h2{font-size:17px;font-weight:800;margin-bottom:3px}',
+    'p{color:#555;font-size:11px;margin-bottom:14px}',
+    'table{border-collapse:collapse;width:100%}',
+    'th{background:#111;color:#fff;text-align:left;padding:6px 10px;font-size:11px}',
+    'tr:nth-child(even){background:#f8f8f8}tr:hover{background:#f0f4ff}',
+    'td{border-bottom:1px solid #e8e8e8}',
+    '.btn{display:inline-block;margin-bottom:16px;padding:9px 26px;background:#1e40af;color:#fff;border:none;border-radius:5px;font-size:13px;font-weight:700;cursor:pointer}',
+    '@media print{.btn{display:none}body{padding:8px}}</style>',
+    '</head><body>',
+    '<button class="btn" onclick="window.print()">Tla\u010di\u0165</button>',
+    '<h2>Nakladanie - ' + PROJ_TITLE + '</h2>',
+    '<p>Stoziare: ' + poleList + (route ? '  &middot;  ' + route : '') + '</p>',
+    '<table><thead><tr><th style="width:70px">Ks</th><th>Komponent</th><th style="width:140px">JK cislo</th></tr></thead>',
+    '<tbody>' + trs + '</tbody></table>',
+    '</body></html>'
+  ].join('');
+}
+function printNakladanie(){
+  const html = buildNakladanieHTML();
+  if(!html) return;
+  const w = window.open('','_blank');
+  if(!w) return;
+  w.document.write(html);
+  w.document.close();
+}
+
+function downloadTxtNakladanie(){
+  const items=Object.values(currentLoadAgg);
+  if(!items.length) return;
+  const poleList=currentLoadPoles.join(', ');
+  const route=PROJ_FROM?PROJ_FROM+' \u2192 '+PROJ_TO:'';
+
+  function crc32(buf){
+    const t=[];for(let i=0;i<256;i++){let c=i;for(let j=0;j<8;j++)c=c&1?(0xEDB88320^(c>>>1)):c>>>1;t[i]=c;}
+    let c=0xFFFFFFFF;for(let i=0;i<buf.length;i++)c=t[(c^buf[i])&0xFF]^(c>>>8);
+    return(c^0xFFFFFFFF)>>>0;
+  }
+  function makeZip(files){
+    const enc=new TextEncoder(),en=[];let off=0;
+    for(const[nm,ct]of files){
+      const n=enc.encode(nm),d=enc.encode(ct),cr=crc32(d);
+      const lh=new Uint8Array(30+n.length),v=new DataView(lh.buffer);
+      v.setUint32(0,0x04034b50,true);v.setUint16(4,20,true);
+      v.setUint32(8,0,true);v.setUint32(12,0,true);
+      v.setUint32(14,cr,true);v.setUint32(18,d.length,true);v.setUint32(22,d.length,true);
+      v.setUint16(26,n.length,true);lh.set(n,30);
+      en.push({n,d,cr,off,lh});off+=lh.length+d.length;
+    }
+    const cd=[];let cds=0;
+    for(const e of en){
+      const c=new Uint8Array(46+e.n.length),v=new DataView(c.buffer);
+      v.setUint32(0,0x02014b50,true);v.setUint16(4,20,true);v.setUint16(6,20,true);
+      v.setUint32(8,0,true);v.setUint32(12,0,true);
+      v.setUint32(16,e.cr,true);v.setUint32(20,e.d.length,true);v.setUint32(24,e.d.length,true);
+      v.setUint16(28,e.n.length,true);v.setUint32(42,e.off,true);
+      c.set(e.n,46);cd.push(c);cds+=c.length;
+    }
+    const eo=new Uint8Array(22),ev=new DataView(eo.buffer);
+    ev.setUint32(0,0x06054b50,true);ev.setUint16(8,en.length,true);ev.setUint16(10,en.length,true);
+    ev.setUint32(12,cds,true);ev.setUint32(16,off,true);
+    const ps=[...en.map(e=>[e.lh,e.d]).flat(),...cd,eo];
+    const out=new Uint8Array(ps.reduce((s,p)=>s+p.length,0));let pos=0;
+    for(const p of ps){out.set(p,pos);pos+=p.length;}
+    return out;
+  }
+
+  function xe(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+  function cl(i){return String.fromCharCode(65+i);}
+  function sc(col,row,val,si){
+    return '<c r="'+cl(col)+row+'"'+(si!=null?' s="'+si+'"':'')+' t="inlineStr"><is><t>'+xe(val)+'</t></is></c>';
+  }
+  function nc(col,row,val,si){
+    return '<c r="'+cl(col)+row+'"'+(si!=null?' s="'+si+'"':'')+'><v>'+val+'</v></c>';
+  }
+  function scRich(col,row,name,otoceny,si){
+    const ref=cl(col)+row;
+    const attr=(si!=null?' s="'+si+'"':'');
+    if(!otoceny) return '<c r="'+ref+'"'+attr+' t="inlineStr"><is><t>'+xe(name)+'</t></is></c>';
+    return '<c r="'+ref+'"'+attr+' t="inlineStr"><is>'
+      +'<r><t xml:space="preserve">'+xe(name)+'  </t></r>'
+      +'<r><rPr><b/><color rgb="FFDC2626"/><sz val="11"/><name val="Calibri"/></rPr><t>[ Oto\u010den\u00e9 ]</t></r>'
+      +'</is></c>';
+  }
+
+  let sr='',mc=[],r=1;
+
+  // Row 1: Title — merged A:C, white bold on deep navy
+  sr+='<row r="'+r+'" ht="28" customHeight="1">'+sc(0,r,'Nakl\u00e1dka \u2014 '+PROJ_TITLE,1)+sc(1,r,'',1)+sc(2,r,'',1)+'</row>';
+  mc.push('A'+r+':C'+r);r++;
+
+  // Row 2: Route (if set) — label A, value B:C
+  if(route){
+    sr+='<row r="'+r+'" ht="17" customHeight="1">'+sc(0,r,'Trasa:',2)+sc(1,r,route,3)+sc(2,r,'',3)+'</row>';
+    mc.push('B'+r+':C'+r);r++;
+  }
+
+  // Row 3: Poles — label A, value B:C
+  sr+='<row r="'+r+'" ht="17" customHeight="1">'+sc(0,r,'Sto\u017eiare:',2)+sc(1,r,poleList,3)+sc(2,r,'',3)+'</row>';
+  mc.push('B'+r+':C'+r);r++;
+
+  // Thin spacer
+  sr+='<row r="'+r+'" ht="4" customHeight="1"></row>';r++;
+
+  // Header row — freeze pane target
+  const headerRow=r;
+  sr+='<row r="'+r+'" ht="22" customHeight="1">'+sc(0,r,'Ks',4)+sc(1,r,'Komponent',4)+sc(2,r,'JK \u010d\u00edslo',4)+'</row>';r++;
+
+  // Data rows
+  items.forEach(function(p,i){
+    const even=i%2===0;
+    sr+='<row r="'+r+'" ht="18" customHeight="1">'+nc(0,r,p.total,even?5:6)+scRich(1,r,p.name,p.otoceny===true,even?7:8)+sc(2,r,p.jk||'',even?9:10)+'</row>';r++;
+  });
+
+
+  const mcXml=mc.length?'<mergeCells count="'+mc.length+'">'+mc.map(function(ref){return '<mergeCell ref="'+ref+'"/>';}).join('')+'</mergeCells>':'';
+  const freezeCell='A'+(headerRow+1);
+  const svXml='<sheetViews><sheetView workbookViewId="0"><pane ySplit="'+headerRow+'" topLeftCell="'+freezeCell+'" state="frozen"/><selection pane="bottomLeft" activeCell="'+freezeCell+'" sqref="'+freezeCell+'"/></sheetView></sheetViews>';
+  const afXml='<autoFilter ref="A'+headerRow+':C'+headerRow+'"/>';
+
+  // ── Styles ──────────────────────────────────────────────────────────────
+  // Fonts: 0=normal, 1=white bold 13 (title), 2=muted bold 10 (info lbl),
+  //        3=normal info val, 4=white bold 11 (header), 5=bold dark (total)
+  const ST='<?xml version="1.0" encoding="UTF-8" standalone="yes"?>'
+    +'<styleSheet xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main">'
+    +'<fonts count="6">'
+    +'<font><sz val="11"/><name val="Calibri"/></font>'
+    +'<font><b/><sz val="13"/><name val="Calibri"/><color rgb="FFFFFFFF"/></font>'
+    +'<font><b/><sz val="10"/><name val="Calibri"/><color rgb="FF1a3a60"/></font>'
+    +'<font><sz val="11"/><name val="Calibri"/><color rgb="FF1a1a2e"/></font>'
+    +'<font><b/><sz val="11"/><name val="Calibri"/><color rgb="FFFFFFFF"/></font>'
+    +'<font><b/><sz val="11"/><name val="Calibri"/><color rgb="FF0f2540"/></font>'
+    +'</fonts>'
+    // Fills: 0=none, 1=gray125(req), 2=title deep navy, 3=header navy,
+    //        4=even light blue, 5=total row pale blue
+    +'<fills count="6">'
+    +'<fill><patternFill patternType="none"/></fill>'
+    +'<fill><patternFill patternType="gray125"/></fill>'
+    +'<fill><patternFill patternType="solid"><fgColor rgb="FF0d1e33"/><bgColor indexed="64"/></patternFill></fill>'
+    +'<fill><patternFill patternType="solid"><fgColor rgb="FF1a3a60"/><bgColor indexed="64"/></patternFill></fill>'
+    +'<fill><patternFill patternType="solid"><fgColor rgb="FFeef5ff"/><bgColor indexed="64"/></patternFill></fill>'
+    +'<fill><patternFill patternType="solid"><fgColor rgb="FFd6e8f8"/><bgColor indexed="64"/></patternFill></fill>'
+    +'</fills>'
+    // Borders: 0=none, 1=thin blue-gray
+    +'<borders count="2">'
+    +'<border><left/><right/><top/><bottom/><diagonal/></border>'
+    +'<border>'
+    +'<left style="thin"><color rgb="FFb8d0e8"/></left>'
+    +'<right style="thin"><color rgb="FFb8d0e8"/></right>'
+    +'<top style="thin"><color rgb="FFb8d0e8"/></top>'
+    +'<bottom style="thin"><color rgb="FFb8d0e8"/></bottom>'
+    +'<diagonal/></border>'
+    +'</borders>'
+    +'<cellStyleXfs count="1"><xf numFmtId="0" fontId="0" fillId="0" borderId="0"/></cellStyleXfs>'
+    +'<cellXfs>'
+    // 0: normal
+    +'<xf numFmtId="0" fontId="0" fillId="0" borderId="0" xfId="0"/>'
+    // 1: title — white bold 13, deep navy bg, no border, center+vcenter
+    +'<xf numFmtId="0" fontId="1" fillId="2" borderId="0" xfId="0" applyFont="1" applyFill="1" applyAlignment="1"><alignment horizontal="left" vertical="center" indent="1"/></xf>'
+    // 2: info label — muted bold 10, no fill
+    +'<xf numFmtId="0" fontId="2" fillId="0" borderId="0" xfId="0" applyFont="1" applyAlignment="1"><alignment vertical="center" indent="1"/></xf>'
+    // 3: info value — light text, no fill
+    +'<xf numFmtId="0" fontId="3" fillId="0" borderId="0" xfId="0" applyFont="1" applyAlignment="1"><alignment vertical="center"/></xf>'
+    // 4: column header — white bold 11, navy bg, thin border, center
+    +'<xf numFmtId="0" fontId="4" fillId="3" borderId="1" xfId="0" applyFont="1" applyFill="1" applyBorder="1" applyAlignment="1"><alignment horizontal="center" vertical="center"/></xf>'
+    // 5: even qty — centered, light blue bg, thin border
+    +'<xf numFmtId="0" fontId="0" fillId="4" borderId="1" xfId="0" applyFill="1" applyBorder="1" applyAlignment="1"><alignment horizontal="center" vertical="center"/></xf>'
+    // 6: odd qty — centered, white bg, thin border
+    +'<xf numFmtId="0" fontId="0" fillId="0" borderId="1" xfId="0" applyBorder="1" applyAlignment="1"><alignment horizontal="center" vertical="center"/></xf>'
+    // 7: even name — light blue bg, thin border, vcenter, indent
+    +'<xf numFmtId="0" fontId="0" fillId="4" borderId="1" xfId="0" applyFill="1" applyBorder="1" applyAlignment="1"><alignment vertical="center" indent="1"/></xf>'
+    // 8: odd name — white bg, thin border, vcenter, indent
+    +'<xf numFmtId="0" fontId="0" fillId="0" borderId="1" xfId="0" applyBorder="1" applyAlignment="1"><alignment vertical="center" indent="1"/></xf>'
+    // 9: even jk — light blue bg, thin border, vcenter
+    +'<xf numFmtId="0" fontId="0" fillId="4" borderId="1" xfId="0" applyFill="1" applyBorder="1" applyAlignment="1"><alignment vertical="center" indent="1"/></xf>'
+    // 10: odd jk — white bg, thin border, vcenter
+    +'<xf numFmtId="0" fontId="0" fillId="0" borderId="1" xfId="0" applyBorder="1" applyAlignment="1"><alignment vertical="center" indent="1"/></xf>'
+    // 11: total qty — bold dark, pale blue bg, thin border, center
+    +'<xf numFmtId="0" fontId="5" fillId="5" borderId="1" xfId="0" applyFont="1" applyFill="1" applyBorder="1" applyAlignment="1"><alignment horizontal="center" vertical="center"/></xf>'
+    // 12: total label — bold dark, pale blue bg, thin border, vcenter
+    +'<xf numFmtId="0" fontId="5" fillId="5" borderId="1" xfId="0" applyFont="1" applyFill="1" applyBorder="1" applyAlignment="1"><alignment vertical="center" indent="1"/></xf>'
+    +'</cellXfs>'
+    +'<cellStyles count="1"><cellStyle name="Normal" xfId="0" builtinId="0"/></cellStyles>'
+    +'</styleSheet>';
+
+  const CT='<?xml version="1.0" encoding="UTF-8" standalone="yes"?>'
+    +'<Types xmlns="http://schemas.openxmlformats.org/package/2006/content-types">'
+    +'<Default Extension="rels" ContentType="application/vnd.openxmlformats-package.relationships+xml"/>'
+    +'<Default Extension="xml" ContentType="application/xml"/>'
+    +'<Override PartName="/xl/workbook.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet.main+xml"/>'
+    +'<Override PartName="/xl/worksheets/sheet1.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.worksheet+xml"/>'
+    +'<Override PartName="/xl/styles.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.styles+xml"/>'
+    +'</Types>';
+  const R='<?xml version="1.0" encoding="UTF-8" standalone="yes"?>'
+    +'<Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships">'
+    +'<Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/officeDocument" Target="xl/workbook.xml"/>'
+    +'</Relationships>';
+  const WB='<?xml version="1.0" encoding="UTF-8" standalone="yes"?>'
+    +'<workbook xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main" xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships">'
+    +'<sheets><sheet name="Nakl\u00e1dka" sheetId="1" r:id="rId1"/></sheets></workbook>';
+  const WBR='<?xml version="1.0" encoding="UTF-8" standalone="yes"?>'
+    +'<Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships">'
+    +'<Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/worksheet" Target="worksheets/sheet1.xml"/>'
+    +'<Relationship Id="rId2" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/styles" Target="styles.xml"/>'
+    +'</Relationships>';
+  const SH='<?xml version="1.0" encoding="UTF-8" standalone="yes"?>'
+    +'<worksheet xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main">'
+    +svXml
+    +'<cols>'
+    +'<col min="1" max="1" width="8" customWidth="1"/>'
+    +'<col min="2" max="2" width="50" customWidth="1"/>'
+    +'<col min="3" max="3" width="26" customWidth="1"/>'
+    +'</cols>'
+    +'<sheetData>'+sr+'</sheetData>'
+    +afXml
+    +mcXml
+    +'</worksheet>';
+
+  const zip=makeZip([
+    ['[Content_Types].xml',CT],['_rels/.rels',R],
+    ['xl/workbook.xml',WB],['xl/_rels/workbook.xml.rels',WBR],
+    ['xl/styles.xml',ST],['xl/worksheets/sheet1.xml',SH]
+  ]);
+  const poleIds=currentLoadPoles.map(function(id){return id.replace(/[\\/:*?"<>|]/g,'').trim();}).join('-');
+  const fname='Nakl\u00e1dka ('+poleIds+').xlsx';
+  const blob=new Blob([zip],{type:'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'});
+  const a=document.createElement('a');
+  a.href=URL.createObjectURL(blob);a.download=fname;a.click();URL.revokeObjectURL(a.href);
+}
+
+function resetDetail(){
+  selIdx = -1;
+  document.getElementById('detHead').innerHTML =
+    \`<span style="color:#7a9abf;font-size:13px;text-align:center;line-height:1.6">Kliknite na stožiar<br>pre detailné informácie</span>\`;
+  document.getElementById('detBody').innerHTML = '';
+  updateAllHighlights();
+}
+
+// ══════════════════════════════════════════════
+//  EVENT HANDLERS
+// ══════════════════════════════════════════════
+let _txStart = 0, _tyStart = 0;
+
+let activeCrossing=-1;
+function resetCrossings(){
+  activeCrossing=-1;
+  document.querySelectorAll('.cross-grp').forEach(el=>el.classList.remove('cx-active','cx-dimmed'));
+}
+document.querySelectorAll('[data-crossing]').forEach(g=>{
+  const ci=parseInt(g.getAttribute('data-crossing'));
+  const tapCross=()=>{
+    if(activeCrossing===ci){ resetCrossings(); }
+    else {
+      activeCrossing=ci;
+      document.querySelectorAll('.cross-grp').forEach(el=>{
+        const idx=parseInt(el.getAttribute('data-crossing'));
+        el.classList.toggle('cx-active',idx===ci);
+        el.classList.toggle('cx-dimmed',idx!==ci);
+      });
+    }
+  };
+  g.addEventListener('click',e=>{ e.stopPropagation(); tapCross(); });
+  g.addEventListener('touchstart',e=>{
+    _txStart=e.touches[0].clientX; _tyStart=e.touches[0].clientY;
+  },{passive:true});
+  g.addEventListener('touchend',e=>{
+    const dx=Math.abs(e.changedTouches[0].clientX-_txStart);
+    const dy=Math.abs(e.changedTouches[0].clientY-_tyStart);
+    if(dx<12&&dy<12){ e.stopPropagation(); e.preventDefault(); tapCross(); }
+  },{passive:false});
+});
+
+document.querySelectorAll('[data-pole]').forEach(a => {
+  const idx = parseInt(a.getAttribute('data-pole'));
+  const tap = () => {
+    if(loadMode){
+      togglePoleSelection(idx);
+    } else {
+      showDetail(idx);
+      setTimeout(() => {
+        const det = document.querySelector('.det-panel');
+        if(det){
+            const y = det.getBoundingClientRect().top + window.pageYOffset - 8;
+            try{ window.scrollTo({top:y, behavior:'smooth'}); }catch(e){ window.scrollTo(0,y); }
+          }
+      }, 80);
+    }
+  };
+  a.addEventListener('click', e => { e.preventDefault(); tap(); });
+  a.addEventListener('touchstart', e => {
+    _txStart = e.touches[0].clientX;
+    _tyStart = e.touches[0].clientY;
+  }, {passive:true});
+  a.addEventListener('touchend', e => {
+    const dx = Math.abs(e.changedTouches[0].clientX - _txStart);
+    const dy = Math.abs(e.changedTouches[0].clientY - _tyStart);
+    if(dx < 12 && dy < 12){ e.preventDefault(); tap(); }
+  }, {passive:false});
+});
+
+document.getElementById('svgWrap').addEventListener('click', e => {
+  if(!e.target.closest('[data-pole]')){ resetDetail(); resetCrossings(); }
+});
+document.getElementById('svgWrap').addEventListener('touchend', e => {
+  if(!e.target.closest('[data-pole]')){
+    const dx = Math.abs(e.changedTouches[0].clientX - _txStart);
+    const dy = Math.abs(e.changedTouches[0].clientY - _tyStart);
+    if(dx < 12 && dy < 12){ resetDetail(); resetCrossings(); }
+  }
+}, {passive:true});
+
+// no pole pre-selected — wait for user click
+<\/script>
+<button class="btn-restore-overlay" id="btnRestoreOverlay" onclick="showOverlay()">&#128230; <span id="restoreCount">0</span> sto&#382;iare</button>
+</body>
+</html>`;
+
+  if(previewMode) return html;
+  const filename = sanitizeFilename(project.title||'Preizolacia') + '.html';
+  downloadText(html, filename, 'text/html');
+}
+
+// ══════════════════════════════════════════════
+//  UTILS
+// ══════════════════════════════════════════════
+function escHtml(s){
+  if(s==null) return '';
+  return String(s)
+    .replace(/&/g,'&amp;')
+    .replace(/</g,'&lt;')
+    .replace(/>/g,'&gt;')
+    .replace(/"/g,'&quot;')
+    .replace(/'/g,'&#39;');
+}
+function sanitizeFilename(s){
+  return s.replace(/[^a-zA-Z0-9áéíóúäöüýžčšťľŕĺňÁÉÍÓÚÄÖÜÝŽČŠŤĽŔĹŇ\-_ ]/g,'-').replace(/\s+/g,'-');
+}
+function downloadText(content, filename, type){
+  const blob = new Blob([content], {type});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href=url; a.download=filename; a.click();
+  setTimeout(()=>URL.revokeObjectURL(url),1000);
+}
+
+// ══════════════════════════════════════════════
+//  BOOT
+// ══════════════════════════════════════════════
+document.getElementById('btnAddPole').addEventListener('click', addPole);
+document.getElementById('btnAddTemplate').addEventListener('click', addTemplate);
+document.getElementById('btnLoadHTMLQuick')?.addEventListener('click', loadFromHTML);
+
+// ── Project-actions toolbar (Tab 1) ──
+document.getElementById('btnNewProject').addEventListener('click', ()=>{
+  const url = window.location.href.split('?')[0] + '?fresh=1';
+  window.open(url, '_blank');
+});
+document.getElementById('btnSaveAsHTML').addEventListener('click', ()=> generateHTML());
+document.getElementById('btnPreviewHTML').addEventListener('click', ()=>{
+  const html = generateHTML(true);
+  if(!html) return;
+  const blob = new Blob([html], {type:'text/html;charset=utf-8'});
+  const url = URL.createObjectURL(blob);
+  const w = window.open(url, '_blank');
+  if(w) w.addEventListener('unload', ()=> URL.revokeObjectURL(url), {once:true});
+});
+document.getElementById('btnLoadHTMLProj').addEventListener('click', loadFromHTML);
+
+initTabs();
+bindProjectFields();
+bindLinkaFields();
+
+const isFresh = new URLSearchParams(window.location.search).get('fresh') === '1';
+if(isFresh){
+  project = { title:'', logo:'', from:'', to:'' };
+  poles = []; draftPole = null; selectedPoleIdx = -1;
+  templates = getDefaultTemplates();
+  linkaInfo = { napatie:'110 kV', typLinky:'1x3', vodic:'243-AL', kzl:'OPGW', zl:'ZL 185' };
+} else {
+  loadState();
+}
+// Migrate old poles: set otoceny on insulator parts that don't have it yet
+poles.forEach(pole => {
+  (pole.parts||[]).forEach(part => {
+    if(/izol[aá]tor/i.test(part.name||'') && part.otoceny === undefined)
+      part.otoceny = izoDefaultOtoceny(pole.zt);
+  });
+});
+fillProjectFields();
+renderPoleList();
+
+// ══════════════════════════════════════════════
+//  USER MATERIALS (localStorage)
+// ══════════════════════════════════════════════
+let userMaterials = [];
+function loadUserMaterials(){
+  try{ userMaterials = JSON.parse(localStorage.getItem('vvn-user-mat')||'[]'); }catch(e){ userMaterials=[]; }
+}
+function saveUserMaterials(){
+  localStorage.setItem('vvn-user-mat', JSON.stringify(userMaterials));
+}
+function getAllMaterials(){
+  // merge MATERIAL_DB + userMaterials into unified category list
+  const map = {};
+  MATERIAL_DB.forEach(cat => {
+    map[cat.cat] = map[cat.cat] || {cat:cat.cat, items:[], builtin:true};
+    cat.items.forEach(it => map[cat.cat].items.push({...it, builtin:true}));
+  });
+  userMaterials.forEach(it => {
+    const c = it.cat || 'Vlastné';
+    map[c] = map[c] || {cat:c, items:[], builtin:false};
+    map[c].items.push({...it, builtin:false});
+  });
+  return Object.values(map);
+}
+function renderMatDbList(){
+  const wrap = document.getElementById('mat-db-list');
+  if(!wrap) return;
+  const all = getAllMaterials();
+  // fill datalist for category autocomplete
+  const dl = document.getElementById('mat-cat-list');
+  if(dl) dl.innerHTML = all.map(c=>`<option value="${escHtml(c.cat)}">`).join('');
+  wrap.innerHTML = '';
+  all.forEach(cat => {
+    const sec = document.createElement('div');
+    sec.style.cssText = 'border-bottom:1px solid rgba(46,66,96,0.4);margin-bottom:2px';
+    const hdr = document.createElement('div');
+    hdr.style.cssText = 'display:flex;align-items:center;gap:6px;padding:7px 8px;cursor:pointer;background:#0d1624;border-radius:4px;margin-bottom:2px;user-select:none';
+    hdr.innerHTML = `<span style="font-size:9px;color:var(--muted)">▶</span><span style="font-size:10px;font-weight:700;letter-spacing:.8px;text-transform:uppercase;color:var(--muted)">${escHtml(cat.cat)}</span><span style="margin-left:auto;font-size:10px;color:var(--muted)">${cat.items.length} ks</span>`;
+    const body = document.createElement('div');
+    body.style.display = 'none';
+    hdr.addEventListener('click', ()=>{
+      const open = body.style.display !== 'none';
+      body.style.display = open ? 'none' : 'block';
+      hdr.querySelector('span').textContent = open ? '▶' : '▼';
+    });
+    cat.items.forEach((it, idx) => {
+      const row = document.createElement('div');
+      row.style.cssText = 'display:flex;align-items:center;gap:8px;padding:4px 12px;border-bottom:1px solid rgba(46,66,96,0.2)';
+      row.innerHTML = `<span style="flex:1;font-size:11px;color:var(--text)">${escHtml(it.name)}</span><span style="font-family:Consolas,monospace;font-size:10px;color:#4a6880">${escHtml(it.jk)}</span>`;
+      if(!it.builtin){
+        const del = document.createElement('button');
+        del.textContent = '✕';
+        del.className = 'btn-remove';
+        del.style.cssText = 'padding:1px 5px;font-size:10px';
+        del.addEventListener('click', ()=>{
+          userMaterials = userMaterials.filter(u => !(u.cat===it.cat && u.name===it.name && u.jk===it.jk));
+          saveUserMaterials();
+          renderMatDbList();
+        });
+        row.appendChild(del);
+      }
+      body.appendChild(row);
+    });
+    sec.appendChild(hdr);
+    sec.appendChild(body);
+    wrap.appendChild(sec);
+  });
+}
+loadUserMaterials();
+document.addEventListener('DOMContentLoaded', ()=>{
+  // Populate category datalist immediately on load
+  const dl = document.getElementById('mat-cat-list');
+  if(dl) dl.innerHTML = getAllMaterials().map(c=>`<option value="${escHtml(c.cat)}">`).join('');
+
+  const addBtn = document.getElementById('mat-add-btn');
+  if(addBtn) addBtn.addEventListener('click', ()=>{
+    const cat  = document.getElementById('mat-new-cat').value.trim();
+    const name = document.getElementById('mat-new-name').value.trim();
+    const jk   = document.getElementById('mat-new-jk').value.trim();
+    if(!name){ alert('Zadaj názov materiálu.'); return; }
+    if(!cat){ alert('Zadaj kategóriu.'); return; }
+    userMaterials.push({cat, name, jk});
+    saveUserMaterials();
+    document.getElementById('mat-new-cat').value = cat; // keep category for next item
+    document.getElementById('mat-new-name').value = '';
+    document.getElementById('mat-new-jk').value = '';
+    renderMatDbList();
+  });
+});
+
+// ══════════════════════════════════════════════
+//  MATERIAL PICKER
+// ══════════════════════════════════════════════
+(function(){
+  // Build picker DOM
+  const picker = document.createElement('div');
+  picker.id = 'mat-picker';
+  picker.style.display = 'none';
+  picker.innerHTML = `<input id="mat-picker-search" placeholder="🔍 Hľadať materiál..." autocomplete="off">
+<div id="mat-picker-body"></div>`;
+  document.body.appendChild(picker);
+
+  let _nameEl = null, _jkEl = null;
+
+  function buildPicker(filter){
+    const body = document.getElementById('mat-picker-body');
+    const q = (filter||'').toLowerCase();
+    body.innerHTML = '';
+    getAllMaterials().forEach(cat => {
+      const items = cat.items.filter(it =>
+        !q || it.name.toLowerCase().includes(q) || it.jk.toLowerCase().includes(q)
+      );
+      if(!items.length) return;
+      const div = document.createElement('div');
+      div.className = 'mp-cat' + (q ? ' open' : '');
+      div.innerHTML = `<div class="mp-cat-hdr"><span class="mp-arr">▶</span>${cat.cat}</div><div class="mp-items"></div>`;
+      div.querySelector('.mp-cat-hdr').addEventListener('click', ()=> div.classList.toggle('open'));
+      const itemsDiv = div.querySelector('.mp-items');
+      items.forEach(it => {
+        const row = document.createElement('div');
+        row.className = 'mp-item';
+        row.innerHTML = `<span>${it.name}</span><span class="mp-item-jk">${it.jk}</span>`;
+        row.addEventListener('mousedown', e => {
+          e.preventDefault();
+          // set JK first — name's input event triggers re-render which destroys _jkEl
+          if(_jkEl)  { _jkEl.value  = it.jk;   _jkEl.dispatchEvent(new Event('input')); }
+          if(_nameEl){ _nameEl.value = it.name; _nameEl.dispatchEvent(new Event('input')); }
+          closePicker();
+        });
+        itemsDiv.appendChild(row);
+      });
+      body.appendChild(div);
+    });
+  }
+
+  function openPicker(btn, nameEl, jkEl){
+    _nameEl = nameEl; _jkEl = jkEl;
+    const rect = btn.getBoundingClientRect();
+    picker.style.display = 'flex';
+    // position below button, flip if needed
+    let top = rect.bottom + 4;
+    let left = rect.left;
+    if(top + 340 > window.innerHeight) top = rect.top - 344;
+    if(left + 300 > window.innerWidth) left = window.innerWidth - 308;
+    picker.style.top  = top + 'px';
+    picker.style.left = left + 'px';
+    const search = document.getElementById('mat-picker-search');
+    search.value = '';
+    buildPicker('');
+    setTimeout(()=> search.focus(), 50);
+  }
+
+  function closePicker(){ picker.style.display='none'; _nameEl=null; _jkEl=null; }
+
+  document.getElementById('mat-picker-search').addEventListener('input', e => buildPicker(e.target.value));
+  document.addEventListener('mousedown', e => {
+    if(!picker.contains(e.target) && !e.target.classList.contains('btn-mat-pick')) closePicker();
+  });
+  document.addEventListener('keydown', e => { if(e.key==='Escape') closePicker(); });
+
+  // expose globally
+  window.openMatPicker = openPicker;
+})();
+</script>
+</body>
+</html>
