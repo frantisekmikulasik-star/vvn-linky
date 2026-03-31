@@ -1,0 +1,3004 @@
+<!DOCTYPE html>
+<html lang="sk">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Preizolácia - Linka 8312 | 110kV VVN</title>
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2032%2032%22%3E%3Ccircle%20cx%3D%2216%22%20cy%3D%2216%22%20r%3D%2215%22%20fill%3D%22white%22%20stroke%3D%22%23cc0000%22%20stroke-width%3D%221.5%22%2F%3E%3Ctext%20x%3D%2216%22%20y%3D%2221%22%20text-anchor%3D%22middle%22%20font-size%3D%2210.5%22%20font-weight%3D%22900%22%20fill%3D%22%23cc0000%22%20font-family%3D%22Arial%2Csans-serif%22%20letter-spacing%3D%220.5%22%3EVVN%3C%2Ftext%3E%3C%2Fsvg%3E">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#1a2840;--panel:#1e2d42;--border:#2e4260;
+  --text:#eaf2ff;--muted:#9ab8d8;--accent:#f7a600;
+  --ddK:#c084fc;--dkdk:#f87171;--pk:#60a5fa;--dn:#34d399;--jn:#fbbf24;--portal:#f7a600;
+}
+body{background:var(--bg);color:var(--text);font-family:'Segoe UI',system-ui,sans-serif;font-size:13px;
+  height:100vh;height:100svh;display:flex;flex-direction:column;overflow:hidden}
+
+/* ─── HEADER ─── */
+header{
+  background:linear-gradient(180deg,#0e1725 0%,#07090f 100%);
+  border-bottom:1px solid #1a2940;
+  padding:8px 20px;display:flex;align-items:center;gap:14px;flex-shrink:0;
+  box-shadow:0 4px 24px rgba(0,0,0,0.6)}
+.logo{
+  background:linear-gradient(135deg,#f7a600,#e08800);
+  color:#000;font-weight:900;font-size:11px;letter-spacing:2px;
+  padding:5px 10px;border-radius:5px;
+  box-shadow:0 0 18px rgba(247,166,0,0.25)}
+.hdr-title h1{font-size:15px;font-weight:700;color:#eef6ff;letter-spacing:.3px}
+.hdr-title p{font-size:11px;color:var(--muted);margin-top:2px}
+.hdr-stats{
+  margin-left:auto;display:flex;gap:0;
+  border:1px solid rgba(255,255,255,0.07);border-radius:7px;overflow:hidden}
+.hs{
+  text-align:center;padding:5px 16px;
+  border-right:1px solid rgba(255,255,255,0.07)}
+.hs:last-child{border-right:none}
+.hs .v{font-size:15px;font-weight:700;color:var(--accent);font-variant-numeric:tabular-nums}
+.hs .l{font-size:8px;color:var(--muted);text-transform:uppercase;letter-spacing:1.5px}
+
+/* ─── MAIN ─── */
+.main{display:flex;flex:1;overflow:hidden;min-height:0}
+.schematic-area{flex:1;display:flex;flex-direction:column;overflow:hidden;min-width:0;min-height:0}
+
+/* Legend */
+.legend-bar{
+  padding:5px 16px;display:flex;gap:12px;flex-wrap:wrap;align-items:center;
+  border-bottom:1px solid var(--border);flex-shrink:0;background:#090c13}
+.leg{display:flex;align-items:center;gap:5px;font-size:11px;color:var(--text);white-space:nowrap}
+.leg-sq{width:9px;height:9px;border-radius:2px;flex-shrink:0}
+
+/* SVG scroll area */
+.svg-wrap{
+  flex:1;overflow-x:auto;overflow-y:hidden;
+  position:relative;background:var(--bg);
+  min-height:120px}
+.svg-wrap::-webkit-scrollbar{height:10px}
+.svg-wrap::-webkit-scrollbar-track{background:#111e30}
+.svg-wrap::-webkit-scrollbar-thumb{background:#3a6090;border-radius:5px}
+.svg-wrap::-webkit-scrollbar-thumb:hover{background:#5a88b8}
+.cross-grp{cursor:pointer;transition:opacity .18s,filter .18s}
+.cross-grp.cx-active{filter:saturate(2.5) brightness(1.25) drop-shadow(0 0 7px var(--cx-col,#7cf)) drop-shadow(0 0 14px var(--cx-col,#7cf))}
+.cross-grp.cx-dimmed{opacity:.1;pointer-events:none}
+
+/* Hint */
+.hint-bar{
+  padding:5px 16px;font-size:11px;color:#8ab0d0;
+  border-top:1px solid var(--border);background:#1a2840;
+  flex-shrink:0;display:flex;justify-content:space-between}
+
+/* ─── DETAIL PANEL ─── */
+.det-panel{
+  width:345px;flex-shrink:0;background:var(--panel);
+  border-left:1px solid var(--border);display:flex;flex-direction:column;overflow:hidden}
+.det-head{
+  padding:14px 16px;border-bottom:1px solid var(--border);
+  flex-shrink:0;background:#0b1120}
+.det-id{font-size:30px;font-weight:900;line-height:1;letter-spacing:-1px}
+.det-sub{font-size:11px;color:var(--muted);margin-top:3px}
+.det-badge{
+  display:inline-block;padding:2px 9px;border-radius:10px;
+  font-size:9.5px;font-weight:700;letter-spacing:.5px;margin-top:7px}
+.prog-wrap{margin-top:10px}
+.prog-bg{background:#111e2e;border-radius:3px;height:3px}
+.prog-fg{height:3px;border-radius:3px;background:linear-gradient(90deg,#f7a600,#ff7700);transition:width .4s}
+.prog-lbl{display:flex;justify-content:space-between;font-size:8.5px;color:var(--muted);margin-top:3px}
+
+.det-body{flex:1;overflow-y:auto;padding:12px 13px}
+.det-body::-webkit-scrollbar{width:3px}
+.det-body::-webkit-scrollbar-thumb{background:var(--border);border-radius:2px}
+
+/* Sections */
+.sec{margin-bottom:14px}
+.sec-t{
+  font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;
+  color:var(--muted);padding-bottom:5px;border-bottom:1px solid var(--border);margin-bottom:8px}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:5px}
+.card{
+  background:#0e1520;border:1px solid var(--border);border-radius:6px;
+  padding:7px 9px}
+.card .ck{font-size:10px;color:var(--muted);margin-bottom:3px;text-transform:uppercase;letter-spacing:.8px}
+.card .cv{font-size:13px;font-weight:600;color:var(--text)}
+.card .cv.mono{font-family:Consolas,monospace;font-size:12px}
+.card.wide{grid-column:1/-1}
+.card.hi{border-color:rgba(247,166,0,.2);background:rgba(247,166,0,.04)}
+.card.hi .cv{color:var(--accent)}
+
+.warn{
+  background:rgba(220,38,38,.1);border:1px solid rgba(220,38,38,.3);
+  border-radius:6px;padding:8px 10px;margin-bottom:10px;font-size:12px;
+  color:#fca5a5;line-height:1.5}
+.warn-t{color:#f87171;font-weight:700;font-size:10px;text-transform:uppercase;
+  letter-spacing:1px;margin-bottom:3px}
+
+.cross-list{display:flex;flex-direction:column;gap:4px}
+.cross-row{
+  display:flex;align-items:center;gap:7px;
+  background:#0e1520;border:1px solid var(--border);
+  border-radius:5px;padding:5px 8px;font-size:11px}
+.cross-ico{font-size:13px;flex-shrink:0;line-height:1}
+
+.comp-t{width:100%;border-collapse:collapse;font-size:12px;table-layout:fixed}
+.comp-t th{
+  background:#1a2840;padding:5px 7px;text-align:left;
+  color:var(--muted);font-size:10px;letter-spacing:.5px;font-weight:600;white-space:nowrap}
+.comp-t th:first-child{text-align:center;width:42px}
+.comp-t th:last-child{width:88px}
+.comp-t td{padding:3px 7px;border-bottom:1px solid rgba(46,66,96,0.5);color:var(--text);font-size:11px;vertical-align:middle}
+.comp-t td:first-child{color:var(--accent);font-weight:700;text-align:center;font-family:Consolas;white-space:nowrap;width:42px}
+.comp-t td:last-child{font-family:Consolas,monospace;font-size:10px;color:#c8d6e8;white-space:nowrap;width:88px;overflow:hidden;text-overflow:ellipsis}
+.comp-t td:nth-child(2){word-break:break-word;line-height:1.35}
+.comp-t tr:last-child td{border-bottom:none}
+
+.mat-list-wrap{border:1px solid var(--border);border-radius:6px;overflow:hidden}
+.mat-row{display:flex;align-items:baseline;gap:0;padding:5px 12px;border-bottom:1px solid rgba(46,66,96,0.25)}
+.mat-row:last-child{border-bottom:none}
+.mat-row:nth-child(odd){background:rgba(255,255,255,0.015)}
+.mat-col-n{font-family:Consolas,monospace;font-weight:700;font-size:12px;min-width:46px;text-align:right;flex-shrink:0;padding-right:10px}
+.mat-col-nm{flex:1;font-size:11px;color:var(--text)}
+.mat-col-jk{font-family:Consolas,monospace;font-size:10px;color:#4a6880;margin-left:8px;flex-shrink:0}
+.note-row{
+  font-size:12px;color:var(--muted);padding:3px 0;
+  display:flex;align-items:flex-start;gap:6px;line-height:1.4}
+.note-row::before{content:'›';color:#60a5fa;font-size:14px;flex-shrink:0;line-height:1.2}
+
+/* nakladanie box */
+.naklad-box{
+  background:rgba(247,166,0,.05);border:1px solid rgba(247,166,0,.2);
+  border-radius:8px;padding:10px 12px;margin-bottom:10px}
+.naklad-title{
+  font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:1.5px;
+  color:var(--accent);margin-bottom:8px}
+.naklad-iso{font-size:20px;font-weight:900;color:#60a5fa;margin-bottom:8px}
+.naklad-iso span{font-size:11px;font-weight:400;color:var(--muted)}
+
+/* ─── NAKLADANIE VÝBER ─── */
+.btn-load-mode{
+  display:inline-flex;align-items:center;gap:6px;
+  padding:5px 14px;border-radius:16px;font-size:11.5px;font-weight:700;cursor:pointer;
+  background:rgba(239,68,68,0.12);border:1px solid rgba(239,68,68,0.45);color:#f87171;
+  transition:all .2s;letter-spacing:.2px;white-space:nowrap;
+  box-shadow:0 0 8px rgba(239,68,68,0.12)}
+.btn-load-mode:hover{background:rgba(239,68,68,0.22);box-shadow:0 0 14px rgba(239,68,68,0.28)}
+.btn-load-mode.active{
+  background:rgba(239,68,68,0.28);border-color:#ef4444;color:#fff;
+  box-shadow:0 0 18px rgba(239,68,68,0.45),inset 0 0 8px rgba(239,68,68,0.15)}
+.btn-clear-sel{
+  padding:2px 8px;border-radius:10px;font-size:10px;cursor:pointer;
+  background:rgba(239,68,68,0.12);border:1px solid rgba(239,68,68,0.35);color:#f87171;font-weight:700}
+.btn-clear-sel:hover{background:rgba(239,68,68,0.25)}
+.btn-hide-overlay{
+  padding:2px 8px;border-radius:10px;font-size:10px;cursor:pointer;
+  background:rgba(90,120,160,0.15);border:1px solid rgba(90,120,160,0.35);color:#9ab8d8;font-weight:700;
+  display:inline-block}
+.btn-hide-overlay:hover{background:rgba(90,120,160,0.3)}
+.btn-restore-overlay{
+  position:fixed;bottom:18px;right:18px;z-index:199;
+  display:none;align-items:center;gap:6px;
+  padding:9px 16px;border-radius:22px;
+  background:#1a0808;border:1.5px solid rgba(239,68,68,0.7);color:#fca5a5;
+  font-size:12px;font-weight:700;cursor:pointer;letter-spacing:.2px;
+  box-shadow:0 4px 20px rgba(239,68,68,0.35),0 0 0 3px rgba(239,68,68,0.08)}
+.btn-restore-overlay:hover{background:#2a0a0a;box-shadow:0 4px 24px rgba(239,68,68,0.5)}
+.btn-restore-overlay.visible{display:inline-flex}
+.naklad-overlay{
+  position:fixed;top:0;bottom:0;right:0;width:400px;
+  background:#0d1827;border-left:1px solid rgba(239,68,68,0.4);
+  box-shadow:-4px 0 32px rgba(0,0,0,0.7),0 0 0 1px rgba(239,68,68,0.1);
+  display:flex;flex-direction:column;z-index:200;
+  animation:slideIn .22s ease}
+@keyframes slideIn{from{transform:translateX(30px);opacity:0}to{transform:translateX(0);opacity:1}}
+.naklad-overlay-head{
+  padding:10px 14px;border-bottom:1px solid rgba(239,68,68,0.2);
+  display:flex;align-items:center;gap:8px;flex-shrink:0}
+.naklad-overlay-title{
+  font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:1.5px;color:#ef4444;flex:1}
+.naklad-overlay-body{overflow-y:auto;padding:12px 14px;flex:1}
+.naklad-overlay-body::-webkit-scrollbar{width:3px}
+.naklad-overlay-body::-webkit-scrollbar-thumb{background:#2a3a50;border-radius:2px}
+.naklad-pole-tags{display:flex;flex-wrap:wrap;gap:4px;margin-bottom:10px}
+.naklad-pole-tag{
+  padding:2px 8px;border-radius:8px;font-size:10px;font-weight:700;
+  background:rgba(239,68,68,0.15);border:1px solid rgba(239,68,68,0.4);color:#fca5a5;cursor:pointer}
+.naklad-pole-tag:hover{background:rgba(239,68,68,0.3)}
+
+/* ─── MOBILE ─── */
+@media (max-width:700px){
+  html{overflow:auto;-webkit-overflow-scrolling:touch}
+  body{height:auto !important;overflow:auto !important;-webkit-overflow-scrolling:touch}
+  header{padding:6px 12px;gap:8px}
+  .hdr-title h1{font-size:13px}
+  .hdr-title p{font-size:10px}
+  .hs{padding:4px 10px}
+  .hs .v{font-size:13px}
+  .hs .l{font-size:7px}
+  .legend-bar{padding:4px 10px;gap:8px}
+  .leg{font-size:10px}
+  .main{flex-direction:column;height:auto;overflow:visible;flex:none}
+  .schematic-area{height:auto;overflow:visible;flex:none}
+  .svg-wrap{
+    height:260px;
+    min-height:260px;
+    max-height:260px;
+    flex:none;
+    overflow-x:auto;
+    overflow-y:hidden;
+    touch-action:pan-x;
+    -webkit-overflow-scrolling:touch
+  }
+  .hint-bar{display:none}
+  .det-panel{
+    width:100% !important;
+    border-left:none;
+    border-top:1px solid var(--border);
+    height:auto;
+    max-height:none;
+    flex-shrink:0;
+    overflow:visible
+  }
+  .det-body{
+    padding:10px;
+    max-height:none;
+    overflow-y:auto;
+    -webkit-overflow-scrolling:touch
+  }
+  .grid2{grid-template-columns:1fr 1fr}
+  /* overlay full-width on tablet/mobile */
+  .naklad-overlay{width:100%;left:0;right:0;border-left:none;border-top:1px solid rgba(239,68,68,0.4)}
+}
+@media (max-width:420px){
+  .hdr-stats{display:none}
+  /* skryť iba legendu, NIE celý bar — tlačidlo nakladania musí zostať */
+  .leg{display:none}
+  .legend-bar{padding:4px 10px;gap:6px;justify-content:flex-end}
+  .svg-wrap{height:220px;min-height:220px;max-height:220px}
+  .btn-load-mode{font-size:10.5px;padding:4px 11px}
+}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo">Západoslovenská Distribučná</div>
+  <div class="hdr-title">
+    <h1>Preizolácia - Linka 8312</h1>
+    <p>Jaslovské Bohunice &rarr; Madunice</p>
+  </div>
+  <div class="hdr-stats">
+    <div class="hs"><div class="v" style="font-size:12px;letter-spacing:.3px">Jednoduch&aacute; linka 1&times;3&times;243-AL</div><div class="l">Typ linky</div></div>
+    <div class="hs"><div class="v">28+1</div><div class="l">Sto&#382;iarov + Port&aacute;l</div></div>
+    <div class="hs"><div class="v">7 162,8 m</div><div class="l">Celkov&aacute; d&#318;&#382;ka</div></div>
+  </div>
+</header>
+
+<div class="main">
+  <div class="schematic-area">
+    <div class="legend-bar">
+      <span style="font-size:9px;color:#7a9abf;font-weight:700;letter-spacing:1.5px;text-transform:uppercase">Legenda:</span>
+      <div class="leg"><div class="leg-sq" style="background:var(--portal)"></div>Port&aacute;l</div>
+      <div class="leg"><div class="leg-sq" style="background:var(--ddK)"></div>DDK &#8211; Dvojit&yacute; kotevn&yacute;</div>
+      <div class="leg"><div class="leg-sq" style="background:var(--dkdk)"></div>DK &#8211; Kotevn&yacute;</div>
+      <div class="leg"><div class="leg-sq" style="background:var(--pk)"></div>PK &#8211; Polokotevn&yacute;</div>
+      <div class="leg"><div class="leg-sq" style="background:var(--dn)"></div>DN &#8211; Dvojit&yacute; nosn&yacute;</div>
+      <div class="leg"><div class="leg-sq" style="background:var(--jn)"></div>JN &#8211; Jednoduch&yacute; nosn&yacute;</div>
+      <button class="btn-load-mode" id="btnLoadMode" onclick="toggleLoadMode()" style="margin-left:auto">&#128230; Vybrať pre nakladanie</button>
+    </div>
+
+    <div class="svg-wrap" id="svgWrap">
+      <svg id="diagram" xmlns="http://www.w3.org/2000/svg" width="1287.683" height="300" viewBox="0 0 1287.683 300" style="display:block">
+<defs>
+  <linearGradient id="sky" x1="0" y1="0" x2="0" y2="1">
+    <stop offset="0%" stop-color="#1e3050"/>
+    <stop offset="60%" stop-color="#162438"/>
+    <stop offset="100%" stop-color="#101c2c"/>
+  </linearGradient>
+  <linearGradient id="gnd" x1="0" y1="0" x2="0" y2="1">
+    <stop offset="0%" stop-color="#0d1f0e"/>
+    <stop offset="100%" stop-color="#050b06"/>
+  </linearGradient>
+  <filter id="tw-glow" x="-60%" y="-60%" width="220%" height="220%">
+    <feGaussianBlur in="SourceGraphic" stdDeviation="3.5" result="blur"/>
+    <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+  </filter>
+</defs><rect x="0" y="0" width="1287.683" height="300" fill="url(#sky)"/><rect x="0" y="210" width="1287.683" height="90" fill="url(#gnd)"/><line x1="0" y1="210" x2="1287.683" y2="210" stroke="#1a3520" stroke-width="1.5"/><path d="M 55,140 C 68.86,143.596 83.14,143.596 97,140 C 110.86,143.596 125.14,143.596 139,140 C 152.86,143.596 167.14,143.596 181,140 C 194.86,143.596 209.14,143.596 223,140 C 236.86,143.596 251.14,143.596 265,140 C 278.86,143.596 293.14,143.596 307,140 C 320.86,143.596 335.14,143.596 349,140 C 362.86,143.596 377.14,143.596 391,140 C 405.13984,143.628224 419.70816,143.628224 433.848,140 C 447.98355,143.62772999999999 462.54745,143.62772999999999 476.683,140 C 490.543,143.596 504.823,143.596 518.683,140 C 532.543,143.596 546.823,143.596 560.683,140 C 574.543,143.596 588.823,143.596 602.683,140 C 616.543,143.596 630.823,143.596 644.683,140 C 658.543,143.596 672.823,143.596 686.683,140 C 700.543,143.596 714.823,143.596 728.683,140 C 742.543,143.596 756.823,143.596 770.683,140 C 784.543,143.596 798.823,143.596 812.683,140 C 826.543,143.596 840.823,143.596 854.683,140 C 868.543,143.596 882.823,143.596 896.683,140 C 910.543,143.596 924.823,143.596 938.683,140 C 952.543,143.596 966.823,143.596 980.683,140 C 994.543,143.596 1008.823,143.596 1022.683,140 C 1036.543,143.596 1050.823,143.596 1064.683,140 C 1078.543,143.596 1092.823,143.596 1106.683,140 C 1120.543,143.596 1134.823,143.596 1148.683,140 C 1162.543,143.596 1176.823,143.596 1190.683,140 C 1204.543,143.596 1218.823,143.596 1232.683,140" fill="none" stroke="#6a8060" stroke-width="1.8" stroke-linecap="round" opacity="1"/><path d="M 55,136.5 C 68.86,140.096 83.14,140.096 97,136.5 C 110.86,140.096 125.14,140.096 139,136.5 C 152.86,140.096 167.14,140.096 181,136.5 C 194.86,140.096 209.14,140.096 223,136.5 C 236.86,140.096 251.14,140.096 265,136.5 C 278.86,140.096 293.14,140.096 307,136.5 C 320.86,140.096 335.14,140.096 349,136.5 C 362.86,140.096 377.14,140.096 391,136.5 C 405.13984,140.128224 419.70816,140.128224 433.848,136.5 C 447.98355,140.12772999999999 462.54745,140.12772999999999 476.683,136.5 C 490.543,140.096 504.823,140.096 518.683,136.5 C 532.543,140.096 546.823,140.096 560.683,136.5 C 574.543,140.096 588.823,140.096 602.683,136.5 C 616.543,140.096 630.823,140.096 644.683,136.5 C 658.543,140.096 672.823,140.096 686.683,136.5 C 700.543,140.096 714.823,140.096 728.683,136.5 C 742.543,140.096 756.823,140.096 770.683,136.5 C 784.543,140.096 798.823,140.096 812.683,136.5 C 826.543,140.096 840.823,140.096 854.683,136.5 C 868.543,140.096 882.823,140.096 896.683,136.5 C 910.543,140.096 924.823,140.096 938.683,136.5 C 952.543,140.096 966.823,140.096 980.683,136.5 C 994.543,140.096 1008.823,140.096 1022.683,136.5 C 1036.543,140.096 1050.823,140.096 1064.683,136.5 C 1078.543,140.096 1092.823,140.096 1106.683,136.5 C 1120.543,140.096 1134.823,140.096 1148.683,136.5 C 1162.543,140.096 1176.823,140.096 1190.683,136.5 C 1204.543,140.096 1218.823,140.096 1232.683,136.5" fill="none" stroke="#3a4a38" stroke-width="1" stroke-linecap="round" opacity="0.5"/><path d="M 55,143.5 C 68.86,147.096 83.14,147.096 97,143.5 C 110.86,147.096 125.14,147.096 139,143.5 C 152.86,147.096 167.14,147.096 181,143.5 C 194.86,147.096 209.14,147.096 223,143.5 C 236.86,147.096 251.14,147.096 265,143.5 C 278.86,147.096 293.14,147.096 307,143.5 C 320.86,147.096 335.14,147.096 349,143.5 C 362.86,147.096 377.14,147.096 391,143.5 C 405.13984,147.128224 419.70816,147.128224 433.848,143.5 C 447.98355,147.12772999999999 462.54745,147.12772999999999 476.683,143.5 C 490.543,147.096 504.823,147.096 518.683,143.5 C 532.543,147.096 546.823,147.096 560.683,143.5 C 574.543,147.096 588.823,147.096 602.683,143.5 C 616.543,147.096 630.823,147.096 644.683,143.5 C 658.543,147.096 672.823,147.096 686.683,143.5 C 700.543,147.096 714.823,147.096 728.683,143.5 C 742.543,147.096 756.823,147.096 770.683,143.5 C 784.543,147.096 798.823,147.096 812.683,143.5 C 826.543,147.096 840.823,147.096 854.683,143.5 C 868.543,147.096 882.823,147.096 896.683,143.5 C 910.543,147.096 924.823,147.096 938.683,143.5 C 952.543,147.096 966.823,147.096 980.683,143.5 C 994.543,147.096 1008.823,147.096 1022.683,143.5 C 1036.543,147.096 1050.823,147.096 1064.683,143.5 C 1078.543,147.096 1092.823,147.096 1106.683,143.5 C 1120.543,147.096 1134.823,147.096 1148.683,143.5 C 1162.543,147.096 1176.823,147.096 1190.683,143.5 C 1204.543,147.096 1218.823,147.096 1232.683,143.5" fill="none" stroke="#3a4a38" stroke-width="1" stroke-linecap="round" opacity="0.5"/><g class="cross-grp" data-crossing="0" style="--cx-col:#f59e0b"><line x1="707.7" y1="0" x2="707.7" y2="7" stroke="#f59e0b" stroke-width="1" stroke-dasharray="4,3" opacity="0.55"/><line x1="707.7" y1="23" x2="707.7" y2="216" stroke="#f59e0b" stroke-width="1" stroke-dasharray="4,3" opacity="0.55"/><rect x="675.5" y="8" width="64.4" height="14" rx="7" fill="#f59e0b" opacity="0.15"/><rect x="675.5" y="8" width="64.4" height="14" rx="7" fill="none" stroke="#f59e0b" stroke-width="0.9" opacity="0.65"/><text x="707.7" y="19" text-anchor="middle" font-size="9" fill="#f59e0b" font-weight="700" font-family="Segoe UI,sans-serif" opacity="0.95">⚡ VN 22kV</text><circle cx="707.7" cy="140" r="2.5" fill="#f59e0b" opacity="0.8"/><circle cx="707.7" cy="140" r="5" fill="none" stroke="#f59e0b" stroke-width="0.8" opacity="0.3"/></g><g class="cross-grp" data-crossing="1" style="--cx-col:#f59e0b"><line x1="1127.7" y1="0" x2="1127.7" y2="7" stroke="#f59e0b" stroke-width="1" stroke-dasharray="4,3" opacity="0.55"/><line x1="1127.7" y1="23" x2="1127.7" y2="216" stroke="#f59e0b" stroke-width="1" stroke-dasharray="4,3" opacity="0.55"/><rect x="1095.5" y="8" width="64.4" height="14" rx="7" fill="#f59e0b" opacity="0.15"/><rect x="1095.5" y="8" width="64.4" height="14" rx="7" fill="none" stroke="#f59e0b" stroke-width="0.9" opacity="0.65"/><text x="1127.7" y="19" text-anchor="middle" font-size="9" fill="#f59e0b" font-weight="700" font-family="Segoe UI,sans-serif" opacity="0.95">⚡ VN 22kV</text><circle cx="1127.7" cy="140" r="2.5" fill="#f59e0b" opacity="0.8"/><circle cx="1127.7" cy="140" r="5" fill="none" stroke="#f59e0b" stroke-width="0.8" opacity="0.3"/></g><g class="cross-grp" data-crossing="2" style="--cx-col:#a78bfa"><line x1="1085.7" y1="0" x2="1085.7" y2="7" stroke="#a78bfa" stroke-width="1" stroke-dasharray="8,3" opacity="0.55"/><line x1="1085.7" y1="23" x2="1085.7" y2="216" stroke="#a78bfa" stroke-width="1" stroke-dasharray="8,3" opacity="0.55"/><rect x="1033.9" y="8" width="103.6" height="14" rx="7" fill="#a78bfa" opacity="0.15"/><rect x="1033.9" y="8" width="103.6" height="14" rx="7" fill="none" stroke="#a78bfa" stroke-width="0.9" opacity="0.65"/><text x="1085.7" y="19" text-anchor="middle" font-size="9" fill="#a78bfa" font-weight="700" font-family="Segoe UI,sans-serif" opacity="0.95">🚂 Železnica ŽSR</text><circle cx="1085.7" cy="140" r="2.5" fill="#a78bfa" opacity="0.8"/><circle cx="1085.7" cy="140" r="5" fill="none" stroke="#a78bfa" stroke-width="0.8" opacity="0.3"/></g><g class="cross-grp" data-crossing="3" style="--cx-col:#ef4444"><line x1="959.7" y1="0" x2="959.7" y2="7" stroke="#ef4444" stroke-width="1" stroke-dasharray="7,3" opacity="0.55"/><line x1="959.7" y1="23" x2="959.7" y2="216" stroke="#ef4444" stroke-width="1" stroke-dasharray="7,3" opacity="0.55"/><rect x="910.7" y="8" width="98.0" height="14" rx="7" fill="#ef4444" opacity="0.15"/><rect x="910.7" y="8" width="98.0" height="14" rx="7" fill="none" stroke="#ef4444" stroke-width="0.9" opacity="0.65"/><text x="959.7" y="19" text-anchor="middle" font-size="9" fill="#ef4444" font-weight="700" font-family="Segoe UI,sans-serif" opacity="0.95">🛤 Diaľnica: D1</text><circle cx="959.7" cy="140" r="2.5" fill="#ef4444" opacity="0.8"/><circle cx="959.7" cy="140" r="5" fill="none" stroke="#ef4444" stroke-width="0.8" opacity="0.3"/></g><g class="cross-grp" data-crossing="4" style="--cx-col:#38bdf8"><line x1="791.7" y1="0" x2="791.7" y2="7" stroke="#38bdf8" stroke-width="1" stroke-dasharray="3,3" opacity="0.55"/><line x1="791.7" y1="23" x2="791.7" y2="216" stroke="#38bdf8" stroke-width="1" stroke-dasharray="3,3" opacity="0.55"/><rect x="728.7" y="8" width="126.0" height="14" rx="7" fill="#38bdf8" opacity="0.15"/><rect x="728.7" y="8" width="126.0" height="14" rx="7" fill="none" stroke="#38bdf8" stroke-width="0.9" opacity="0.65"/><text x="791.7" y="19" text-anchor="middle" font-size="9" fill="#38bdf8" font-weight="700" font-family="Segoe UI,sans-serif" opacity="0.95">🌊 Vodný tok / rieka</text><circle cx="791.7" cy="140" r="2.5" fill="#38bdf8" opacity="0.8"/><circle cx="791.7" cy="140" r="5" fill="none" stroke="#38bdf8" stroke-width="0.8" opacity="0.3"/></g><g class="cross-grp" data-crossing="5" style="--cx-col:#60a5fa"><line x1="539.7" y1="0" x2="539.7" y2="7" stroke="#60a5fa" stroke-width="1" stroke-dasharray="5,2" opacity="0.55"/><line x1="539.7" y1="23" x2="539.7" y2="216" stroke="#60a5fa" stroke-width="1" stroke-dasharray="5,2" opacity="0.55"/><rect x="473.9" y="8" width="131.6" height="14" rx="7" fill="#60a5fa" opacity="0.15"/><rect x="473.9" y="8" width="131.6" height="14" rx="7" fill="none" stroke="#60a5fa" stroke-width="0.9" opacity="0.65"/><text x="539.7" y="19" text-anchor="middle" font-size="9" fill="#60a5fa" font-weight="700" font-family="Segoe UI,sans-serif" opacity="0.95">🛣 Cesta: V.Kostoľan…</text><circle cx="539.7" cy="140" r="2.5" fill="#60a5fa" opacity="0.8"/><circle cx="539.7" cy="140" r="5" fill="none" stroke="#60a5fa" stroke-width="0.8" opacity="0.3"/></g><g class="cross-grp" data-crossing="6" style="--cx-col:#ef4444"><line x1="328.0" y1="0" x2="328.0" y2="7" stroke="#ef4444" stroke-width="1" stroke-dasharray="6,3" opacity="0.55"/><line x1="328.0" y1="23" x2="328.0" y2="216" stroke="#ef4444" stroke-width="1" stroke-dasharray="6,3" opacity="0.55"/><rect x="262.2" y="8" width="131.6" height="14" rx="7" fill="#ef4444" opacity="0.15"/><rect x="262.2" y="8" width="131.6" height="14" rx="7" fill="none" stroke="#ef4444" stroke-width="0.9" opacity="0.65"/><text x="328.0" y="19" text-anchor="middle" font-size="9" fill="#ef4444" font-weight="700" font-family="Segoe UI,sans-serif" opacity="0.95">🔴 VVN 400kV: Podkri…</text><circle cx="328.0" cy="140" r="2.5" fill="#ef4444" opacity="0.8"/><circle cx="328.0" cy="140" r="5" fill="none" stroke="#ef4444" stroke-width="0.8" opacity="0.3"/></g><line x1="118" y1="148" x2="118" y2="208" stroke="#3b82f6" stroke-width="1.4" stroke-dasharray="3,3" opacity="0.45"/><text x="118" y="136" text-anchor="middle" font-size="11" fill="#3b82f6" opacity="0.7" font-family="Segoe UI,sans-serif">◈</text><line x1="202" y1="148" x2="202" y2="208" stroke="#3b82f6" stroke-width="1.4" stroke-dasharray="3,3" opacity="0.45"/><text x="202" y="136" text-anchor="middle" font-size="11" fill="#3b82f6" opacity="0.7" font-family="Segoe UI,sans-serif">◈</text><line x1="244" y1="148" x2="244" y2="208" stroke="#3b82f6" stroke-width="1.4" stroke-dasharray="3,3" opacity="0.45"/><text x="244" y="136" text-anchor="middle" font-size="11" fill="#3b82f6" opacity="0.7" font-family="Segoe UI,sans-serif">◈</text><line x1="328" y1="148" x2="328" y2="208" stroke="#ef4444" stroke-width="1.4" stroke-dasharray="5,3" opacity="0.45"/><text x="328" y="136" text-anchor="middle" font-size="11" fill="#ef4444" opacity="0.7" font-family="Segoe UI,sans-serif">⚠</text><line x1="370" y1="148" x2="370" y2="208" stroke="#ef4444" stroke-width="1.4" stroke-dasharray="5,3" opacity="0.45"/><text x="370" y="136" text-anchor="middle" font-size="11" fill="#ef4444" opacity="0.7" font-family="Segoe UI,sans-serif">⚠</text><line x1="412.424" y1="148" x2="412.424" y2="208" stroke="#3b82f6" stroke-width="1.4" stroke-dasharray="3,3" opacity="0.45"/><text x="412.424" y="136" text-anchor="middle" font-size="11" fill="#3b82f6" opacity="0.7" font-family="Segoe UI,sans-serif">◈</text><line x1="455.2655" y1="148" x2="455.2655" y2="208" stroke="#3b82f6" stroke-width="1.4" stroke-dasharray="3,3" opacity="0.45"/><text x="455.2655" y="136" text-anchor="middle" font-size="11" fill="#3b82f6" opacity="0.7" font-family="Segoe UI,sans-serif">◈</text><line x1="539.683" y1="148" x2="539.683" y2="208" stroke="#3b82f6" stroke-width="1.4" stroke-dasharray="3,3" opacity="0.45"/><text x="539.683" y="136" text-anchor="middle" font-size="11" fill="#3b82f6" opacity="0.7" font-family="Segoe UI,sans-serif">◈</text><line x1="581.683" y1="148" x2="581.683" y2="208" stroke="#3b82f6" stroke-width="1.4" stroke-dasharray="3,3" opacity="0.45"/><text x="581.683" y="136" text-anchor="middle" font-size="11" fill="#3b82f6" opacity="0.7" font-family="Segoe UI,sans-serif">◈</text><line x1="623.683" y1="148" x2="623.683" y2="208" stroke="#3b82f6" stroke-width="1.4" stroke-dasharray="3,3" opacity="0.45"/><text x="623.683" y="136" text-anchor="middle" font-size="11" fill="#3b82f6" opacity="0.7" font-family="Segoe UI,sans-serif">◈</text><line x1="665.683" y1="148" x2="665.683" y2="208" stroke="#3b82f6" stroke-width="1.4" stroke-dasharray="3,3" opacity="0.45"/><text x="665.683" y="136" text-anchor="middle" font-size="11" fill="#3b82f6" opacity="0.7" font-family="Segoe UI,sans-serif">◈</text><line x1="707.683" y1="148" x2="707.683" y2="208" stroke="#f59e0b" stroke-width="1.4" stroke-dasharray="3,3" opacity="0.45"/><text x="707.683" y="136" text-anchor="middle" font-size="11" fill="#f59e0b" opacity="0.7" font-family="Segoe UI,sans-serif">⚡</text><line x1="749.683" y1="148" x2="749.683" y2="208" stroke="#f59e0b" stroke-width="1.4" stroke-dasharray="3,3" opacity="0.45"/><text x="749.683" y="136" text-anchor="middle" font-size="11" fill="#f59e0b" opacity="0.7" font-family="Segoe UI,sans-serif">⚡</text><line x1="791.683" y1="148" x2="791.683" y2="208" stroke="#3b82f6" stroke-width="1.4" stroke-dasharray="3,3" opacity="0.45"/><text x="791.683" y="136" text-anchor="middle" font-size="11" fill="#3b82f6" opacity="0.7" font-family="Segoe UI,sans-serif">◈</text><line x1="833.683" y1="148" x2="833.683" y2="208" stroke="#3b82f6" stroke-width="1.4" stroke-dasharray="3,3" opacity="0.45"/><text x="833.683" y="136" text-anchor="middle" font-size="11" fill="#3b82f6" opacity="0.7" font-family="Segoe UI,sans-serif">◈</text><line x1="875.683" y1="148" x2="875.683" y2="208" stroke="#3b82f6" stroke-width="1.4" stroke-dasharray="3,3" opacity="0.45"/><text x="875.683" y="136" text-anchor="middle" font-size="11" fill="#3b82f6" opacity="0.7" font-family="Segoe UI,sans-serif">◈</text><line x1="917.683" y1="148" x2="917.683" y2="208" stroke="#3b82f6" stroke-width="1.4" stroke-dasharray="3,3" opacity="0.45"/><text x="917.683" y="136" text-anchor="middle" font-size="11" fill="#3b82f6" opacity="0.7" font-family="Segoe UI,sans-serif">◈</text><line x1="959.683" y1="148" x2="959.683" y2="208" stroke="#ef4444" stroke-width="1.4" stroke-dasharray="5,3" opacity="0.45"/><text x="959.683" y="136" text-anchor="middle" font-size="11" fill="#ef4444" opacity="0.7" font-family="Segoe UI,sans-serif">⚠</text><line x1="1001.683" y1="148" x2="1001.683" y2="208" stroke="#ef4444" stroke-width="1.4" stroke-dasharray="5,3" opacity="0.45"/><text x="1001.683" y="136" text-anchor="middle" font-size="11" fill="#ef4444" opacity="0.7" font-family="Segoe UI,sans-serif">⚠</text><line x1="1043.683" y1="148" x2="1043.683" y2="208" stroke="#3b82f6" stroke-width="1.4" stroke-dasharray="3,3" opacity="0.45"/><text x="1043.683" y="136" text-anchor="middle" font-size="11" fill="#3b82f6" opacity="0.7" font-family="Segoe UI,sans-serif">◈</text><line x1="1085.683" y1="148" x2="1085.683" y2="208" stroke="#ef4444" stroke-width="1.4" stroke-dasharray="5,3" opacity="0.45"/><text x="1085.683" y="136" text-anchor="middle" font-size="11" fill="#ef4444" opacity="0.7" font-family="Segoe UI,sans-serif">⚠</text><line x1="1127.683" y1="148" x2="1127.683" y2="208" stroke="#ef4444" stroke-width="1.4" stroke-dasharray="5,3" opacity="0.45"/><text x="1127.683" y="136" text-anchor="middle" font-size="11" fill="#ef4444" opacity="0.7" font-family="Segoe UI,sans-serif">⚠</text><line x1="1169.683" y1="148" x2="1169.683" y2="208" stroke="#f59e0b" stroke-width="1.4" stroke-dasharray="3,3" opacity="0.45"/><text x="1169.683" y="136" text-anchor="middle" font-size="11" fill="#f59e0b" opacity="0.7" font-family="Segoe UI,sans-serif">⚡</text><line x1="1211.683" y1="148" x2="1211.683" y2="208" stroke="#3b82f6" stroke-width="1.4" stroke-dasharray="3,3" opacity="0.45"/><text x="1211.683" y="136" text-anchor="middle" font-size="11" fill="#3b82f6" opacity="0.7" font-family="Segoe UI,sans-serif">◈</text><line x1="301.8" y1="218" x2="301.8" y2="232" stroke="#5a7898" stroke-width="1"/><text x="301.8" y="246" text-anchor="middle" font-size="9" fill="#5a7898" font-family="Segoe UI,sans-serif">1 km</text><line x1="438.5" y1="218" x2="438.5" y2="232" stroke="#5a7898" stroke-width="1"/><text x="438.5" y="246" text-anchor="middle" font-size="9" fill="#5a7898" font-family="Segoe UI,sans-serif">2 km</text><line x1="574.0" y1="218" x2="574.0" y2="232" stroke="#5a7898" stroke-width="1"/><text x="574.0" y="246" text-anchor="middle" font-size="9" fill="#5a7898" font-family="Segoe UI,sans-serif">3 km</text><line x1="726.8" y1="218" x2="726.8" y2="232" stroke="#5a7898" stroke-width="1"/><text x="726.8" y="246" text-anchor="middle" font-size="9" fill="#5a7898" font-family="Segoe UI,sans-serif">4 km</text><line x1="873.7" y1="218" x2="873.7" y2="232" stroke="#5a7898" stroke-width="1"/><text x="873.7" y="246" text-anchor="middle" font-size="9" fill="#5a7898" font-family="Segoe UI,sans-serif">5 km</text><line x1="1035.1" y1="218" x2="1035.1" y2="232" stroke="#5a7898" stroke-width="1"/><text x="1035.1" y="246" text-anchor="middle" font-size="9" fill="#5a7898" font-family="Segoe UI,sans-serif">6 km</text><line x1="1209.0" y1="218" x2="1209.0" y2="232" stroke="#5a7898" stroke-width="1"/><text x="1209.0" y="246" text-anchor="middle" font-size="9" fill="#5a7898" font-family="Segoe UI,sans-serif">7 km</text><rect x="55" y="262" width="190" height="20" rx="4" fill="rgba(20,40,70,0.88)"/><text x="63" y="276" text-anchor="start" font-size="12" fill="#f0d080" font-weight="700" font-family="Segoe UI, sans-serif">&#9654; Jaslovské Bohunice</text><rect x="1097.683" y="262" width="134" height="20" rx="4" fill="rgba(20,40,70,0.88)"/><text x="1224.683" y="276" text-anchor="end" font-size="12" fill="#f0d080" font-weight="700" font-family="Segoe UI, sans-serif">Madunice &#9654;</text><a data-pole="0" style="cursor:pointer"><rect x="33" y="92" width="44" height="134" fill="transparent" stroke="none"/><path d="M -14,-38 L -14,70  M 14,-38 L 14,70  M -14,-38 L 14,-38  M -18,-38 L 18,-38  M -14,-18 L -5,-12  M 14,-18 L 5,-12  M -14,-28 L 14,-28" transform="translate(55,140)" fill="none" stroke="#f7a600" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" opacity="0.85"/><circle cx="41" cy="102" r="2" fill="#f7a600" opacity="0.9"/><circle cx="69" cy="102" r="2" fill="#f7a600" opacity="0.9"/><circle cx="55" cy="140" r="2.8" fill="#f7a600" opacity="0.95"/><circle cx="69" cy="92" r="5" fill="#dc2626"/><text x="69" y="96" text-anchor="middle" font-size="7" font-weight="900" fill="#fff" font-family="Segoe UI,sans-serif">!</text><rect x="37" y="190" width="36" height="16" rx="4" fill="#0d1e35" stroke="#4a7aaa" stroke-width="1"/><text x="55" y="202" text-anchor="middle" font-size="12" font-weight="800" fill="#e8f4ff" font-family="Segoe UI,system-ui,sans-serif">Portál</text></a><a data-pole="1" style="cursor:pointer"><rect x="75" y="82" width="44" height="144" fill="transparent" stroke="none"/><path d="M -20,-48 L 20,-48  M -20,-48 L -4,-30  M 20,-48 L 4,-30  M 0,-48 L 0,0  M 0,0 L -15,70  M 0,0 L 15,70  M -8,50 L 8,50" transform="translate(97,140)" fill="none" stroke="#c084fc" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" opacity="0.85"/><circle cx="77" cy="92" r="2" fill="#c084fc" opacity="0.9"/><circle cx="117" cy="92" r="2" fill="#c084fc" opacity="0.9"/><circle cx="97" cy="140" r="2.8" fill="#c084fc" opacity="0.95"/><circle cx="111" cy="82" r="5" fill="#dc2626"/><text x="111" y="86" text-anchor="middle" font-size="7" font-weight="900" fill="#fff" font-family="Segoe UI,sans-serif">!</text><rect x="83" y="190" width="28" height="16" rx="4" fill="#0d1e35" stroke="#4a7aaa" stroke-width="1"/><text x="97" y="202" text-anchor="middle" font-size="12" font-weight="800" fill="#e8f4ff" font-family="Segoe UI,system-ui,sans-serif">1a</text></a><a data-pole="2" style="cursor:pointer"><rect x="117" y="82" width="44" height="144" fill="transparent" stroke="none"/><path d="M -20,-48 L 20,-48  M -20,-48 L -4,-30  M 20,-48 L 4,-30  M 0,-48 L 0,0  M 0,0 L -15,70  M 0,0 L 15,70  M -8,50 L 8,50" transform="translate(139,140)" fill="none" stroke="#c084fc" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" opacity="0.85"/><circle cx="119" cy="92" r="2" fill="#c084fc" opacity="0.9"/><circle cx="159" cy="92" r="2" fill="#c084fc" opacity="0.9"/><circle cx="139" cy="140" r="2.8" fill="#c084fc" opacity="0.95"/><rect x="125" y="190" width="28" height="16" rx="4" fill="#0d1e35" stroke="#4a7aaa" stroke-width="1"/><text x="139" y="202" text-anchor="middle" font-size="12" font-weight="800" fill="#e8f4ff" font-family="Segoe UI,system-ui,sans-serif">2a</text></a><a data-pole="3" style="cursor:pointer"><rect x="159" y="82" width="44" height="144" fill="transparent" stroke="none"/><path d="M -20,-48 L 20,-48  M -20,-48 L -4,-30  M 20,-48 L 4,-30  M 0,-48 L 0,0  M 0,0 L -15,70  M 0,0 L 15,70  M -8,50 L 8,50" transform="translate(181,140)" fill="none" stroke="#c084fc" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" opacity="0.85"/><circle cx="161" cy="92" r="2" fill="#c084fc" opacity="0.9"/><circle cx="201" cy="92" r="2" fill="#c084fc" opacity="0.9"/><circle cx="181" cy="140" r="2.8" fill="#c084fc" opacity="0.95"/><rect x="167" y="190" width="28" height="16" rx="4" fill="#0d1e35" stroke="#4a7aaa" stroke-width="1"/><text x="181" y="202" text-anchor="middle" font-size="12" font-weight="800" fill="#e8f4ff" font-family="Segoe UI,system-ui,sans-serif">3a</text></a><a data-pole="4" style="cursor:pointer"><rect x="201" y="82" width="44" height="144" fill="transparent" stroke="none"/><path d="M -20,-48 L 20,-48  M -20,-48 L -4,-30  M 20,-48 L 4,-30  M 0,-48 L 0,0  M 0,0 L -15,70  M 0,0 L 15,70  M -8,50 L 8,50" transform="translate(223,140)" fill="none" stroke="#c084fc" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" opacity="0.85"/><circle cx="203" cy="92" r="2" fill="#c084fc" opacity="0.9"/><circle cx="243" cy="92" r="2" fill="#c084fc" opacity="0.9"/><circle cx="223" cy="140" r="2.8" fill="#c084fc" opacity="0.95"/><rect x="209" y="190" width="28" height="16" rx="4" fill="#0d1e35" stroke="#4a7aaa" stroke-width="1"/><text x="223" y="202" text-anchor="middle" font-size="12" font-weight="800" fill="#e8f4ff" font-family="Segoe UI,system-ui,sans-serif">4a</text></a><a data-pole="5" style="cursor:pointer"><rect x="243" y="88" width="44" height="138" fill="transparent" stroke="none"/><path d="M -15,-42 L 15,-42  M -15,-42 L -2,-26  M 15,-42 L 2,-26  M 0,-42 L 0,0  M 0,0 L -10,70  M 0,0 L 10,70" transform="translate(265,140)" fill="none" stroke="#60a5fa" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" opacity="0.85"/><circle cx="250" cy="98" r="2" fill="#60a5fa" opacity="0.9"/><circle cx="280" cy="98" r="2" fill="#60a5fa" opacity="0.9"/><circle cx="265" cy="140" r="2.8" fill="#60a5fa" opacity="0.95"/><rect x="251" y="190" width="28" height="16" rx="4" fill="#0d1e35" stroke="#4a7aaa" stroke-width="1"/><text x="265" y="202" text-anchor="middle" font-size="12" font-weight="800" fill="#e8f4ff" font-family="Segoe UI,system-ui,sans-serif">5a</text></a><a data-pole="6" style="cursor:pointer"><rect x="285" y="88" width="44" height="138" fill="transparent" stroke="none"/><path d="M -15,-42 L 15,-42  M -15,-42 L -2,-26  M 15,-42 L 2,-26  M 0,-42 L 0,0  M 0,0 L -10,70  M 0,0 L 10,70" transform="translate(307,140)" fill="none" stroke="#60a5fa" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" opacity="0.85"/><circle cx="292" cy="98" r="2" fill="#60a5fa" opacity="0.9"/><circle cx="322" cy="98" r="2" fill="#60a5fa" opacity="0.9"/><circle cx="307" cy="140" r="2.8" fill="#60a5fa" opacity="0.95"/><circle cx="293" cy="88" r="5.5" fill="#f97316" opacity="0.9"/><text x="293" y="92" text-anchor="middle" font-size="9" font-weight="900" fill="#fff" font-family="Segoe UI,sans-serif">!</text><circle cx="293" cy="88" r="7.5" fill="none" stroke="#f97316" stroke-width="1" opacity="0.35"/><rect x="293" y="190" width="28" height="16" rx="4" fill="#0d1e35" stroke="#f97316" stroke-width="1.8"/><text x="307" y="202" text-anchor="middle" font-size="12" font-weight="800" fill="#e8f4ff" font-family="Segoe UI,system-ui,sans-serif">6a</text></a><a data-pole="7" style="cursor:pointer"><rect x="327" y="88" width="44" height="138" fill="transparent" stroke="none"/><path d="M -15,-42 L 15,-42  M -15,-42 L -2,-26  M 15,-42 L 2,-26  M 0,-42 L 0,0  M 0,0 L -10,70  M 0,0 L 10,70" transform="translate(349,140)" fill="none" stroke="#60a5fa" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" opacity="0.85"/><circle cx="334" cy="98" r="2" fill="#60a5fa" opacity="0.9"/><circle cx="364" cy="98" r="2" fill="#60a5fa" opacity="0.9"/><circle cx="349" cy="140" r="2.8" fill="#60a5fa" opacity="0.95"/><circle cx="335" cy="88" r="5.5" fill="#f97316" opacity="0.9"/><text x="335" y="92" text-anchor="middle" font-size="9" font-weight="900" fill="#fff" font-family="Segoe UI,sans-serif">!</text><circle cx="335" cy="88" r="7.5" fill="none" stroke="#f97316" stroke-width="1" opacity="0.35"/><rect x="335" y="190" width="28" height="16" rx="4" fill="#0d1e35" stroke="#f97316" stroke-width="1.8"/><text x="349" y="202" text-anchor="middle" font-size="12" font-weight="800" fill="#e8f4ff" font-family="Segoe UI,system-ui,sans-serif">7a</text></a><a data-pole="8" style="cursor:pointer"><rect x="369" y="88" width="44" height="138" fill="transparent" stroke="none"/><path d="M -15,-42 L 15,-42  M -15,-42 L -2,-26  M 15,-42 L 2,-26  M 0,-42 L 0,0  M 0,0 L -10,70  M 0,0 L 10,70" transform="translate(391,140)" fill="none" stroke="#60a5fa" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" opacity="0.85"/><circle cx="376" cy="98" r="2" fill="#60a5fa" opacity="0.9"/><circle cx="406" cy="98" r="2" fill="#60a5fa" opacity="0.9"/><circle cx="391" cy="140" r="2.8" fill="#60a5fa" opacity="0.95"/><rect x="377" y="190" width="28" height="16" rx="4" fill="#0d1e35" stroke="#4a7aaa" stroke-width="1"/><text x="391" y="202" text-anchor="middle" font-size="12" font-weight="800" fill="#e8f4ff" font-family="Segoe UI,system-ui,sans-serif">8a</text></a><a data-pole="9" style="cursor:pointer"><rect x="411.848" y="88" width="44" height="138" fill="transparent" stroke="none"/><path d="M -15,-42 L 15,-42  M -15,-42 L -2,-26  M 15,-42 L 2,-26  M 0,-42 L 0,0  M 0,0 L -10,70  M 0,0 L 10,70" transform="translate(433.848,140)" fill="none" stroke="#60a5fa" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" opacity="0.85"/><circle cx="418.848" cy="98" r="2" fill="#60a5fa" opacity="0.9"/><circle cx="448.848" cy="98" r="2" fill="#60a5fa" opacity="0.9"/><circle cx="433.848" cy="140" r="2.8" fill="#60a5fa" opacity="0.95"/><rect x="419.848" y="190" width="28" height="16" rx="4" fill="#0d1e35" stroke="#4a7aaa" stroke-width="1"/><text x="433.848" y="202" text-anchor="middle" font-size="12" font-weight="800" fill="#e8f4ff" font-family="Segoe UI,system-ui,sans-serif">9a</text></a><a data-pole="10" style="cursor:pointer"><rect x="454.683" y="88" width="44" height="138" fill="transparent" stroke="none"/><path d="M -15,-42 L 15,-42  M -15,-42 L -2,-26  M 15,-42 L 2,-26  M 0,-42 L 0,0  M 0,0 L -10,70  M 0,0 L 10,70" transform="translate(476.683,140)" fill="none" stroke="#60a5fa" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" opacity="0.85"/><circle cx="461.683" cy="98" r="2" fill="#60a5fa" opacity="0.9"/><circle cx="491.683" cy="98" r="2" fill="#60a5fa" opacity="0.9"/><circle cx="476.683" cy="140" r="2.8" fill="#60a5fa" opacity="0.95"/><rect x="462.683" y="190" width="28" height="16" rx="4" fill="#0d1e35" stroke="#4a7aaa" stroke-width="1"/><text x="476.683" y="202" text-anchor="middle" font-size="12" font-weight="800" fill="#e8f4ff" font-family="Segoe UI,system-ui,sans-serif">10a</text></a><a data-pole="11" style="cursor:pointer"><rect x="496.683" y="88" width="44" height="138" fill="transparent" stroke="none"/><path d="M -15,-42 L 15,-42  M -15,-42 L -2,-26  M 15,-42 L 2,-26  M 0,-42 L 0,0  M 0,0 L -10,70  M 0,0 L 10,70" transform="translate(518.683,140)" fill="none" stroke="#60a5fa" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" opacity="0.85"/><circle cx="503.683" cy="98" r="2" fill="#60a5fa" opacity="0.9"/><circle cx="533.683" cy="98" r="2" fill="#60a5fa" opacity="0.9"/><circle cx="518.683" cy="140" r="2.8" fill="#60a5fa" opacity="0.95"/><circle cx="504.683" cy="88" r="5.5" fill="#f97316" opacity="0.9"/><text x="504.683" y="92" text-anchor="middle" font-size="9" font-weight="900" fill="#fff" font-family="Segoe UI,sans-serif">!</text><circle cx="504.683" cy="88" r="7.5" fill="none" stroke="#f97316" stroke-width="1" opacity="0.35"/><rect x="504.683" y="190" width="28" height="16" rx="4" fill="#0d1e35" stroke="#f97316" stroke-width="1.8"/><text x="518.683" y="202" text-anchor="middle" font-size="12" font-weight="800" fill="#e8f4ff" font-family="Segoe UI,system-ui,sans-serif">11a</text></a><a data-pole="12" style="cursor:pointer"><rect x="538.683" y="84" width="44" height="142" fill="transparent" stroke="none"/><path d="M -18,-46 L 18,-46  M -18,-46 L -3,-28  M 18,-46 L 3,-28  M 0,-46 L 0,0  M -5,-14 L 5,-22  M 0,0 L -13,70  M 0,0 L 13,70  M -6,52 L 6,52" transform="translate(560.683,140)" fill="none" stroke="#f87171" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" opacity="0.85"/><circle cx="542.683" cy="94" r="2" fill="#f87171" opacity="0.9"/><circle cx="578.683" cy="94" r="2" fill="#f87171" opacity="0.9"/><circle cx="560.683" cy="140" r="2.8" fill="#f87171" opacity="0.95"/><circle cx="546.683" cy="84" r="5.5" fill="#f97316" opacity="0.9"/><text x="546.683" y="88" text-anchor="middle" font-size="9" font-weight="900" fill="#fff" font-family="Segoe UI,sans-serif">!</text><circle cx="546.683" cy="84" r="7.5" fill="none" stroke="#f97316" stroke-width="1" opacity="0.35"/><rect x="546.683" y="190" width="28" height="16" rx="4" fill="#0d1e35" stroke="#f97316" stroke-width="1.8"/><text x="560.683" y="202" text-anchor="middle" font-size="12" font-weight="800" fill="#e8f4ff" font-family="Segoe UI,system-ui,sans-serif">12a</text></a><a data-pole="13" style="cursor:pointer"><rect x="580.683" y="90" width="44" height="136" fill="transparent" stroke="none"/><path d="M -13,-40 L 13,-40  M -13,-40 L -1,-24  M 13,-40 L 1,-24  M 0,-40 L 0,0  M 0,0 L -8,70  M 0,0 L 8,70" transform="translate(602.683,140)" fill="none" stroke="#34d399" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" opacity="0.85"/><circle cx="589.683" cy="100" r="2" fill="#34d399" opacity="0.9"/><circle cx="615.683" cy="100" r="2" fill="#34d399" opacity="0.9"/><circle cx="602.683" cy="140" r="2.8" fill="#34d399" opacity="0.95"/><rect x="588.683" y="190" width="28" height="16" rx="4" fill="#0d1e35" stroke="#4a7aaa" stroke-width="1"/><text x="602.683" y="202" text-anchor="middle" font-size="12" font-weight="800" fill="#e8f4ff" font-family="Segoe UI,system-ui,sans-serif">13a</text></a><a data-pole="14" style="cursor:pointer"><rect x="622.683" y="90" width="44" height="136" fill="transparent" stroke="none"/><path d="M -13,-40 L 13,-40  M -13,-40 L -1,-24  M 13,-40 L 1,-24  M 0,-40 L 0,0  M 0,0 L -8,70  M 0,0 L 8,70" transform="translate(644.683,140)" fill="none" stroke="#34d399" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" opacity="0.85"/><circle cx="631.683" cy="100" r="2" fill="#34d399" opacity="0.9"/><circle cx="657.683" cy="100" r="2" fill="#34d399" opacity="0.9"/><circle cx="644.683" cy="140" r="2.8" fill="#34d399" opacity="0.95"/><rect x="630.683" y="190" width="28" height="16" rx="4" fill="#0d1e35" stroke="#4a7aaa" stroke-width="1"/><text x="644.683" y="202" text-anchor="middle" font-size="12" font-weight="800" fill="#e8f4ff" font-family="Segoe UI,system-ui,sans-serif">14a</text></a><a data-pole="15" style="cursor:pointer"><rect x="664.683" y="90" width="44" height="136" fill="transparent" stroke="none"/><path d="M -13,-40 L 13,-40  M -13,-40 L -1,-24  M 13,-40 L 1,-24  M 0,-40 L 0,0  M 0,0 L -8,70  M 0,0 L 8,70" transform="translate(686.683,140)" fill="none" stroke="#34d399" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" opacity="0.85"/><circle cx="673.683" cy="100" r="2" fill="#34d399" opacity="0.9"/><circle cx="699.683" cy="100" r="2" fill="#34d399" opacity="0.9"/><circle cx="686.683" cy="140" r="2.8" fill="#34d399" opacity="0.95"/><circle cx="672.683" cy="90" r="5.5" fill="#f97316" opacity="0.9"/><text x="672.683" y="94" text-anchor="middle" font-size="9" font-weight="900" fill="#fff" font-family="Segoe UI,sans-serif">!</text><circle cx="672.683" cy="90" r="7.5" fill="none" stroke="#f97316" stroke-width="1" opacity="0.35"/><rect x="672.683" y="190" width="28" height="16" rx="4" fill="#0d1e35" stroke="#f97316" stroke-width="1.8"/><text x="686.683" y="202" text-anchor="middle" font-size="12" font-weight="800" fill="#e8f4ff" font-family="Segoe UI,system-ui,sans-serif">15a</text></a><a data-pole="16" style="cursor:pointer"><rect x="706.683" y="90" width="44" height="136" fill="transparent" stroke="none"/><path d="M -13,-40 L 13,-40  M -13,-40 L -1,-24  M 13,-40 L 1,-24  M 0,-40 L 0,0  M 0,0 L -8,70  M 0,0 L 8,70" transform="translate(728.683,140)" fill="none" stroke="#34d399" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" opacity="0.85"/><circle cx="715.683" cy="100" r="2" fill="#34d399" opacity="0.9"/><circle cx="741.683" cy="100" r="2" fill="#34d399" opacity="0.9"/><circle cx="728.683" cy="140" r="2.8" fill="#34d399" opacity="0.95"/><circle cx="714.683" cy="90" r="5.5" fill="#f97316" opacity="0.9"/><text x="714.683" y="94" text-anchor="middle" font-size="9" font-weight="900" fill="#fff" font-family="Segoe UI,sans-serif">!</text><circle cx="714.683" cy="90" r="7.5" fill="none" stroke="#f97316" stroke-width="1" opacity="0.35"/><rect x="714.683" y="190" width="28" height="16" rx="4" fill="#0d1e35" stroke="#f97316" stroke-width="1.8"/><text x="728.683" y="202" text-anchor="middle" font-size="12" font-weight="800" fill="#e8f4ff" font-family="Segoe UI,system-ui,sans-serif">16a</text></a><a data-pole="17" style="cursor:pointer"><rect x="748.683" y="96" width="44" height="130" fill="transparent" stroke="none"/><path d="M -9,-34 L 9,-34  M 0,-34 L 0,70" transform="translate(770.683,140)" fill="none" stroke="#fbbf24" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" opacity="0.85"/><circle cx="761.683" cy="106" r="2" fill="#fbbf24" opacity="0.9"/><circle cx="779.683" cy="106" r="2" fill="#fbbf24" opacity="0.9"/><circle cx="770.683" cy="140" r="2.8" fill="#fbbf24" opacity="0.95"/><circle cx="756.683" cy="96" r="5.5" fill="#f97316" opacity="0.9"/><text x="756.683" y="100" text-anchor="middle" font-size="9" font-weight="900" fill="#fff" font-family="Segoe UI,sans-serif">!</text><circle cx="756.683" cy="96" r="7.5" fill="none" stroke="#f97316" stroke-width="1" opacity="0.35"/><rect x="756.683" y="190" width="28" height="16" rx="4" fill="#0d1e35" stroke="#f97316" stroke-width="1.8"/><text x="770.683" y="202" text-anchor="middle" font-size="12" font-weight="800" fill="#e8f4ff" font-family="Segoe UI,system-ui,sans-serif">17a</text></a><a data-pole="18" style="cursor:pointer"><rect x="790.683" y="96" width="44" height="130" fill="transparent" stroke="none"/><path d="M -9,-34 L 9,-34  M 0,-34 L 0,70" transform="translate(812.683,140)" fill="none" stroke="#fbbf24" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" opacity="0.85"/><circle cx="803.683" cy="106" r="2" fill="#fbbf24" opacity="0.9"/><circle cx="821.683" cy="106" r="2" fill="#fbbf24" opacity="0.9"/><circle cx="812.683" cy="140" r="2.8" fill="#fbbf24" opacity="0.95"/><circle cx="798.683" cy="96" r="5.5" fill="#f97316" opacity="0.9"/><text x="798.683" y="100" text-anchor="middle" font-size="9" font-weight="900" fill="#fff" font-family="Segoe UI,sans-serif">!</text><circle cx="798.683" cy="96" r="7.5" fill="none" stroke="#f97316" stroke-width="1" opacity="0.35"/><rect x="798.683" y="190" width="28" height="16" rx="4" fill="#0d1e35" stroke="#f97316" stroke-width="1.8"/><text x="812.683" y="202" text-anchor="middle" font-size="12" font-weight="800" fill="#e8f4ff" font-family="Segoe UI,system-ui,sans-serif">18a</text></a><a data-pole="19" style="cursor:pointer"><rect x="832.683" y="96" width="44" height="130" fill="transparent" stroke="none"/><path d="M -9,-34 L 9,-34  M 0,-34 L 0,70" transform="translate(854.683,140)" fill="none" stroke="#fbbf24" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" opacity="0.85"/><circle cx="845.683" cy="106" r="2" fill="#fbbf24" opacity="0.9"/><circle cx="863.683" cy="106" r="2" fill="#fbbf24" opacity="0.9"/><circle cx="854.683" cy="140" r="2.8" fill="#fbbf24" opacity="0.95"/><rect x="840.683" y="190" width="28" height="16" rx="4" fill="#0d1e35" stroke="#4a7aaa" stroke-width="1"/><text x="854.683" y="202" text-anchor="middle" font-size="12" font-weight="800" fill="#e8f4ff" font-family="Segoe UI,system-ui,sans-serif">19a</text></a><a data-pole="20" style="cursor:pointer"><rect x="874.683" y="96" width="44" height="130" fill="transparent" stroke="none"/><path d="M -9,-34 L 9,-34  M 0,-34 L 0,70" transform="translate(896.683,140)" fill="none" stroke="#fbbf24" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" opacity="0.85"/><circle cx="887.683" cy="106" r="2" fill="#fbbf24" opacity="0.9"/><circle cx="905.683" cy="106" r="2" fill="#fbbf24" opacity="0.9"/><circle cx="896.683" cy="140" r="2.8" fill="#fbbf24" opacity="0.95"/><rect x="882.683" y="190" width="28" height="16" rx="4" fill="#0d1e35" stroke="#4a7aaa" stroke-width="1"/><text x="896.683" y="202" text-anchor="middle" font-size="12" font-weight="800" fill="#e8f4ff" font-family="Segoe UI,system-ui,sans-serif">20a</text></a><a data-pole="21" style="cursor:pointer"><rect x="916.683" y="90" width="44" height="136" fill="transparent" stroke="none"/><path d="M -13,-40 L 13,-40  M -13,-40 L -1,-24  M 13,-40 L 1,-24  M 0,-40 L 0,0  M 0,0 L -8,70  M 0,0 L 8,70" transform="translate(938.683,140)" fill="none" stroke="#34d399" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" opacity="0.85"/><circle cx="925.683" cy="100" r="2" fill="#34d399" opacity="0.9"/><circle cx="951.683" cy="100" r="2" fill="#34d399" opacity="0.9"/><circle cx="938.683" cy="140" r="2.8" fill="#34d399" opacity="0.95"/><circle cx="952.683" cy="90" r="5" fill="#dc2626"/><text x="952.683" y="94" text-anchor="middle" font-size="7" font-weight="900" fill="#fff" font-family="Segoe UI,sans-serif">!</text><circle cx="924.683" cy="90" r="5.5" fill="#f97316" opacity="0.9"/><text x="924.683" y="94" text-anchor="middle" font-size="9" font-weight="900" fill="#fff" font-family="Segoe UI,sans-serif">!</text><circle cx="924.683" cy="90" r="7.5" fill="none" stroke="#f97316" stroke-width="1" opacity="0.35"/><rect x="924.683" y="190" width="28" height="16" rx="4" fill="#0d1e35" stroke="#f97316" stroke-width="1.8"/><text x="938.683" y="202" text-anchor="middle" font-size="12" font-weight="800" fill="#e8f4ff" font-family="Segoe UI,system-ui,sans-serif">21a</text></a><a data-pole="22" style="cursor:pointer"><rect x="958.683" y="84" width="44" height="142" fill="transparent" stroke="none"/><path d="M -18,-46 L 18,-46  M -18,-46 L -3,-28  M 18,-46 L 3,-28  M 0,-46 L 0,0  M -5,-14 L 5,-22  M 0,0 L -13,70  M 0,0 L 13,70  M -6,52 L 6,52" transform="translate(980.683,140)" fill="none" stroke="#f87171" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" opacity="0.85"/><circle cx="962.683" cy="94" r="2" fill="#f87171" opacity="0.9"/><circle cx="998.683" cy="94" r="2" fill="#f87171" opacity="0.9"/><circle cx="980.683" cy="140" r="2.8" fill="#f87171" opacity="0.95"/><circle cx="966.683" cy="84" r="5.5" fill="#f97316" opacity="0.9"/><text x="966.683" y="88" text-anchor="middle" font-size="9" font-weight="900" fill="#fff" font-family="Segoe UI,sans-serif">!</text><circle cx="966.683" cy="84" r="7.5" fill="none" stroke="#f97316" stroke-width="1" opacity="0.35"/><rect x="966.683" y="190" width="28" height="16" rx="4" fill="#0d1e35" stroke="#f97316" stroke-width="1.8"/><text x="980.683" y="202" text-anchor="middle" font-size="12" font-weight="800" fill="#e8f4ff" font-family="Segoe UI,system-ui,sans-serif">22a</text></a><a data-pole="23" style="cursor:pointer"><rect x="1000.683" y="96" width="44" height="130" fill="transparent" stroke="none"/><path d="M -9,-34 L 9,-34  M 0,-34 L 0,70" transform="translate(1022.683,140)" fill="none" stroke="#fbbf24" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" opacity="0.85"/><circle cx="1013.683" cy="106" r="2" fill="#fbbf24" opacity="0.9"/><circle cx="1031.683" cy="106" r="2" fill="#fbbf24" opacity="0.9"/><circle cx="1022.683" cy="140" r="2.8" fill="#fbbf24" opacity="0.95"/><rect x="1008.683" y="190" width="28" height="16" rx="4" fill="#0d1e35" stroke="#4a7aaa" stroke-width="1"/><text x="1022.683" y="202" text-anchor="middle" font-size="12" font-weight="800" fill="#e8f4ff" font-family="Segoe UI,system-ui,sans-serif">23a</text></a><a data-pole="24" style="cursor:pointer"><rect x="1042.683" y="90" width="44" height="136" fill="transparent" stroke="none"/><path d="M -13,-40 L 13,-40  M -13,-40 L -1,-24  M 13,-40 L 1,-24  M 0,-40 L 0,0  M 0,0 L -8,70  M 0,0 L 8,70" transform="translate(1064.683,140)" fill="none" stroke="#34d399" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" opacity="0.85"/><circle cx="1051.683" cy="100" r="2" fill="#34d399" opacity="0.9"/><circle cx="1077.683" cy="100" r="2" fill="#34d399" opacity="0.9"/><circle cx="1064.683" cy="140" r="2.8" fill="#34d399" opacity="0.95"/><circle cx="1050.683" cy="90" r="5.5" fill="#f97316" opacity="0.9"/><text x="1050.683" y="94" text-anchor="middle" font-size="9" font-weight="900" fill="#fff" font-family="Segoe UI,sans-serif">!</text><circle cx="1050.683" cy="90" r="7.5" fill="none" stroke="#f97316" stroke-width="1" opacity="0.35"/><rect x="1050.683" y="190" width="28" height="16" rx="4" fill="#0d1e35" stroke="#f97316" stroke-width="1.8"/><text x="1064.683" y="202" text-anchor="middle" font-size="12" font-weight="800" fill="#e8f4ff" font-family="Segoe UI,system-ui,sans-serif">24a</text></a><a data-pole="25" style="cursor:pointer"><rect x="1084.683" y="90" width="44" height="136" fill="transparent" stroke="none"/><path d="M -13,-40 L 13,-40  M -13,-40 L -1,-24  M 13,-40 L 1,-24  M 0,-40 L 0,0  M 0,0 L -8,70  M 0,0 L 8,70" transform="translate(1106.683,140)" fill="none" stroke="#34d399" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" opacity="0.85"/><circle cx="1093.683" cy="100" r="2" fill="#34d399" opacity="0.9"/><circle cx="1119.683" cy="100" r="2" fill="#34d399" opacity="0.9"/><circle cx="1106.683" cy="140" r="2.8" fill="#34d399" opacity="0.95"/><circle cx="1092.683" cy="90" r="5.5" fill="#f97316" opacity="0.9"/><text x="1092.683" y="94" text-anchor="middle" font-size="9" font-weight="900" fill="#fff" font-family="Segoe UI,sans-serif">!</text><circle cx="1092.683" cy="90" r="7.5" fill="none" stroke="#f97316" stroke-width="1" opacity="0.35"/><rect x="1092.683" y="190" width="28" height="16" rx="4" fill="#0d1e35" stroke="#f97316" stroke-width="1.8"/><text x="1106.683" y="202" text-anchor="middle" font-size="12" font-weight="800" fill="#e8f4ff" font-family="Segoe UI,system-ui,sans-serif">25a</text></a><a data-pole="26" style="cursor:pointer"><rect x="1126.683" y="84" width="44" height="142" fill="transparent" stroke="none"/><path d="M -18,-46 L 18,-46  M -18,-46 L -3,-28  M 18,-46 L 3,-28  M 0,-46 L 0,0  M -5,-14 L 5,-22  M 0,0 L -13,70  M 0,0 L 13,70  M -6,52 L 6,52" transform="translate(1148.683,140)" fill="none" stroke="#f87171" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" opacity="0.85"/><circle cx="1130.683" cy="94" r="2" fill="#f87171" opacity="0.9"/><circle cx="1166.683" cy="94" r="2" fill="#f87171" opacity="0.9"/><circle cx="1148.683" cy="140" r="2.8" fill="#f87171" opacity="0.95"/><circle cx="1134.683" cy="84" r="5.5" fill="#f97316" opacity="0.9"/><text x="1134.683" y="88" text-anchor="middle" font-size="9" font-weight="900" fill="#fff" font-family="Segoe UI,sans-serif">!</text><circle cx="1134.683" cy="84" r="7.5" fill="none" stroke="#f97316" stroke-width="1" opacity="0.35"/><rect x="1134.683" y="190" width="28" height="16" rx="4" fill="#0d1e35" stroke="#f97316" stroke-width="1.8"/><text x="1148.683" y="202" text-anchor="middle" font-size="12" font-weight="800" fill="#e8f4ff" font-family="Segoe UI,system-ui,sans-serif">26a</text></a><a data-pole="27" style="cursor:pointer"><rect x="1168.683" y="96" width="44" height="130" fill="transparent" stroke="none"/><path d="M -9,-34 L 9,-34  M 0,-34 L 0,70" transform="translate(1190.683,140)" fill="none" stroke="#fbbf24" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" opacity="0.85"/><circle cx="1181.683" cy="106" r="2" fill="#fbbf24" opacity="0.9"/><circle cx="1199.683" cy="106" r="2" fill="#fbbf24" opacity="0.9"/><circle cx="1190.683" cy="140" r="2.8" fill="#fbbf24" opacity="0.95"/><rect x="1176.683" y="190" width="28" height="16" rx="4" fill="#0d1e35" stroke="#4a7aaa" stroke-width="1"/><text x="1190.683" y="202" text-anchor="middle" font-size="12" font-weight="800" fill="#e8f4ff" font-family="Segoe UI,system-ui,sans-serif">27a</text></a><a data-pole="28" style="cursor:pointer"><rect x="1210.683" y="96" width="44" height="130" fill="transparent" stroke="none"/><path d="M -9,-34 L 9,-34  M 0,-34 L 0,70" transform="translate(1232.683,140)" fill="none" stroke="#fbbf24" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" opacity="0.85"/><circle cx="1223.683" cy="106" r="2" fill="#fbbf24" opacity="0.9"/><circle cx="1241.683" cy="106" r="2" fill="#fbbf24" opacity="0.9"/><circle cx="1232.683" cy="140" r="2.8" fill="#fbbf24" opacity="0.95"/><rect x="1218.683" y="190" width="28" height="16" rx="4" fill="#0d1e35" stroke="#4a7aaa" stroke-width="1"/><text x="1232.683" y="202" text-anchor="middle" font-size="12" font-weight="800" fill="#e8f4ff" font-family="Segoe UI,system-ui,sans-serif">28a</text></a>
+      </svg>
+    </div>
+
+    <div class="hint-bar">
+      <span>&#8592; Pos&uacute;vajte horizont&aacute;lne pre zobrazenie celej trasy</span>
+      <span>Kliknite na sto&#382;iar pre detailn&eacute; inform&aacute;cie &rarr;</span>
+    </div>
+  </div>
+
+
+  <div class="det-panel">
+    <div class="det-head" id="detHead" style="display:flex;align-items:center;justify-content:center;min-height:80px">
+      <span style="color:#7a9abf;font-size:13px;text-align:center;line-height:1.6">Kliknite na stožiar<br>pre detailn&eacute; inform&aacute;cie</span>
+    </div>
+    <div class="det-body" id="detBody"></div>
+  </div>
+</div>
+
+<script>
+// ══════════════════════════════════════════════
+//  POLES DATA
+// ══════════════════════════════════════════════
+const POLES = [
+  {
+    "id": "Portál",
+    "zt": "portal",
+    "typ": "Portál",
+    "druh": "Portál",
+    "oldNum": "V1",
+    "cum": 0,
+    "angle": null,
+    "warn": "Tlmiče Nemontujeme smer 1a",
+    "cross": [
+      "Asfaltová cesta (V1–1a)",
+      "Fe plot (V1–1a)",
+      "2× teplovod v zemi (V1–1a)"
+    ],
+    "notes": [
+      "Typ závesu: DDK – Dvojitý kotevný",
+      "Pištole zostávajú staré (nemenia sa)",
+      "Zmerať starý reťazec (+ použiť predĺženie alebo vydlicu)."
+    ],
+    "parts": [
+      {
+        "n": 1,
+        "name": "Závesný kĺb (Praporec)",
+        "jk": "235132",
+        "otoceny": null
+      },
+      {
+        "n": 1,
+        "name": "Vidlica s okom nastaviteľná",
+        "jk": "231 547",
+        "otoceny": null
+      },
+      {
+        "n": 2,
+        "name": "Dvojité oko krížové",
+        "jk": "231 407",
+        "otoceny": null
+      },
+      {
+        "n": 2,
+        "name": "Rozperka",
+        "jk": "233 417",
+        "otoceny": null
+      },
+      {
+        "n": 4,
+        "name": "Izolátor CS120 T19L 550/3820/1300",
+        "jk": "SMH110/4Nymk-99/589",
+        "otoceny": true
+      },
+      {
+        "n": 2,
+        "name": "Dvojbolcňová platnička",
+        "jk": "",
+        "otoceny": null
+      },
+      {
+        "n": 1,
+        "name": "Vidlica s okom nastaviteľná",
+        "jk": "231547",
+        "otoceny": null
+      },
+      {
+        "n": 1,
+        "name": "Vidlica s okom nastaviteľná",
+        "jk": "231547",
+        "otoceny": null
+      }
+    ],
+    "extraParts": [],
+    "pnCount": 0,
+    "pnAno": false,
+    "pnOtoceny": false
+  },
+  {
+    "id": "1a",
+    "zt": "DDK",
+    "typ": "I+0",
+    "druh": "Kotevný",
+    "oldNum": "41",
+    "cum": 97,
+    "angle": "175°37'",
+    "warn": "Tlmiče Nemontovať smer Portál",
+    "cross": [
+      "Asfalt. cesta EBO A1–EBO V2 (V1–1a)",
+      "Fe plot (V1–1a)",
+      "2× teplovod v zemi (V1–1a)"
+    ],
+    "notes": [
+      "Zmerať starý reťazec (+ podla toho použiť predĺženie alebo vydlicu)",
+      "Pištole zostávajú staré (nemenia sa)",
+      "Horná+Spodná konzola: Praporec 235 118, Stredná: 235 119"
+    ],
+    "parts": [
+      {
+        "n": 4,
+        "name": "Izolátor CS120 T19L 550/3820/1300",
+        "jk": "SMH110/4Nymk-99/589",
+        "otoceny": true
+      },
+      {
+        "n": 2,
+        "name": "Rozperka",
+        "jk": "233417",
+        "otoceny": null
+      },
+      {
+        "n": 2,
+        "name": "Dvojité oko krížové",
+        "jk": "231407",
+        "otoceny": null
+      },
+      {
+        "n": 2,
+        "name": "Dvojbolcňová platnička",
+        "jk": "",
+        "otoceny": null
+      }
+    ],
+    "extraParts": [
+      {
+        "n": 2,
+        "name": "Závesný kĺb (Praporec)",
+        "jk": "235118",
+        "note": "Horná + Spodná konzola"
+      },
+      {
+        "n": 1,
+        "name": "Závesný kĺb (Praporec)",
+        "jk": "235119",
+        "note": "Stredná konzola"
+      },
+      {
+        "n": 3,
+        "name": "Vidlica s okom priama a=150",
+        "jk": "231641.15",
+        "note": "Vidlica"
+      },
+      {
+        "n": 3,
+        "name": "Vidlica s okom nastaviteľná",
+        "jk": "231547",
+        "note": "Predľženie"
+      },
+      {
+        "n": 3,
+        "name": "Tlmič vibrácií",
+        "jk": "228582.52",
+        "note": ""
+      }
+    ],
+    "pnCount": 0,
+    "pnAno": false,
+    "pnOtoceny": false
+  },
+  {
+    "id": "2a",
+    "zt": "DDK",
+    "typ": "RVO (I)",
+    "druh": "Kotevný",
+    "oldNum": "40",
+    "cum": 156,
+    "angle": "157°23'",
+    "warn": null,
+    "cross": [],
+    "notes": [
+      "Zmerať starý reťazec (+ podla toho použiť predĺženie alebo vydlicu)",
+      "Pištole zostávajú staré (nemenia sa)"
+    ],
+    "parts": [
+      {
+        "n": 4,
+        "name": "Izolátor CS120 T19L 550/3820/1300",
+        "jk": "SMH110/4Nymk-99/589",
+        "otoceny": true
+      },
+      {
+        "n": 2,
+        "name": "Rozperka",
+        "jk": "233417",
+        "otoceny": null
+      },
+      {
+        "n": 1,
+        "name": "Závesný kĺb (Praporec)",
+        "jk": "235119.2",
+        "otoceny": null
+      },
+      {
+        "n": 2,
+        "name": "Dvojité oko krížové",
+        "jk": "231407",
+        "otoceny": null
+      },
+      {
+        "n": 2,
+        "name": "Dvojbolcňová platnička",
+        "jk": "",
+        "otoceny": null
+      },
+      {
+        "n": 1,
+        "name": "Tlmič vibrácií",
+        "jk": "228582.52",
+        "otoceny": null
+      }
+    ],
+    "extraParts": [
+      {
+        "n": 3,
+        "name": "Vidlica s okom priama a=150",
+        "jk": "231641.15",
+        "note": "Vidlica"
+      },
+      {
+        "n": 3,
+        "name": "Vidlica s okom nastaviteľná",
+        "jk": "231547",
+        "note": "Predľženie"
+      }
+    ],
+    "pnCount": 0,
+    "pnAno": false,
+    "pnOtoceny": false
+  },
+  {
+    "id": "3a",
+    "zt": "DDK",
+    "typ": "VII+6",
+    "druh": "Kotevný",
+    "oldNum": "30",
+    "cum": 233.3,
+    "angle": "165°16'",
+    "warn": null,
+    "cross": [
+      "2× teplovod v zemi (3a–4a)"
+    ],
+    "notes": [
+      "Typ závesu: DDK – Dvojitý kotevný",
+      "Horná+Stredná konzola: Praporec 118",
+      "Spodná konzola: Praporec 119",
+      "Pištole zostávajú staré (nemenia sa)",
+      "V rozpise materiálu navyše pridelené pre celý stožiar: 4× Praporec č.235 126 + 4× Praporec č.235 125"
+    ],
+    "parts": [
+      {
+        "n": 4,
+        "name": "Izolátor CS120 T19L 550/3820/1300",
+        "jk": "SMH110/4Nymk-99/589",
+        "otoceny": true
+      },
+      {
+        "n": 2,
+        "name": "Rozperka",
+        "jk": "233417",
+        "otoceny": null
+      },
+      {
+        "n": 1,
+        "name": "Závesný kĺb (Praporec)",
+        "jk": "235119.2",
+        "otoceny": null
+      },
+      {
+        "n": 2,
+        "name": "Dvojité oko krížové",
+        "jk": "231407",
+        "otoceny": null
+      },
+      {
+        "n": 2,
+        "name": "Dvojbolcňová platnička",
+        "jk": "",
+        "otoceny": null
+      },
+      {
+        "n": 1,
+        "name": "Tlmič vibrácií",
+        "jk": "228582.52",
+        "otoceny": null
+      }
+    ],
+    "extraParts": [
+      {
+        "n": 2,
+        "name": "Závesný kĺb (Praporec)",
+        "jk": "235118",
+        "note": "Horná+Stredná konzola"
+      },
+      {
+        "n": 1,
+        "name": "Závesný kĺb (Praporec)",
+        "jk": "235118.9",
+        "note": "Spodná konzola"
+      },
+      {
+        "n": 4,
+        "name": "Závesný kĺb (Praporec)",
+        "jk": "235126",
+        "note": ""
+      },
+      {
+        "n": 4,
+        "name": "Závesný kĺb (Praporec)",
+        "jk": "235125",
+        "note": ""
+      }
+    ],
+    "pnCount": 0,
+    "pnAno": false,
+    "pnOtoceny": false
+  },
+  {
+    "id": "4a",
+    "zt": "DDK",
+    "typ": "V (II)",
+    "druh": "Kotevný",
+    "oldNum": "29",
+    "cum": 417.1,
+    "angle": "179°56'",
+    "warn": null,
+    "cross": [
+      "2× teplovod v zemi (3a–4a)"
+    ],
+    "notes": [
+      "Typ závesu: DDK – Dvojitý kotevný",
+      "Horná+Stredná konzola: Praporec 118",
+      "Spodná konzola: Praporec 119",
+      "Pištole zostávajú staré (nemenia sa)",
+      "V rozpise materiálu navyše pridelené pre celý stožiar: 4× Praporec č.235 126 + 4× Praporec č.235 125"
+    ],
+    "parts": [
+      {
+        "n": 4,
+        "name": "Izolátor CS120 T19L 550/3820/1300",
+        "jk": "SMH110/4Nymk-99/589",
+        "otoceny": true
+      },
+      {
+        "n": 2,
+        "name": "Rozperka",
+        "jk": "233417",
+        "otoceny": null
+      },
+      {
+        "n": 1,
+        "name": "Závesný kĺb (Praporec)",
+        "jk": "235119.2",
+        "otoceny": null
+      },
+      {
+        "n": 2,
+        "name": "Dvojité oko krížové",
+        "jk": "231407",
+        "otoceny": null
+      },
+      {
+        "n": 2,
+        "name": "Dvojbolcňová platnička",
+        "jk": "",
+        "otoceny": null
+      },
+      {
+        "n": 1,
+        "name": "Tlmič vibrácií",
+        "jk": "228582.52",
+        "otoceny": null
+      }
+    ],
+    "extraParts": [
+      {
+        "n": 2,
+        "name": "Závesný kĺb (Praporec)",
+        "jk": "235118",
+        "note": "Horná+Stredná konzola"
+      },
+      {
+        "n": 1,
+        "name": "Závesný kĺb (Praporec)",
+        "jk": "235119.2",
+        "note": "Spodná konzola"
+      },
+      {
+        "n": 4,
+        "name": "Závesný kĺb (Praporec)",
+        "jk": "235126",
+        "note": ""
+      },
+      {
+        "n": 4,
+        "name": "Závesný kĺb (Praporec)",
+        "jk": "235125",
+        "note": ""
+      }
+    ],
+    "pnCount": 0,
+    "pnAno": false,
+    "pnOtoceny": false
+  },
+  {
+    "id": "5a",
+    "zt": "PK",
+    "typ": "Ns+4",
+    "druh": "Polokotevný",
+    "oldNum": "28",
+    "cum": 719.9,
+    "angle": null,
+    "warn": null,
+    "cross": [],
+    "notes": [
+      "Plašič – montáž na strmeň",
+      "Uchytenie cez strmeň"
+    ],
+    "parts": [
+      {
+        "n": 1,
+        "name": "Strmeň",
+        "jk": "235 542",
+        "otoceny": null
+      },
+      {
+        "n": 1,
+        "name": "Dvojité oko priame",
+        "jk": "231447",
+        "otoceny": null
+      },
+      {
+        "n": 1,
+        "name": "Ochranná tyč",
+        "jk": "521601",
+        "otoceny": null
+      },
+      {
+        "n": 2,
+        "name": "Izolátor CS120 T19L 550/3820/1300",
+        "jk": "SMH110/4Nymk-99/589",
+        "otoceny": false
+      },
+      {
+        "n": 2,
+        "name": "Nosná svorka s ochrannou špirálou",
+        "jk": "136400.25",
+        "otoceny": null
+      },
+      {
+        "n": 1,
+        "name": "Rozperka",
+        "jk": "233417",
+        "otoceny": null
+      },
+      {
+        "n": 2,
+        "name": "Tlmič vibrácií",
+        "jk": "228582.52",
+        "otoceny": null
+      }
+    ],
+    "extraParts": [],
+    "pnCount": 0,
+    "pnAno": false,
+    "pnOtoceny": false
+  },
+  {
+    "id": "6a",
+    "zt": "PK",
+    "typ": "Ns+4",
+    "druh": "Polokotevný",
+    "oldNum": "27",
+    "cum": 1039.3,
+    "angle": null,
+    "warn": null,
+    "cross": [
+      "400 kV VVN vedenie V044/496 – nad vedením (6a–7a)",
+      "Poľná cesta (6a–7a)"
+    ],
+    "notes": [
+      "Plašič – montáž na strmeň"
+    ],
+    "parts": [
+      {
+        "n": 1,
+        "name": "Strmeň",
+        "jk": "235 542",
+        "otoceny": null
+      },
+      {
+        "n": 1,
+        "name": "Dvojité oko priame",
+        "jk": "231447",
+        "otoceny": null
+      },
+      {
+        "n": 1,
+        "name": "Ochranná tyč",
+        "jk": "521601",
+        "otoceny": null
+      },
+      {
+        "n": 2,
+        "name": "Izolátor CS120 T19L 550/3820/1300",
+        "jk": "SMH110/4Nymk-99/589",
+        "otoceny": false
+      },
+      {
+        "n": 2,
+        "name": "Nosná svorka s ochrannou špirálou",
+        "jk": "136400.25",
+        "otoceny": null
+      },
+      {
+        "n": 1,
+        "name": "Rozperka",
+        "jk": "233417",
+        "otoceny": null
+      },
+      {
+        "n": 2,
+        "name": "Tlmič vibrácií",
+        "jk": "228582.52",
+        "otoceny": null
+      }
+    ],
+    "extraParts": [],
+    "pnCount": 0,
+    "pnAno": false,
+    "pnOtoceny": false
+  },
+  {
+    "id": "7a",
+    "zt": "PK",
+    "typ": "Ns+4",
+    "druh": "Polokotevný",
+    "oldNum": "26",
+    "cum": 1337.6,
+    "angle": null,
+    "warn": null,
+    "cross": [
+      "400 kV VVN vedenie V044/496 – nad vedením (6a–7a)",
+      "Poľná cesta (6a–7a)"
+    ],
+    "notes": [
+      "Plašič – montáž na strmeň"
+    ],
+    "parts": [
+      {
+        "n": 1,
+        "name": "Strmeň",
+        "jk": "235 542",
+        "otoceny": null
+      },
+      {
+        "n": 1,
+        "name": "Dvojité oko priame",
+        "jk": "231447",
+        "otoceny": null
+      },
+      {
+        "n": 1,
+        "name": "Ochranná tyč",
+        "jk": "521601",
+        "otoceny": null
+      },
+      {
+        "n": 2,
+        "name": "Izolátor CS120 T19L 550/3820/1300",
+        "jk": "SMH110/4Nymk-99/589",
+        "otoceny": false
+      },
+      {
+        "n": 2,
+        "name": "Nosná svorka s ochrannou špirálou",
+        "jk": "136400.25",
+        "otoceny": null
+      },
+      {
+        "n": 1,
+        "name": "Rozperka",
+        "jk": "233417",
+        "otoceny": null
+      },
+      {
+        "n": 2,
+        "name": "Tlmič vibrácií",
+        "jk": "228582.52",
+        "otoceny": null
+      }
+    ],
+    "extraParts": [],
+    "pnCount": 0,
+    "pnAno": false,
+    "pnOtoceny": false
+  },
+  {
+    "id": "8a",
+    "zt": "PK",
+    "typ": "Ns+4",
+    "druh": "Polokotevný",
+    "oldNum": "25",
+    "cum": 1634.6,
+    "angle": null,
+    "warn": null,
+    "cross": [
+      "Poľná cesta (8a–9a)"
+    ],
+    "notes": [
+      "Plašič – montáž na strmeň"
+    ],
+    "parts": [
+      {
+        "n": 1,
+        "name": "Strmeň",
+        "jk": "235 542",
+        "otoceny": null
+      },
+      {
+        "n": 1,
+        "name": "Dvojité oko priame",
+        "jk": "231447",
+        "otoceny": null
+      },
+      {
+        "n": 1,
+        "name": "Ochranná tyč",
+        "jk": "521601",
+        "otoceny": null
+      },
+      {
+        "n": 2,
+        "name": "Izolátor CS120 T19L 550/3820/1300",
+        "jk": "SMH110/4Nymk-99/589",
+        "otoceny": false
+      },
+      {
+        "n": 2,
+        "name": "Nosná svorka s ochrannou špirálou",
+        "jk": "136400.25",
+        "otoceny": null
+      },
+      {
+        "n": 1,
+        "name": "Rozperka",
+        "jk": "233417",
+        "otoceny": null
+      },
+      {
+        "n": 2,
+        "name": "Tlmič vibrácií",
+        "jk": "228582.52",
+        "otoceny": null
+      }
+    ],
+    "extraParts": [],
+    "pnCount": 0,
+    "pnAno": false,
+    "pnOtoceny": false
+  },
+  {
+    "id": "9a",
+    "zt": "PK",
+    "typ": "Ns+4",
+    "druh": "Polokotevný",
+    "oldNum": "24",
+    "cum": 1964.2,
+    "angle": null,
+    "warn": null,
+    "cross": [
+      "Poľná cesta (8a–9a)"
+    ],
+    "notes": [
+      "Plašič – montáž na strmeň"
+    ],
+    "parts": [
+      {
+        "n": 1,
+        "name": "Strmeň",
+        "jk": "235 542",
+        "otoceny": null
+      },
+      {
+        "n": 1,
+        "name": "Dvojité oko priame",
+        "jk": "231447",
+        "otoceny": null
+      },
+      {
+        "n": 1,
+        "name": "Ochranná tyč",
+        "jk": "521601",
+        "otoceny": null
+      },
+      {
+        "n": 2,
+        "name": "Izolátor CS120 T19L 550/3820/1300",
+        "jk": "SMH110/4Nymk-99/589",
+        "otoceny": false
+      },
+      {
+        "n": 2,
+        "name": "Nosná svorka s ochrannou špirálou",
+        "jk": "136400.25",
+        "otoceny": null
+      },
+      {
+        "n": 1,
+        "name": "Rozperka",
+        "jk": "233417",
+        "otoceny": null
+      },
+      {
+        "n": 2,
+        "name": "Tlmič vibrácií",
+        "jk": "228582.52",
+        "otoceny": null
+      }
+    ],
+    "extraParts": [],
+    "pnCount": 0,
+    "pnAno": false,
+    "pnOtoceny": false
+  },
+  {
+    "id": "10a",
+    "zt": "PK",
+    "typ": "Ns+4",
+    "druh": "Polokotevný",
+    "oldNum": "23",
+    "cum": 2293.7,
+    "angle": null,
+    "warn": null,
+    "cross": [],
+    "notes": [
+      "Plašič – montáž na strmeň"
+    ],
+    "parts": [
+      {
+        "n": 1,
+        "name": "Strmeň",
+        "jk": "235 542",
+        "otoceny": null
+      },
+      {
+        "n": 1,
+        "name": "Dvojité oko priame",
+        "jk": "231447",
+        "otoceny": null
+      },
+      {
+        "n": 1,
+        "name": "Ochranná tyč",
+        "jk": "521601",
+        "otoceny": null
+      },
+      {
+        "n": 2,
+        "name": "Izolátor CS120 T19L 550/3820/1300",
+        "jk": "SMH110/4Nymk-99/589",
+        "otoceny": false
+      },
+      {
+        "n": 2,
+        "name": "Nosná svorka s ochrannou špirálou",
+        "jk": "136400.25",
+        "otoceny": null
+      },
+      {
+        "n": 1,
+        "name": "Rozperka",
+        "jk": "233417",
+        "otoceny": null
+      },
+      {
+        "n": 2,
+        "name": "Tlmič vibrácií",
+        "jk": "228582.52",
+        "otoceny": null
+      }
+    ],
+    "extraParts": [],
+    "pnCount": 0,
+    "pnAno": false,
+    "pnOtoceny": false
+  },
+  {
+    "id": "11a",
+    "zt": "PK",
+    "typ": "Ns+4",
+    "druh": "Polokotevný",
+    "oldNum": "22",
+    "cum": 2616.2,
+    "angle": null,
+    "warn": null,
+    "cross": [
+      "Štátna cesta V.Kostoľany–Pečeňady (11a–12a)",
+      "Diaľkový kábel /v zemi/ (11a–12a)"
+    ],
+    "notes": [
+      "Plašič – montáž na strmeň"
+    ],
+    "parts": [
+      {
+        "n": 1,
+        "name": "Strmeň",
+        "jk": "235 542",
+        "otoceny": null
+      },
+      {
+        "n": 1,
+        "name": "Dvojité oko priame",
+        "jk": "231447",
+        "otoceny": null
+      },
+      {
+        "n": 1,
+        "name": "Ochranná tyč",
+        "jk": "521601",
+        "otoceny": null
+      },
+      {
+        "n": 2,
+        "name": "Izolátor CS120 T19L 550/3820/1300",
+        "jk": "SMH110/4Nymk-99/589",
+        "otoceny": false
+      },
+      {
+        "n": 2,
+        "name": "Nosná svorka s ochrannou špirálou",
+        "jk": "136400.25",
+        "otoceny": null
+      },
+      {
+        "n": 1,
+        "name": "Rozperka",
+        "jk": "233417",
+        "otoceny": null
+      },
+      {
+        "n": 2,
+        "name": "Tlmič vibrácií",
+        "jk": "228582.52",
+        "otoceny": null
+      }
+    ],
+    "extraParts": [],
+    "pnCount": 0,
+    "pnAno": false,
+    "pnOtoceny": false
+  },
+  {
+    "id": "12a",
+    "zt": "DK",
+    "typ": "RV (II)",
+    "druh": "Kotevný",
+    "oldNum": "21",
+    "cum": 2909.8,
+    "angle": "176°22'",
+    "warn": null,
+    "cross": [
+      "Štátna cesta V.Kostoľany–Pečeňady (11a–12a)",
+      "Diaľkový kábel /v zemi/ (11a–12a)"
+    ],
+    "notes": [
+      "Horná+Stredná konzola: Praporec 118 + Vydlica",
+      "Spodná konzola: Praporec 119 + Vydlica",
+      "Pištole zostávajú staré (nemenia sa)",
+      "V rozpise materiálu navyše pridelené pre celý stožiar: 4× Praporec č.235 126 + 4× Praporec č.235 125"
+    ],
+    "parts": [
+      {
+        "n": 2,
+        "name": "Izolátor CS120 T19L 550/3820/1300",
+        "jk": "SMH110/4Nymk-99/589",
+        "otoceny": true
+      },
+      {
+        "n": 2,
+        "name": "Rozperka",
+        "jk": "233417",
+        "otoceny": null
+      },
+      {
+        "n": 2,
+        "name": "Dvojité oko krížové",
+        "jk": "231407",
+        "otoceny": null
+      },
+      {
+        "n": 1,
+        "name": "Tlmič vibrácií",
+        "jk": "228582.52",
+        "otoceny": null
+      }
+    ],
+    "extraParts": [
+      {
+        "n": 2,
+        "name": "Závesný kĺb (Praporec)",
+        "jk": "235118",
+        "note": "Horná+Stredná konzola"
+      },
+      {
+        "n": 1,
+        "name": "Závesný kĺb (Praporec)",
+        "jk": "235119.2",
+        "note": "Spodná konzola"
+      },
+      {
+        "n": 6,
+        "name": "Vidlica s okom priama a=150",
+        "jk": "231641.15",
+        "note": ""
+      },
+      {
+        "n": 4,
+        "name": "Závesný kĺb (Praporec)",
+        "jk": "235126",
+        "note": ""
+      },
+      {
+        "n": 4,
+        "name": "Závesný kĺb (Praporec)",
+        "jk": "235125",
+        "note": ""
+      }
+    ],
+    "pnCount": 0,
+    "pnAno": false,
+    "pnOtoceny": false
+  },
+  {
+    "id": "13a",
+    "zt": "DN",
+    "typ": "Ns+4",
+    "druh": "Nosný",
+    "oldNum": "20",
+    "cum": 3193.5,
+    "angle": null,
+    "warn": null,
+    "cross": [
+      "Kanál (13a–14a)"
+    ],
+    "notes": [
+      "Plašič – montáž na strmeň"
+    ],
+    "parts": [
+      {
+        "n": 1,
+        "name": "Strmeň",
+        "jk": "235 542",
+        "otoceny": null
+      },
+      {
+        "n": 1,
+        "name": "Nosná svorka s ochrannou špirálou",
+        "jk": "136400.25",
+        "otoceny": null
+      },
+      {
+        "n": 2,
+        "name": "Izolátor CS120 T19L 550/3820/1300",
+        "jk": "SMH110/4Nymk-99/589",
+        "otoceny": false
+      },
+      {
+        "n": 1,
+        "name": "Nosná svorka s ochrannou špirálou",
+        "jk": "136400.25",
+        "otoceny": null
+      },
+      {
+        "n": 2,
+        "name": "Dvojité oko priame",
+        "jk": "231447",
+        "otoceny": null
+      },
+      {
+        "n": 1,
+        "name": "Ochranná tyč",
+        "jk": "521601",
+        "otoceny": null
+      },
+      {
+        "n": 2,
+        "name": "Tlmič vibrácií",
+        "jk": "228582.52",
+        "otoceny": null
+      }
+    ],
+    "extraParts": [],
+    "pnCount": 0,
+    "pnAno": false,
+    "pnOtoceny": false
+  },
+  {
+    "id": "14a",
+    "zt": "DN",
+    "typ": "Ns+4",
+    "druh": "Nosný",
+    "oldNum": "19",
+    "cum": 3454.2,
+    "angle": null,
+    "warn": null,
+    "cross": [
+      "Kanál (13a–14a)"
+    ],
+    "notes": [
+      "Plašič – montáž na strmeň"
+    ],
+    "parts": [
+      {
+        "n": 1,
+        "name": "Strmeň",
+        "jk": "235 542",
+        "otoceny": null
+      },
+      {
+        "n": 1,
+        "name": "Nosná svorka s ochrannou špirálou",
+        "jk": "136400.25",
+        "otoceny": null
+      },
+      {
+        "n": 2,
+        "name": "Izolátor CS120 T19L 550/3820/1300",
+        "jk": "SMH110/4Nymk-99/589",
+        "otoceny": false
+      },
+      {
+        "n": 1,
+        "name": "Nosná svorka s ochrannou špirálou",
+        "jk": "136400.25",
+        "otoceny": null
+      },
+      {
+        "n": 2,
+        "name": "Dvojité oko priame",
+        "jk": "231447",
+        "otoceny": null
+      },
+      {
+        "n": 1,
+        "name": "Ochranná tyč",
+        "jk": "521601",
+        "otoceny": null
+      },
+      {
+        "n": 2,
+        "name": "Tlmič vibrácií",
+        "jk": "228582.52",
+        "otoceny": null
+      }
+    ],
+    "extraParts": [],
+    "pnCount": 0,
+    "pnAno": false,
+    "pnOtoceny": false
+  },
+  {
+    "id": "15a",
+    "zt": "DN",
+    "typ": "Ns",
+    "druh": "Nosný",
+    "oldNum": "18",
+    "cum": 3718.4,
+    "angle": null,
+    "warn": null,
+    "cross": [
+      "22 kV vedenie č.233 (15a–16a)",
+      "Poľná cesta (15a–16a)",
+      "Suchý kanál (15a–16a)"
+    ],
+    "notes": [
+      "Plašič – montáž na strmeň"
+    ],
+    "parts": [
+      {
+        "n": 1,
+        "name": "Strmeň",
+        "jk": "235 542",
+        "otoceny": null
+      },
+      {
+        "n": 1,
+        "name": "Nosná svorka s ochrannou špirálou",
+        "jk": "136400.25",
+        "otoceny": null
+      },
+      {
+        "n": 2,
+        "name": "Izolátor CS120 T19L 550/3820/1300",
+        "jk": "SMH110/4Nymk-99/589",
+        "otoceny": false
+      },
+      {
+        "n": 1,
+        "name": "Nosná svorka s ochrannou špirálou",
+        "jk": "136400.25",
+        "otoceny": null
+      },
+      {
+        "n": 2,
+        "name": "Dvojité oko priame",
+        "jk": "231447",
+        "otoceny": null
+      },
+      {
+        "n": 1,
+        "name": "Ochranná tyč",
+        "jk": "521601",
+        "otoceny": null
+      },
+      {
+        "n": 2,
+        "name": "Tlmič vibrácií",
+        "jk": "228582.52",
+        "otoceny": null
+      }
+    ],
+    "extraParts": [],
+    "pnCount": 0,
+    "pnAno": false,
+    "pnOtoceny": false
+  },
+  {
+    "id": "16a",
+    "zt": "DN",
+    "typ": "Ns+4",
+    "druh": "Nosný",
+    "oldNum": "17",
+    "cum": 4013.5,
+    "angle": null,
+    "warn": null,
+    "cross": [
+      "22 kV vedenie č.233 (15a–16a)",
+      "Poľná cesta (15a–16a)",
+      "Suchý kanál (15a–16a)",
+      "Vodovodné potrubie /v zemi/ (16a–17a)"
+    ],
+    "notes": [
+      "Plašič – montáž na strmeň"
+    ],
+    "parts": [
+      {
+        "n": 1,
+        "name": "Strmeň",
+        "jk": "235 542",
+        "otoceny": null
+      },
+      {
+        "n": 1,
+        "name": "Nosná svorka s ochrannou špirálou",
+        "jk": "136400.25",
+        "otoceny": null
+      },
+      {
+        "n": 2,
+        "name": "Izolátor CS120 T19L 550/3820/1300",
+        "jk": "SMH110/4Nymk-99/589",
+        "otoceny": false
+      },
+      {
+        "n": 1,
+        "name": "Nosná svorka s ochrannou špirálou",
+        "jk": "136400.25",
+        "otoceny": null
+      },
+      {
+        "n": 2,
+        "name": "Dvojité oko priame",
+        "jk": "231447",
+        "otoceny": null
+      },
+      {
+        "n": 1,
+        "name": "Ochranná tyč",
+        "jk": "521601",
+        "otoceny": null
+      },
+      {
+        "n": 2,
+        "name": "Tlmič vibrácií",
+        "jk": "228582.52",
+        "otoceny": null
+      }
+    ],
+    "extraParts": [],
+    "pnCount": 0,
+    "pnAno": false,
+    "pnOtoceny": false
+  },
+  {
+    "id": "17a",
+    "zt": "JN",
+    "typ": "Ns",
+    "druh": "Nosný",
+    "oldNum": "16",
+    "cum": 4301.9,
+    "angle": null,
+    "warn": null,
+    "cross": [
+      "Vodovodné potrubie /v zemi/ (16a–17a)",
+      "Rieka Dudváh (17a–18a)",
+      "Vodovodné potrubie /v zemi/ (17a–18a)"
+    ],
+    "notes": [
+      "Strmeň ide priamo na izolátor",
+      "Plašič – montáž na strmeň"
+    ],
+    "parts": [
+      {
+        "n": 1,
+        "name": "Strmeň",
+        "jk": "235 542",
+        "otoceny": null
+      },
+      {
+        "n": 1,
+        "name": "Nosná svorka s ochrannou špirálou",
+        "jk": "136400.25",
+        "otoceny": null
+      },
+      {
+        "n": 1,
+        "name": "Ochranná tyč",
+        "jk": "521601",
+        "otoceny": null
+      },
+      {
+        "n": 1,
+        "name": "Izolátor CS120 T19L 550/3820/1300",
+        "jk": "SMH110/4Nymk-99/589",
+        "otoceny": true
+      },
+      {
+        "n": 2,
+        "name": "Tlmič vibrácií",
+        "jk": "228582.52",
+        "otoceny": null
+      }
+    ],
+    "extraParts": [],
+    "pnCount": 0,
+    "pnAno": false,
+    "pnOtoceny": false
+  },
+  {
+    "id": "18a",
+    "zt": "JN",
+    "typ": "Ns+4",
+    "druh": "Nosný",
+    "oldNum": "15",
+    "cum": 4589.5,
+    "angle": null,
+    "warn": null,
+    "cross": [
+      "Rieka Dudváh (17a–18a)",
+      "Vodovodné potrubie /v zemi/ (17a–18a)",
+      "Zavlažovacie potrubie (18a–19a)",
+      "Suchý kanál (18a–19a)",
+      "Poľná cesta (18a–19a)"
+    ],
+    "notes": [
+      "Strmeň ide priamo na izolátor",
+      "Plašič – montáž na strmeň"
+    ],
+    "parts": [
+      {
+        "n": 1,
+        "name": "Strmeň",
+        "jk": "235 542",
+        "otoceny": null
+      },
+      {
+        "n": 1,
+        "name": "Nosná svorka s ochrannou špirálou",
+        "jk": "136400.25",
+        "otoceny": null
+      },
+      {
+        "n": 1,
+        "name": "Ochranná tyč",
+        "jk": "521601",
+        "otoceny": null
+      },
+      {
+        "n": 1,
+        "name": "Izolátor CS120 T19L 550/3820/1300",
+        "jk": "SMH110/4Nymk-99/589",
+        "otoceny": true
+      },
+      {
+        "n": 2,
+        "name": "Tlmič vibrácií",
+        "jk": "228582.52",
+        "otoceny": null
+      }
+    ],
+    "extraParts": [],
+    "pnCount": 0,
+    "pnAno": false,
+    "pnOtoceny": false
+  },
+  {
+    "id": "19a",
+    "zt": "JN",
+    "typ": "Ns",
+    "druh": "Nosný",
+    "oldNum": "14",
+    "cum": 4883.2,
+    "angle": null,
+    "warn": null,
+    "cross": [
+      "Zavlažovacie potrubie (18a–19a)",
+      "Suchý kanál (18a–19a)",
+      "Poľná cesta (18a–19a)"
+    ],
+    "notes": [
+      "Strmeň ide priamo na izolátor",
+      "Plašič – montáž na strmeň"
+    ],
+    "parts": [
+      {
+        "n": 1,
+        "name": "Strmeň",
+        "jk": "235 542",
+        "otoceny": null
+      },
+      {
+        "n": 1,
+        "name": "Nosná svorka s ochrannou špirálou",
+        "jk": "136400.25",
+        "otoceny": null
+      },
+      {
+        "n": 1,
+        "name": "Ochranná tyč",
+        "jk": "521601",
+        "otoceny": null
+      },
+      {
+        "n": 1,
+        "name": "Izolátor CS120 T19L 550/3820/1300",
+        "jk": "SMH110/4Nymk-99/589",
+        "otoceny": true
+      },
+      {
+        "n": 2,
+        "name": "Tlmič vibrácií",
+        "jk": "228582.52",
+        "otoceny": null
+      }
+    ],
+    "extraParts": [],
+    "pnCount": 0,
+    "pnAno": false,
+    "pnOtoceny": false
+  },
+  {
+    "id": "20a",
+    "zt": "JN",
+    "typ": "Ns",
+    "druh": "Nosný",
+    "oldNum": "13",
+    "cum": 5141,
+    "angle": null,
+    "warn": null,
+    "cross": [
+      "Zavlažovacie potrubie (20a–21a)"
+    ],
+    "notes": [
+      "Strmeň ide priamo na izolátor",
+      "Plašič – montáž na strmeň"
+    ],
+    "parts": [
+      {
+        "n": 1,
+        "name": "Strmeň",
+        "jk": "235 542",
+        "otoceny": null
+      },
+      {
+        "n": 1,
+        "name": "Nosná svorka s ochrannou špirálou",
+        "jk": "136400.25",
+        "otoceny": null
+      },
+      {
+        "n": 1,
+        "name": "Ochranná tyč",
+        "jk": "521601",
+        "otoceny": null
+      },
+      {
+        "n": 1,
+        "name": "Izolátor CS120 T19L 550/3820/1300",
+        "jk": "SMH110/4Nymk-99/589",
+        "otoceny": true
+      },
+      {
+        "n": 2,
+        "name": "Tlmič vibrácií",
+        "jk": "228582.52",
+        "otoceny": null
+      }
+    ],
+    "extraParts": [],
+    "pnCount": 0,
+    "pnAno": false,
+    "pnOtoceny": false
+  },
+  {
+    "id": "21a",
+    "zt": "DN",
+    "typ": "N+6",
+    "druh": "Nosný",
+    "oldNum": "12",
+    "cum": 5377.7,
+    "angle": null,
+    "warn": "Uchytenie cez Praporec typ 118, NIE cez strmeň! Plašič Typ č.603 – montáž cez nový šrób.",
+    "cross": [
+      "Zavlažovacie potrubie (20a–21a)",
+      "2× Fe plot (21a–22a)",
+      "Diaľnica D1/D61 Trenčín–Trnava (21a–22a)",
+      "Lesná cesta (21a–22a)",
+      "Poľná cesta (21a–22a)"
+    ],
+    "notes": [
+      "Iný typ plašiča: č.603 (montáž cez nový šrób)"
+    ],
+    "parts": [
+      {
+        "n": 1,
+        "name": "Závesný kĺb (Praporec)",
+        "jk": "235118",
+        "otoceny": null
+      },
+      {
+        "n": 1,
+        "name": "Nosná svorka s ochrannou špirálou",
+        "jk": "136400.25",
+        "otoceny": null
+      },
+      {
+        "n": 2,
+        "name": "Izolátor CS120 T19L 550/3820/1300",
+        "jk": "SMH110/4Nymk-99/589",
+        "otoceny": false
+      },
+      {
+        "n": 1,
+        "name": "Nosná svorka s ochrannou špirálou",
+        "jk": "136400.25",
+        "otoceny": null
+      },
+      {
+        "n": 2,
+        "name": "Dvojité oko priame",
+        "jk": "231447",
+        "otoceny": null
+      },
+      {
+        "n": 1,
+        "name": "Ochranná tyč",
+        "jk": "521603",
+        "otoceny": null
+      },
+      {
+        "n": 2,
+        "name": "Tlmič vibrácií",
+        "jk": "228582.52",
+        "otoceny": null
+      }
+    ],
+    "extraParts": [],
+    "pnCount": 0,
+    "pnAno": false,
+    "pnOtoceny": false
+  },
+  {
+    "id": "22a",
+    "zt": "DK",
+    "typ": "RV (II)",
+    "druh": "Kotevný",
+    "oldNum": "11",
+    "cum": 5658.3,
+    "angle": "179°42'",
+    "warn": null,
+    "cross": [
+      "2× Fe plot (21a–22a)",
+      "Diaľnica D1/D61 Trenčín–Trnava (21a–22a)",
+      "Lesná cesta (21a–22a)",
+      "Poľná cesta (21a–22a)",
+      "Poľná cesta (22a–23a)"
+    ],
+    "notes": [
+      "Horná+Stredná konzola: Praporec 118 + Vydlica",
+      "Spodná konzola: Praporec 119 + Vydlica",
+      "Pištole zostávajú staré (nemenia sa)",
+      "V rozpise materiálu navyše pridelené pre celý stožiar: 4× Praporec č.235 126 + 4× Praporec č.235 125"
+    ],
+    "parts": [
+      {
+        "n": 2,
+        "name": "Izolátor CS120 T19L 550/3820/1300",
+        "jk": "SMH110/4Nymk-99/589",
+        "otoceny": true
+      },
+      {
+        "n": 2,
+        "name": "Rozperka",
+        "jk": "233417",
+        "otoceny": null
+      },
+      {
+        "n": 1,
+        "name": "Závesný kĺb (Praporec)",
+        "jk": "235119.2",
+        "otoceny": null
+      },
+      {
+        "n": 2,
+        "name": "Dvojité oko krížové",
+        "jk": "231407",
+        "otoceny": null
+      },
+      {
+        "n": 1,
+        "name": "Tlmič vibrácií",
+        "jk": "228582.52",
+        "otoceny": null
+      }
+    ],
+    "extraParts": [
+      {
+        "n": 2,
+        "name": "Závesný kĺb (Praporec)",
+        "jk": "235118",
+        "note": "Horná+Stredná konzola"
+      },
+      {
+        "n": 1,
+        "name": "Závesný kĺb (Praporec)",
+        "jk": "235119.2",
+        "note": "Spodná konzola"
+      },
+      {
+        "n": 3,
+        "name": "Vidlica s okom priama a=150",
+        "jk": "231641.15",
+        "note": ""
+      },
+      {
+        "n": 4,
+        "name": "Závesný kĺb (Praporec)",
+        "jk": "235126",
+        "note": ""
+      },
+      {
+        "n": 4,
+        "name": "Závesný kĺb (Praporec)",
+        "jk": "235125",
+        "note": ""
+      }
+    ],
+    "pnCount": 0,
+    "pnAno": false,
+    "pnOtoceny": false
+  },
+  {
+    "id": "23a",
+    "zt": "JN",
+    "typ": "Ns",
+    "druh": "Nosný",
+    "oldNum": "10",
+    "cum": 5920.2,
+    "angle": null,
+    "warn": null,
+    "cross": [
+      "Poľná cesta (22a–23a)",
+      "Kanál (23a–24a)",
+      "Poľná cesta (23a–24a)"
+    ],
+    "notes": [
+      "Strmeň ide priamo na izolátor",
+      "Plašič – montáž na strmeň"
+    ],
+    "parts": [
+      {
+        "n": 1,
+        "name": "Strmeň",
+        "jk": "235 542",
+        "otoceny": null
+      },
+      {
+        "n": 1,
+        "name": "Nosná svorka s ochrannou špirálou",
+        "jk": "136400.25",
+        "otoceny": null
+      },
+      {
+        "n": 1,
+        "name": "Ochranná tyč",
+        "jk": "521601",
+        "otoceny": null
+      },
+      {
+        "n": 1,
+        "name": "Izolátor CS120 T19L 550/3820/1300",
+        "jk": "SMH110/4Nymk-99/589",
+        "otoceny": true
+      },
+      {
+        "n": 2,
+        "name": "Tlmič vibrácií",
+        "jk": "228582.52",
+        "otoceny": null
+      }
+    ],
+    "extraParts": [],
+    "pnCount": 0,
+    "pnAno": false,
+    "pnOtoceny": false
+  },
+  {
+    "id": "24a",
+    "zt": "DN",
+    "typ": "N",
+    "druh": "Nosný",
+    "oldNum": "9",
+    "cum": 6191.2,
+    "angle": null,
+    "warn": null,
+    "cross": [
+      "Kanál (23a–24a)",
+      "Poľná cesta (23a–24a)",
+      "ŽSR elektrif. trať č.120, km 68,8 BA–Žilina (24a–25a)"
+    ],
+    "notes": [
+      "Plašič – montáž na strmeň"
+    ],
+    "parts": [
+      {
+        "n": 1,
+        "name": "Strmeň",
+        "jk": "235 542",
+        "otoceny": null
+      },
+      {
+        "n": 1,
+        "name": "Nosná svorka s ochrannou špirálou",
+        "jk": "136400.25",
+        "otoceny": null
+      },
+      {
+        "n": 2,
+        "name": "Izolátor CS120 T19L 550/3820/1300",
+        "jk": "SMH110/4Nymk-99/589",
+        "otoceny": false
+      },
+      {
+        "n": 1,
+        "name": "Nosná svorka s ochrannou špirálou",
+        "jk": "136400.25",
+        "otoceny": null
+      },
+      {
+        "n": 2,
+        "name": "Dvojité oko priame",
+        "jk": "231447",
+        "otoceny": null
+      },
+      {
+        "n": 1,
+        "name": "Ochranná tyč",
+        "jk": "521601",
+        "otoceny": null
+      },
+      {
+        "n": 2,
+        "name": "Tlmič vibrácií",
+        "jk": "228582.52",
+        "otoceny": null
+      }
+    ],
+    "extraParts": [],
+    "pnCount": 0,
+    "pnAno": false,
+    "pnOtoceny": false
+  },
+  {
+    "id": "25a",
+    "zt": "DN",
+    "typ": "N+4",
+    "druh": "Nosný",
+    "oldNum": "8",
+    "cum": 6373.1,
+    "angle": null,
+    "warn": null,
+    "cross": [
+      "ŽSR elektrif. trať č.120, km 68,8 BA–Žilina (24a–25a)",
+      "22 kV vedenie č.234 (25a–26a)"
+    ],
+    "notes": [
+      "Plašič – montáž na strmeň"
+    ],
+    "parts": [
+      {
+        "n": 1,
+        "name": "Strmeň",
+        "jk": "235 542",
+        "otoceny": null
+      },
+      {
+        "n": 1,
+        "name": "Nosná svorka s ochrannou špirálou",
+        "jk": "136400.25",
+        "otoceny": null
+      },
+      {
+        "n": 2,
+        "name": "Izolátor CS120 T19L 550/3820/1300",
+        "jk": "SMH110/4Nymk-99/589",
+        "otoceny": false
+      },
+      {
+        "n": 1,
+        "name": "Nosná svorka s ochrannou špirálou",
+        "jk": "136400.25",
+        "otoceny": null
+      },
+      {
+        "n": 2,
+        "name": "Dvojité oko priame",
+        "jk": "231447",
+        "otoceny": null
+      },
+      {
+        "n": 1,
+        "name": "Ochranná tyč",
+        "jk": "521601",
+        "otoceny": null
+      },
+      {
+        "n": 2,
+        "name": "Tlmič vibrácií",
+        "jk": "228582.52",
+        "otoceny": null
+      }
+    ],
+    "extraParts": [],
+    "pnCount": 0,
+    "pnAno": false,
+    "pnOtoceny": false
+  },
+  {
+    "id": "26a",
+    "zt": "DK",
+    "typ": "V (II)",
+    "druh": "Kotevný",
+    "oldNum": "7",
+    "cum": 6586.3,
+    "angle": "179°58'",
+    "warn": null,
+    "cross": [
+      "22 kV vedenie č.234 (25a–26a)",
+      "Poľná cesta (26a–27a)"
+    ],
+    "notes": [
+      "Horná+Stredná konzola: Praporec 118 + Vydlica",
+      "Spodná konzola: Praporec 119 + Vydlica",
+      "Pištole zostávajú staré (nemenia sa)",
+      "V rozpise materiálu navyše pridelené pre celý stožiar: 4× Praporec č.235 126 + 4× Praporec č.235 125"
+    ],
+    "parts": [
+      {
+        "n": 2,
+        "name": "Izolátor CS120 T19L 550/3820/1300",
+        "jk": "SMH110/4Nymk-99/589",
+        "otoceny": true
+      },
+      {
+        "n": 2,
+        "name": "Rozperka",
+        "jk": "233417",
+        "otoceny": null
+      },
+      {
+        "n": 1,
+        "name": "Závesný kĺb (Praporec)",
+        "jk": "235119.2",
+        "otoceny": null
+      },
+      {
+        "n": 2,
+        "name": "Dvojité oko krížové",
+        "jk": "231407",
+        "otoceny": null
+      },
+      {
+        "n": 1,
+        "name": "Tlmič vibrácií",
+        "jk": "228582.52",
+        "otoceny": null
+      }
+    ],
+    "extraParts": [
+      {
+        "n": 2,
+        "name": "Závesný kĺb (Praporec)",
+        "jk": "235118",
+        "note": "Horná+Stredná konzola"
+      },
+      {
+        "n": 1,
+        "name": "Závesný kĺb (Praporec)",
+        "jk": "235119.2",
+        "note": "Spodná konzola"
+      },
+      {
+        "n": 3,
+        "name": "Vidlica s okom priama a=150",
+        "jk": "231641.15",
+        "note": ""
+      },
+      {
+        "n": 4,
+        "name": "Závesný kĺb (Praporec)",
+        "jk": "235126",
+        "note": ""
+      },
+      {
+        "n": 4,
+        "name": "Závesný kĺb (Praporec)",
+        "jk": "235125",
+        "note": ""
+      }
+    ],
+    "pnCount": 0,
+    "pnAno": false,
+    "pnOtoceny": false
+  },
+  {
+    "id": "27a",
+    "zt": "JN",
+    "typ": "Ns+4",
+    "druh": "Nosný",
+    "oldNum": "6",
+    "cum": 6874.1,
+    "angle": null,
+    "warn": null,
+    "cross": [
+      "Poľná cesta (26a–27a)"
+    ],
+    "notes": [
+      "Strmeň ide priamo na izolátor",
+      "Plašič – montáž na strmeň"
+    ],
+    "parts": [
+      {
+        "n": 1,
+        "name": "Strmeň",
+        "jk": "235 542",
+        "otoceny": null
+      },
+      {
+        "n": 1,
+        "name": "Nosná svorka s ochrannou špirálou",
+        "jk": "136400.25",
+        "otoceny": null
+      },
+      {
+        "n": 1,
+        "name": "Ochranná tyč",
+        "jk": "521601",
+        "otoceny": null
+      },
+      {
+        "n": 1,
+        "name": "Izolátor CS120 T19L 550/3820/1300",
+        "jk": "SMH110/4Nymk-99/589",
+        "otoceny": true
+      },
+      {
+        "n": 2,
+        "name": "Tlmič vibrácií",
+        "jk": "228582.52",
+        "otoceny": null
+      }
+    ],
+    "extraParts": [],
+    "pnCount": 0,
+    "pnAno": false,
+    "pnOtoceny": false
+  },
+  {
+    "id": "28a",
+    "zt": "JN",
+    "typ": "Ns",
+    "druh": "Nosný",
+    "oldNum": "5",
+    "cum": 7162.8,
+    "angle": null,
+    "warn": null,
+    "cross": [],
+    "notes": [
+      "Posledný stožiar sekcie (koniec trasy)",
+      "Strmeň ide priamo na izolátor"
+    ],
+    "parts": [
+      {
+        "n": 1,
+        "name": "Strmeň",
+        "jk": "235 542",
+        "otoceny": null
+      },
+      {
+        "n": 1,
+        "name": "Nosná svorka s ochrannou špirálou",
+        "jk": "136400.25",
+        "otoceny": null
+      },
+      {
+        "n": 1,
+        "name": "Ochranná tyč",
+        "jk": "521601",
+        "otoceny": null
+      },
+      {
+        "n": 1,
+        "name": "Izolátor CS120 T19L 550/3820/1300",
+        "jk": "SMH110/4Nymk-99/589",
+        "otoceny": true
+      },
+      {
+        "n": 2,
+        "name": "Tlmič vibrácií",
+        "jk": "228582.52",
+        "otoceny": null
+      }
+    ],
+    "extraParts": [],
+    "pnCount": 0,
+    "pnAno": false,
+    "pnOtoceny": false
+  }
+];
+const CROSSINGS = [{"id":1774965171878,"fromPole":"15a","toPole":"16a","typeId":"vn22","note":""},{"id":1774974077962,"fromPole":"25a","toPole":"26a","typeId":"vn22","note":""},{"id":1774974088468,"fromPole":"24a","toPole":"25a","typeId":"rail","note":""},{"id":1774974249845,"fromPole":"21a","toPole":"22a","typeId":"highway","note":"D1"},{"id":1774974351005,"fromPole":"17a","toPole":"18a","typeId":"river","note":""},{"id":1774974392053,"fromPole":"11a","toPole":"12a","typeId":"road","note":"V.Kostoľany–Pečeňady"},{"id":1774974436899,"fromPole":"6a","toPole":"7a","typeId":"vvn400","note":"Podkrižovanie"}];
+
+const TOTAL       = 7162.8;
+const BASE_CHAIN  = 3;
+const IS_DVOJITA  = false;
+function getChainCount(pole){
+  if(pole.druh === 'Kotevný' && (pole.zt === 'DK' || pole.zt === 'DDK')) return BASE_CHAIN * 2;
+  return BASE_CHAIN;
+}
+const FROM_LABEL  = "Jaslovské Bohunice";
+const PROJ_TITLE  = "Preizolácia - Linka 8312";
+const PROJ_FROM   = "Jaslovské Bohunice";
+const PROJ_TO     = "Madunice";
+let currentLoadAgg   = {};
+let currentLoadPoles = [];
+const TOTAL_FMT   = "7 162,8";
+
+const ZT_ISO = {DDK:4, DK:2, PK:2, DN:2, JN:1, portal:4};
+const ZT_COL = {
+  portal:'#f7a600', DDK:'#c084fc', DK:'#f87171',
+  PK:'#60a5fa', DN:'#34d399', JN:'#fbbf24',
+};
+
+function ztLabel(zt){
+  const m={portal:'DDK – Dvojitý kotevný',DDK:'DDK – Dvojitý kotevný',DK:'DK – Kotevný',
+    PK:'PK – Polokotevný',DN:'DN – Dvojitý nosný',JN:'JN – Jednoduchý nosný'};
+  return m[zt]||zt;
+}
+function ztBadgeStyle(zt){
+  const m={
+    portal: 'background:rgba(247,166,0,.15);color:#f7a600;border:1px solid rgba(247,166,0,.3)',
+    DDK:    'background:rgba(147,51,234,.15);color:#c084fc;border:1px solid rgba(147,51,234,.3)',
+    DK:     'background:rgba(220,38,38,.15);color:#fca5a5;border:1px solid rgba(220,38,38,.3)',
+    PK:     'background:rgba(37,99,235,.15);color:#93c5fd;border:1px solid rgba(37,99,235,.3)',
+    DN:     'background:rgba(5,150,105,.15);color:#6ee7b7;border:1px solid rgba(5,150,105,.3)',
+    JN:     'background:rgba(217,119,6,.15);color:#fcd34d;border:1px solid rgba(217,119,6,.3)',
+  };
+  return m[zt]||'background:#111e2e;color:#9ab8d8';
+}
+function crossIcon(t){
+  if(/400.kV|Diaľnica|D61|D1/.test(t)) return '⚡';
+  if(/kV|vedenie/.test(t))             return '⚡';
+  if(/ŽSR|trať/.test(t))              return '🚆';
+  if(/rieka|Dudváh/.test(t))          return '🌊';
+  if(/kanál/.test(t))                  return '💧';
+  if(/potrubie|teplovod/.test(t))      return '🔧';
+  if(/cesta/.test(t))                  return '🛤️';
+  if(/kábel/.test(t))                  return '🔌';
+  if(/plot/.test(t))                   return '🔲';
+  return '📍';
+}
+
+// ══════════════════════════════════════════════
+//  DETAIL PANEL
+// ══════════════════════════════════════════════
+let selIdx = -1;
+
+function showDetail(idx){
+  selIdx = idx;
+  const pole = POLES[idx];
+  const z    = pole.zt || 'JN';
+  const col  = ZT_COL[z] || '#9ab8d8';
+  const hasCum = pole.cum != null;
+  const prevWithCum = idx > 0 ? POLES.slice(0,idx).reverse().find(p=>p.cum!=null) : null;
+  const nextWithCum = idx < POLES.length-1 ? POLES.slice(idx+1).find(p=>p.cum!=null) : null;
+  const pct  = (hasCum && TOTAL > 0) ? (pole.cum / TOTAL * 100).toFixed(1) : null;
+  const spanPrev = (hasCum && prevWithCum) ? (pole.cum - prevWithCum.cum).toFixed(1) : null;
+  const spanNext = (hasCum && nextWithCum) ? (nextWithCum.cum - pole.cum).toFixed(1) : null;
+  const isoPerChain = ZT_ISO[z] || 0;
+  const pnCount = pole.pnCount || 0;
+  const CHAIN_COUNT = getChainCount(pole);
+  const totalIso = (isoPerChain * CHAIN_COUNT) + pnCount;
+  const isLast = idx === POLES.length - 1;
+  const isPortalPole = pole.druh === 'Portál' || z === 'portal';
+
+  // head
+  const poleCrossings = CROSSINGS.filter(c => c.fromPole === pole.id || c.toPole === pole.id);
+  const CROSS_TYPE_MAP = {
+    vn22:'⚡ VN 22kV', vn35:'⚡ VN 35kV', vvn110:'🔶 VVN 110kV', vvn400:'🔴 VVN 400kV',
+    nn:'💡 NN 0.4kV', road:'🛣 Cesta', highway:'🛤 Diaľnica', rail:'🚂 Železnica ŽSR',
+    river:'🌊 Vodný tok', gas:'🔥 Plynovod', tele:'📡 Telekomunikácie', cable:'🔌 Kábel', other:'◈ Iné'
+  };
+  const CROSS_COLOR_MAP = {
+    vn22:'#f59e0b', vn35:'#fb923c', vvn110:'#f97316', vvn400:'#ef4444',
+    nn:'#a3e635', road:'#60a5fa', highway:'#ef4444', rail:'#a78bfa',
+    river:'#38bdf8', gas:'#fb923c', tele:'#34d399', cable:'#84cc16', other:'#9ab8d8'
+  };
+
+  const headHtml = `
+    <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">
+      <div class="det-id" style="color:${col}">${pole.id}</div>
+      <span class="det-badge" style="${ztBadgeStyle(z)}">${z.toUpperCase()}</span>
+      ${pole.warn ? '<span style="color:#ef4444;font-size:17px" title="Upozornenie">⚠️</span>' : ''}
+      ${poleCrossings.length ? '<span style="background:rgba(249,115,22,0.18);color:#f97316;border:1px solid rgba(249,115,22,0.4);border-radius:10px;padding:2px 8px;font-size:10px;font-weight:800">🚧 '+poleCrossings.length+'× prekážka</span>' : ''}
+    </div>
+    <div class="det-sub">${pole.typ ? pole.typ + ' &nbsp;·&nbsp; ' : ''}${pole.oldNum ? 'Staré č. <b style="color:#c8d6e8">' + pole.oldNum + '</b>' : ''}</div>`;
+
+  document.getElementById('detHead').innerHTML = headHtml;
+
+  // body
+  let html = '';
+
+  if(pole.warn){
+    html += `<div class="warn"><div class="warn-t">⚠ Upozornenie</div>${pole.warn}</div>`;
+  }
+
+  if(poleCrossings.length){
+    html += `<div style="margin-bottom:12px;border-radius:8px;overflow:hidden;border:2px solid rgba(251,146,60,0.45);box-shadow:0 2px 12px rgba(251,146,60,0.1)">
+      <div style="background:linear-gradient(135deg,rgba(251,146,60,0.22),rgba(251,146,60,0.12));padding:8px 12px;display:flex;align-items:center;gap:6px;border-bottom:1px solid rgba(251,146,60,0.25)">
+        <span style="font-size:15px">🚧</span>
+        <span style="font-size:12px;font-weight:800;color:#fb923c;letter-spacing:.5px">PREKÁŽKY V POLI</span>
+        <span style="margin-left:auto;background:rgba(251,146,60,0.25);color:#fb923c;font-size:10px;font-weight:800;border-radius:10px;padding:1px 8px">${poleCrossings.length}×</span>
+      </div>`;
+    poleCrossings.forEach(c => {
+      const lbl = CROSS_TYPE_MAP[c.typeId] || ('◈ '+c.typeId);
+      const col = CROSS_COLOR_MAP[c.typeId] || '#9ab8d8';
+      const icon = lbl.split(' ')[0];
+      const name = lbl.replace(/^\S+\s*/,'');
+      const noteSpan = c.note ? `<div style="font-size:10px;color:#9ab8d8;margin-top:3px;font-style:italic">${c.note}</div>` : '';
+      html += `<div style="display:flex;align-items:flex-start;gap:10px;padding:10px 12px;border-bottom:1px solid rgba(251,146,60,0.1);background:rgba(15,25,45,0.6);border-left:3px solid ${col}">
+        <span style="font-size:22px;flex-shrink:0;line-height:1.1">${icon}</span>
+        <div style="flex:1;min-width:0">
+          <div style="font-weight:800;color:${col};font-size:13px">${name}</div>
+          <div style="font-size:11px;color:#7a9abf;margin-top:2px">&#128279; ${c.fromPole} <b style="color:#9ab8d8">→</b> ${c.toPole}</div>
+          ${noteSpan}
+        </div>
+      </div>`;
+    });
+    html += `</div>`;
+  }
+
+  html += `<div class="sec"><div class="sec-t">Parametre stožiara</div>
+  <div class="grid2">
+    <div class="card"><div class="ck">Typ závesu</div><div class="cv">${ztLabel(z)}</div></div>
+    ${pole.typ ? `<div class="card"><div class="ck">Typ stožiara</div><div class="cv">${pole.typ}</div></div>` : ''}
+    ${pole.oldNum ? `<div class="card"><div class="ck">Staré číslo</div><div class="cv mono">${pole.oldNum}</div></div>` : ''}
+    ${pole.angle ? `<div class="card wide"><div class="ck">Uhol lomu</div><div class="cv mono">${pole.angle}</div></div>` : ''}
+    ${hasCum ? `<div class="card hi"><div class="ck">Poloha na trase</div><div class="cv mono">${pole.cum.toLocaleString('sk')} m</div></div>` : ''}
+    ${pct != null ? `<div class="card hi"><div class="ck">Pozícia</div><div class="cv mono">${pct} % trasy</div></div>` : ''}
+    ${spanPrev != null ? `<div class="card"><div class="ck">← Pole od predch.</div><div class="cv mono">${spanPrev} m</div></div>` : ''}
+    ${spanNext != null ? `<div class="card"><div class="ck">→ Pole k nasl.</div><div class="cv mono">${spanNext} m</div></div>` : ''}
+  </div></div>`;
+
+  // nakladanie
+  function otocLabel(otoceny){
+    if(otoceny === true) return ` <span style="font-size:10px;background:rgba(96,165,250,0.15);color:#60a5fa;border-radius:3px;padding:1px 5px;margin-left:4px">(Otočené)</span>`;
+    return '';
+  }
+
+  const rawParts = (pole.parts||[]).filter(p => (p.name||'').trim());
+  const hasExtraPraporec = (pole.extraParts||[]).some(p => /praporec/i.test(p.name||''));
+  const partsAgg = {};
+  rawParts.forEach(p => {
+    const key = p.name.trim();
+    if(hasExtraPraporec && /praporec/i.test(key)) return;
+    const isIzoP = /izol[aá]tor/i.test(key);
+    const aggKey = isIzoP ? key + '||' + String(p.otoceny) : key;
+    if(!partsAgg[aggKey]) partsAgg[aggKey] = {name: key, jk: p.jk||'', total: 0, otoceny: p.otoceny};
+    partsAgg[aggKey].total += (p.n||1) * CHAIN_COUNT;
+  });
+  if(pnCount > 0 && pole.pnAno){
+    const pnOtoc = pole.pnOtoceny === true;
+    partsAgg['Izolátor (PN)||' + String(pnOtoc)] = {name:'Izolátor (PN)', jk:'', total: pnCount, otoceny: pnOtoc};
+    partsAgg['Armatúra PN (podľa projektu)'] = {name:'Armatúra PN (podľa projektu)', jk:'', total: pnCount};
+  }
+  const aggList = Object.values(partsAgg);
+
+  if(rawParts.length > 0 || aggList.length > 0){
+    // 1 reťazec
+    let chainRows = '';
+    rawParts.forEach(p => {
+      const isIso = /izol[aá]tor/i.test(p.name);
+      const nameCell = p.name + (isIso ? otocLabel(p.otoceny) : '');
+      chainRows += `<tr>
+        <td style="font-size:13px;font-weight:800;color:${isIso?'#60a5fa':'var(--accent)'}">${p.n||1}×</td>
+        <td>${nameCell}</td>
+        <td style="font-family:Consolas,monospace;font-size:11px;color:#c8d6e8">${p.jk||''}</td>
+      </tr>`;
+    });
+    // celý stožiar
+    let aggRows = '';
+    aggList.forEach(p => {
+      const isIso = /izol[aá]tor/i.test(p.name);
+      const nameCell = p.name + (isIso ? otocLabel(p.otoceny) : '');
+      aggRows += `<tr>
+        <td style="font-size:13px;font-weight:800;color:${isIso?'#60a5fa':'var(--accent)'}">${p.total}×</td>
+        <td>${nameCell}</td>
+        <td style="font-family:Consolas,monospace;font-size:11px;color:#c8d6e8">${p.jk}</td>
+      </tr>`;
+    });
+    // ── extra parts (praporce, vydlice — nie násobené závesom) ──
+    let extraRows = '';
+    (pole.extraParts||[]).forEach(p => {
+      const isIso = /izol[aá]tor/i.test(p.name||'');
+      const noteSpan = p.note ? ` <span style="font-size:10px;color:#5a7898">(${p.note})</span>` : '';
+      extraRows += `<tr>
+        <td style="font-size:13px;font-weight:800;color:${isIso?'#60a5fa':'var(--accent)'}">${p.n||1}×</td>
+        <td>${p.name||''}${noteSpan}</td>
+        <td style="font-family:Consolas,monospace;font-size:11px;color:#c8d6e8">${p.jk||''}</td>
+      </tr>`;
+    });
+    // ── 1 reťazec — samostatná info sekcia ──
+    if(chainRows){
+      html += `<div class="sec">
+  <div class="sec-t">Jeden Reťazec (záves)</div>
+  <table class="comp-t">
+    <thead><tr><th>Ks</th><th>Komponent</th><th>Číslo</th></tr></thead>
+    <tbody>${chainRows}</tbody>
+  </table>
+</div>`;
+    }
+    // ── nakladanie — celý stožiar ──
+    if(aggRows || extraRows){
+      html += `<div class="naklad-box">
+  <div class="naklad-title">📦 Nakladanie — celkom na stožiar (${CHAIN_COUNT}× záves)</div>
+  <table class="comp-t">
+    <thead><tr><th>Celkom</th><th>Komponent</th><th>Číslo</th></tr></thead>
+    <tbody>${aggRows}${extraRows}</tbody>
+  </table>
+</div>`;
+    }
+  }
+
+
+  if(pole.notes && pole.notes.filter(n=>n).length){
+    html += `<div class="sec"><div class="sec-t">Poznámky</div>`;
+    pole.notes.filter(n=>n).forEach(n => { html += `<div class="note-row">${n}</div>`; });
+    html += `</div>`;
+  }
+
+  document.getElementById('detBody').innerHTML = html;
+
+  updateAllHighlights();
+}
+
+// ══════════════════════════════════════════════
+//  NAKLADANIE — MULTI-VÝBER
+// ══════════════════════════════════════════════
+let selectedForLoad = new Set();
+let loadMode = false;
+
+function toggleLoadMode(){
+  loadMode = !loadMode;
+  const btn = document.getElementById('btnLoadMode');
+  if(loadMode){
+    btn.classList.add('active');
+    btn.textContent = '📦 Výber aktívny — kliknite na stožiar';
+  } else {
+    btn.classList.remove('active');
+    btn.textContent = '📦 Vybrať pre nakladanie';
+  }
+}
+
+function togglePoleSelection(idx){
+  if(selectedForLoad.has(idx)) selectedForLoad.delete(idx);
+  else selectedForLoad.add(idx);
+  updateAllHighlights();
+  updateLoadOverlay();
+}
+
+function clearSelection(){
+  selectedForLoad.clear();
+  updateAllHighlights();
+  updateLoadOverlay();
+  const rb = document.getElementById('btnRestoreOverlay');
+  if(rb) rb.classList.remove('visible');
+}
+
+function hideOverlay(){
+  const ov = document.getElementById('nakladOverlay');
+  if(ov) ov.style.display = 'none';
+  const rb = document.getElementById('btnRestoreOverlay');
+  if(rb && selectedForLoad.size > 0) rb.classList.add('visible');
+}
+
+function showOverlay(){
+  const rb = document.getElementById('btnRestoreOverlay');
+  if(rb) rb.classList.remove('visible');
+  updateLoadOverlay();
+}
+
+function updateAllHighlights(){
+  document.querySelectorAll('[data-pole]').forEach(a => {
+    const pIdx   = parseInt(a.getAttribute('data-pole'));
+    const isSel  = pIdx === selIdx;
+    const isLoad = selectedForLoad.has(pIdx);
+    const pZt    = POLES[pIdx] ? (POLES[pIdx].zt || 'JN') : 'JN';
+    const origCol = ZT_COL[pZt] || '#9ab8d8';
+    const col = isLoad ? '#ef4444' : isSel ? '#f7a600' : origCol;
+    Array.from(a.querySelectorAll('rect'))
+      .filter(r => r.getAttribute('fill') !== 'transparent')
+      .forEach(r => {
+        r.setAttribute('fill',   isLoad ? '#3a0a0a' : isSel ? '#f7a600' : '#0d1e35');
+        r.setAttribute('stroke', col);
+      });
+    a.querySelectorAll('text').forEach(t => {
+      if(t.getAttribute('fill') === '#fff') return;
+      t.setAttribute('fill',        isLoad ? '#fca5a5' : isSel ? '#000' : '#e8f4ff');
+      t.setAttribute('font-weight', (isLoad||isSel) ? '900' : '800');
+    });
+    a.querySelectorAll('path').forEach(p => {
+      p.setAttribute('stroke',  col);
+      p.setAttribute('opacity', (isLoad||isSel) ? '1' : '0.85');
+    });
+    a.querySelectorAll('circle').forEach(c => {
+      if(c.getAttribute('fill') === '#dc2626') return;
+      c.setAttribute('fill', col);
+    });
+    a.setAttribute('filter', (isLoad||isSel) ? 'url(#tw-glow)' : '');
+  });
+}
+
+function otocLabelGlobal(otoceny){
+  if(otoceny === true) return ` <span style="font-size:10px;background:rgba(96,165,250,0.15);color:#60a5fa;border-radius:3px;padding:1px 5px;margin-left:4px">(Otočené)</span>`;
+  return '';
+}
+
+function updateLoadOverlay(){
+  let overlay = document.getElementById('nakladOverlay');
+  const rc = document.getElementById('restoreCount');
+  if(rc) rc.textContent = selectedForLoad.size;
+  if(selectedForLoad.size === 0){
+    if(overlay) overlay.style.display = 'none';
+    const rb = document.getElementById('btnRestoreOverlay');
+    if(rb) rb.classList.remove('visible');
+    return;
+  }
+  const agg = {};
+  selectedForLoad.forEach(idx => {
+    const pole = POLES[idx];
+    if(!pole) return;
+    const cc = getChainCount(pole);
+    const hasExtraPraporec = (pole.extraParts||[]).some(p => /praporec/i.test(p.name||''));
+    (pole.parts||[]).forEach(p => {
+      const k = (p.name||'').trim();
+      if(!k) return;
+      if(hasExtraPraporec && /praporec/i.test(k)) return;
+      const isIzoP = /izol[aá]tor/i.test(k);
+      const aggKey = isIzoP ? k + '||' + String(p.otoceny) : k;
+      if(!agg[aggKey]) agg[aggKey] = {name:k, jk:p.jk||'', total:0, otoceny:p.otoceny};
+      agg[aggKey].total += (p.n||1) * cc;
+    });
+    (pole.extraParts||[]).forEach(p => {
+      const k = (p.name||'').trim();
+      if(!k) return;
+      if(!agg[k]) agg[k] = {name:k, jk:p.jk||'', total:0};
+      agg[k].total += (p.n||1);
+    });
+    // PN
+    if((pole.pnCount||0) > 0 && pole.pnAno){
+      const pnOtoc = pole.pnOtoceny === true;
+      const pnKey = 'Izolátor (PN)||' + String(pnOtoc);
+      if(!agg[pnKey]) agg[pnKey] = {name:'Izolátor (PN)', jk:'', total:0, otoceny:pnOtoc};
+      agg[pnKey].total += pole.pnCount;
+      if(!agg['Armatúra PN']) agg['Armatúra PN'] = {name:'Armatúra PN (podľa projektu)', jk:'', total:0};
+      agg['Armatúra PN'].total += pole.pnCount;
+    }
+  });
+  const sortedIdx = Array.from(selectedForLoad).sort((a,b)=>a-b);
+  currentLoadAgg   = agg;
+  currentLoadPoles = sortedIdx.map(i => POLES[i]?.id || String(i));
+  const tags = sortedIdx.map(i =>
+    `<span class="naklad-pole-tag" title="Odznačiť" onclick="togglePoleSelection(${i})">${POLES[i]?.id||i} ✕</span>`
+  ).join('');
+  let rows = '';
+  Object.values(agg).forEach(p => {
+    const isIso = /izol[aá]tor/i.test(p.name);
+    const nameCell = p.name + (isIso ? otocLabelGlobal(p.otoceny) : '');
+    rows += `<tr>
+      <td style="font-size:13px;font-weight:800;color:${isIso?'#60a5fa':'#f7a600'}">${p.total}×</td>
+      <td>${nameCell}</td>
+      <td><span style="font-family:Consolas;font-size:11px;color:#c8d6e8">${p.jk}</span></td>
+    </tr>`;
+  });
+  const html2 = `
+    <div class="naklad-overlay-head">
+      <span class="naklad-overlay-title">📦 Nakladanie — ${selectedForLoad.size} stožiar${selectedForLoad.size===1?'':'e'}</span>
+      <button class="btn-hide-overlay" onclick="printNakladanie()" style="background:rgba(96,165,250,0.15);border-color:rgba(96,165,250,0.4);color:#93c5fd">👁 Zobraziť</button>
+      <button class="btn-hide-overlay" onclick="downloadTxtNakladanie()" style="background:rgba(52,211,153,0.12);border-color:rgba(52,211,153,0.35);color:#6ee7b7">💾 Uložiť</button>
+      <button class="btn-hide-overlay" onclick="hideOverlay()">Skryť ▼</button>
+      <button class="btn-clear-sel" onclick="clearSelection()">✕ Zrušiť výber</button>
+    </div>
+    <div class="naklad-overlay-body">
+      <div class="naklad-pole-tags">${tags}</div>
+      <table class="comp-t">
+        <thead><tr><th>Celkom</th><th>Komponent</th><th>Číslo</th></tr></thead>
+        <tbody>${rows}</tbody>
+      </table>
+    </div>`;
+  if(!overlay){
+    overlay = document.createElement('div');
+    overlay.id = 'nakladOverlay';
+    overlay.className = 'naklad-overlay';
+    document.body.appendChild(overlay);
+  }
+  overlay.innerHTML = html2;
+  overlay.style.display = 'flex';
+  overlay.style.flexDirection = 'column';
+}
+
+function buildNakladanieHTML(){
+  const items = Object.values(currentLoadAgg);
+  if(!items.length) return null;
+  const poleList = currentLoadPoles.join(', ');
+  let trs = '';
+  items.forEach(p => {
+    const ot = p.otoceny === true ? ' <span style="display:inline-block;font-size:10px;font-weight:900;background:#dc2626;color:#fff;border-radius:4px;padding:1px 7px;letter-spacing:.5px;text-transform:uppercase;box-shadow:0 0 6px rgba(220,38,38,.5)">Otočené</span>' : '';
+    trs += '<tr><td style="font-weight:800;font-size:15px;padding:5px 10px;white-space:nowrap">' + p.total + 'x</td>'
+         + '<td style="padding:5px 10px">' + p.name + ot + '</td>'
+         + '<td style="padding:5px 10px;font-family:Consolas,monospace;font-size:11px;color:#555">' + (p.jk||'') + '</td></tr>';
+  });
+  const route = PROJ_FROM ? PROJ_FROM + ' &rarr; ' + PROJ_TO : '';
+  return [
+    '<!DOCTYPE html><html lang="sk"><head><meta charset="UTF-8">',
+    '<title>Nakladanie - ' + PROJ_TITLE + '</title>',
+    '<style>*{box-sizing:border-box;margin:0;padding:0}',
+    'body{font-family:Segoe UI,Arial,sans-serif;font-size:13px;color:#111;padding:20px}',
+    'h2{font-size:17px;font-weight:800;margin-bottom:3px}',
+    'p{color:#555;font-size:11px;margin-bottom:14px}',
+    'table{border-collapse:collapse;width:100%}',
+    'th{background:#111;color:#fff;text-align:left;padding:6px 10px;font-size:11px}',
+    'tr:nth-child(even){background:#f8f8f8}tr:hover{background:#f0f4ff}',
+    'td{border-bottom:1px solid #e8e8e8}',
+    '.btn{display:inline-block;margin-bottom:16px;padding:9px 26px;background:#1e40af;color:#fff;border:none;border-radius:5px;font-size:13px;font-weight:700;cursor:pointer}',
+    '@media print{.btn{display:none}body{padding:8px}}</style>',
+    '</head><body>',
+    '<button class="btn" onclick="window.print()">Tlačiť</button>',
+    '<h2>Nakladanie - ' + PROJ_TITLE + '</h2>',
+    '<p>Stoziare: ' + poleList + (route ? '  &middot;  ' + route : '') + '</p>',
+    '<table><thead><tr><th style="width:70px">Ks</th><th>Komponent</th><th style="width:140px">JK cislo</th></tr></thead>',
+    '<tbody>' + trs + '</tbody></table>',
+    '</body></html>'
+  ].join('');
+}
+function printNakladanie(){
+  const html = buildNakladanieHTML();
+  if(!html) return;
+  const w = window.open('','_blank');
+  if(!w) return;
+  w.document.write(html);
+  w.document.close();
+}
+
+function downloadTxtNakladanie(){
+  const items=Object.values(currentLoadAgg);
+  if(!items.length) return;
+  const poleList=currentLoadPoles.join(', ');
+  const route=PROJ_FROM?PROJ_FROM+' → '+PROJ_TO:'';
+
+  function crc32(buf){
+    const t=[];for(let i=0;i<256;i++){let c=i;for(let j=0;j<8;j++)c=c&1?(0xEDB88320^(c>>>1)):c>>>1;t[i]=c;}
+    let c=0xFFFFFFFF;for(let i=0;i<buf.length;i++)c=t[(c^buf[i])&0xFF]^(c>>>8);
+    return(c^0xFFFFFFFF)>>>0;
+  }
+  function makeZip(files){
+    const enc=new TextEncoder(),en=[];let off=0;
+    for(const[nm,ct]of files){
+      const n=enc.encode(nm),d=enc.encode(ct),cr=crc32(d);
+      const lh=new Uint8Array(30+n.length),v=new DataView(lh.buffer);
+      v.setUint32(0,0x04034b50,true);v.setUint16(4,20,true);
+      v.setUint32(8,0,true);v.setUint32(12,0,true);
+      v.setUint32(14,cr,true);v.setUint32(18,d.length,true);v.setUint32(22,d.length,true);
+      v.setUint16(26,n.length,true);lh.set(n,30);
+      en.push({n,d,cr,off,lh});off+=lh.length+d.length;
+    }
+    const cd=[];let cds=0;
+    for(const e of en){
+      const c=new Uint8Array(46+e.n.length),v=new DataView(c.buffer);
+      v.setUint32(0,0x02014b50,true);v.setUint16(4,20,true);v.setUint16(6,20,true);
+      v.setUint32(8,0,true);v.setUint32(12,0,true);
+      v.setUint32(16,e.cr,true);v.setUint32(20,e.d.length,true);v.setUint32(24,e.d.length,true);
+      v.setUint16(28,e.n.length,true);v.setUint32(42,e.off,true);
+      c.set(e.n,46);cd.push(c);cds+=c.length;
+    }
+    const eo=new Uint8Array(22),ev=new DataView(eo.buffer);
+    ev.setUint32(0,0x06054b50,true);ev.setUint16(8,en.length,true);ev.setUint16(10,en.length,true);
+    ev.setUint32(12,cds,true);ev.setUint32(16,off,true);
+    const ps=[...en.map(e=>[e.lh,e.d]).flat(),...cd,eo];
+    const out=new Uint8Array(ps.reduce((s,p)=>s+p.length,0));let pos=0;
+    for(const p of ps){out.set(p,pos);pos+=p.length;}
+    return out;
+  }
+
+  function xe(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+  function cl(i){return String.fromCharCode(65+i);}
+  function sc(col,row,val,si){
+    return '<c r="'+cl(col)+row+'"'+(si!=null?' s="'+si+'"':'')+' t="inlineStr"><is><t>'+xe(val)+'</t></is></c>';
+  }
+  function nc(col,row,val,si){
+    return '<c r="'+cl(col)+row+'"'+(si!=null?' s="'+si+'"':'')+'><v>'+val+'</v></c>';
+  }
+  function scRich(col,row,name,otoceny,si){
+    const ref=cl(col)+row;
+    const attr=(si!=null?' s="'+si+'"':'');
+    if(!otoceny) return '<c r="'+ref+'"'+attr+' t="inlineStr"><is><t>'+xe(name)+'</t></is></c>';
+    return '<c r="'+ref+'"'+attr+' t="inlineStr"><is>'
+      +'<r><t xml:space="preserve">'+xe(name)+'  </t></r>'
+      +'<r><rPr><b/><color rgb="FFDC2626"/><sz val="11"/><name val="Calibri"/></rPr><t>[ Otočené ]</t></r>'
+      +'</is></c>';
+  }
+
+  let sr='',mc=[],r=1;
+
+  // Row 1: Title — merged A:C, white bold on deep navy
+  sr+='<row r="'+r+'" ht="28" customHeight="1">'+sc(0,r,'Nakládka — '+PROJ_TITLE,1)+sc(1,r,'',1)+sc(2,r,'',1)+'</row>';
+  mc.push('A'+r+':C'+r);r++;
+
+  // Row 2: Route (if set) — label A, value B:C
+  if(route){
+    sr+='<row r="'+r+'" ht="17" customHeight="1">'+sc(0,r,'Trasa:',2)+sc(1,r,route,3)+sc(2,r,'',3)+'</row>';
+    mc.push('B'+r+':C'+r);r++;
+  }
+
+  // Row 3: Poles — label A, value B:C
+  sr+='<row r="'+r+'" ht="17" customHeight="1">'+sc(0,r,'Stožiare:',2)+sc(1,r,poleList,3)+sc(2,r,'',3)+'</row>';
+  mc.push('B'+r+':C'+r);r++;
+
+  // Thin spacer
+  sr+='<row r="'+r+'" ht="4" customHeight="1"></row>';r++;
+
+  // Header row — freeze pane target
+  const headerRow=r;
+  sr+='<row r="'+r+'" ht="22" customHeight="1">'+sc(0,r,'Ks',4)+sc(1,r,'Komponent',4)+sc(2,r,'JK číslo',4)+'</row>';r++;
+
+  // Data rows
+  items.forEach(function(p,i){
+    const even=i%2===0;
+    sr+='<row r="'+r+'" ht="18" customHeight="1">'+nc(0,r,p.total,even?5:6)+scRich(1,r,p.name,p.otoceny===true,even?7:8)+sc(2,r,p.jk||'',even?9:10)+'</row>';r++;
+  });
+
+
+  const mcXml=mc.length?'<mergeCells count="'+mc.length+'">'+mc.map(function(ref){return '<mergeCell ref="'+ref+'"/>';}).join('')+'</mergeCells>':'';
+  const freezeCell='A'+(headerRow+1);
+  const svXml='<sheetViews><sheetView workbookViewId="0"><pane ySplit="'+headerRow+'" topLeftCell="'+freezeCell+'" state="frozen"/><selection pane="bottomLeft" activeCell="'+freezeCell+'" sqref="'+freezeCell+'"/></sheetView></sheetViews>';
+  const afXml='<autoFilter ref="A'+headerRow+':C'+headerRow+'"/>';
+
+  // ── Styles ──────────────────────────────────────────────────────────────
+  // Fonts: 0=normal, 1=white bold 13 (title), 2=muted bold 10 (info lbl),
+  //        3=normal info val, 4=white bold 11 (header), 5=bold dark (total)
+  const ST='<?xml version="1.0" encoding="UTF-8" standalone="yes"?>'
+    +'<styleSheet xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main">'
+    +'<fonts count="6">'
+    +'<font><sz val="11"/><name val="Calibri"/></font>'
+    +'<font><b/><sz val="13"/><name val="Calibri"/><color rgb="FFFFFFFF"/></font>'
+    +'<font><b/><sz val="10"/><name val="Calibri"/><color rgb="FF1a3a60"/></font>'
+    +'<font><sz val="11"/><name val="Calibri"/><color rgb="FF1a1a2e"/></font>'
+    +'<font><b/><sz val="11"/><name val="Calibri"/><color rgb="FFFFFFFF"/></font>'
+    +'<font><b/><sz val="11"/><name val="Calibri"/><color rgb="FF0f2540"/></font>'
+    +'</fonts>'
+    // Fills: 0=none, 1=gray125(req), 2=title deep navy, 3=header navy,
+    //        4=even light blue, 5=total row pale blue
+    +'<fills count="6">'
+    +'<fill><patternFill patternType="none"/></fill>'
+    +'<fill><patternFill patternType="gray125"/></fill>'
+    +'<fill><patternFill patternType="solid"><fgColor rgb="FF0d1e33"/><bgColor indexed="64"/></patternFill></fill>'
+    +'<fill><patternFill patternType="solid"><fgColor rgb="FF1a3a60"/><bgColor indexed="64"/></patternFill></fill>'
+    +'<fill><patternFill patternType="solid"><fgColor rgb="FFeef5ff"/><bgColor indexed="64"/></patternFill></fill>'
+    +'<fill><patternFill patternType="solid"><fgColor rgb="FFd6e8f8"/><bgColor indexed="64"/></patternFill></fill>'
+    +'</fills>'
+    // Borders: 0=none, 1=thin blue-gray
+    +'<borders count="2">'
+    +'<border><left/><right/><top/><bottom/><diagonal/></border>'
+    +'<border>'
+    +'<left style="thin"><color rgb="FFb8d0e8"/></left>'
+    +'<right style="thin"><color rgb="FFb8d0e8"/></right>'
+    +'<top style="thin"><color rgb="FFb8d0e8"/></top>'
+    +'<bottom style="thin"><color rgb="FFb8d0e8"/></bottom>'
+    +'<diagonal/></border>'
+    +'</borders>'
+    +'<cellStyleXfs count="1"><xf numFmtId="0" fontId="0" fillId="0" borderId="0"/></cellStyleXfs>'
+    +'<cellXfs>'
+    // 0: normal
+    +'<xf numFmtId="0" fontId="0" fillId="0" borderId="0" xfId="0"/>'
+    // 1: title — white bold 13, deep navy bg, no border, center+vcenter
+    +'<xf numFmtId="0" fontId="1" fillId="2" borderId="0" xfId="0" applyFont="1" applyFill="1" applyAlignment="1"><alignment horizontal="left" vertical="center" indent="1"/></xf>'
+    // 2: info label — muted bold 10, no fill
+    +'<xf numFmtId="0" fontId="2" fillId="0" borderId="0" xfId="0" applyFont="1" applyAlignment="1"><alignment vertical="center" indent="1"/></xf>'
+    // 3: info value — light text, no fill
+    +'<xf numFmtId="0" fontId="3" fillId="0" borderId="0" xfId="0" applyFont="1" applyAlignment="1"><alignment vertical="center"/></xf>'
+    // 4: column header — white bold 11, navy bg, thin border, center
+    +'<xf numFmtId="0" fontId="4" fillId="3" borderId="1" xfId="0" applyFont="1" applyFill="1" applyBorder="1" applyAlignment="1"><alignment horizontal="center" vertical="center"/></xf>'
+    // 5: even qty — centered, light blue bg, thin border
+    +'<xf numFmtId="0" fontId="0" fillId="4" borderId="1" xfId="0" applyFill="1" applyBorder="1" applyAlignment="1"><alignment horizontal="center" vertical="center"/></xf>'
+    // 6: odd qty — centered, white bg, thin border
+    +'<xf numFmtId="0" fontId="0" fillId="0" borderId="1" xfId="0" applyBorder="1" applyAlignment="1"><alignment horizontal="center" vertical="center"/></xf>'
+    // 7: even name — light blue bg, thin border, vcenter, indent
+    +'<xf numFmtId="0" fontId="0" fillId="4" borderId="1" xfId="0" applyFill="1" applyBorder="1" applyAlignment="1"><alignment vertical="center" indent="1"/></xf>'
+    // 8: odd name — white bg, thin border, vcenter, indent
+    +'<xf numFmtId="0" fontId="0" fillId="0" borderId="1" xfId="0" applyBorder="1" applyAlignment="1"><alignment vertical="center" indent="1"/></xf>'
+    // 9: even jk — light blue bg, thin border, vcenter
+    +'<xf numFmtId="0" fontId="0" fillId="4" borderId="1" xfId="0" applyFill="1" applyBorder="1" applyAlignment="1"><alignment vertical="center" indent="1"/></xf>'
+    // 10: odd jk — white bg, thin border, vcenter
+    +'<xf numFmtId="0" fontId="0" fillId="0" borderId="1" xfId="0" applyBorder="1" applyAlignment="1"><alignment vertical="center" indent="1"/></xf>'
+    // 11: total qty — bold dark, pale blue bg, thin border, center
+    +'<xf numFmtId="0" fontId="5" fillId="5" borderId="1" xfId="0" applyFont="1" applyFill="1" applyBorder="1" applyAlignment="1"><alignment horizontal="center" vertical="center"/></xf>'
+    // 12: total label — bold dark, pale blue bg, thin border, vcenter
+    +'<xf numFmtId="0" fontId="5" fillId="5" borderId="1" xfId="0" applyFont="1" applyFill="1" applyBorder="1" applyAlignment="1"><alignment vertical="center" indent="1"/></xf>'
+    +'</cellXfs>'
+    +'<cellStyles count="1"><cellStyle name="Normal" xfId="0" builtinId="0"/></cellStyles>'
+    +'</styleSheet>';
+
+  const CT='<?xml version="1.0" encoding="UTF-8" standalone="yes"?>'
+    +'<Types xmlns="http://schemas.openxmlformats.org/package/2006/content-types">'
+    +'<Default Extension="rels" ContentType="application/vnd.openxmlformats-package.relationships+xml"/>'
+    +'<Default Extension="xml" ContentType="application/xml"/>'
+    +'<Override PartName="/xl/workbook.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet.main+xml"/>'
+    +'<Override PartName="/xl/worksheets/sheet1.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.worksheet+xml"/>'
+    +'<Override PartName="/xl/styles.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.styles+xml"/>'
+    +'</Types>';
+  const R='<?xml version="1.0" encoding="UTF-8" standalone="yes"?>'
+    +'<Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships">'
+    +'<Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/officeDocument" Target="xl/workbook.xml"/>'
+    +'</Relationships>';
+  const WB='<?xml version="1.0" encoding="UTF-8" standalone="yes"?>'
+    +'<workbook xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main" xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships">'
+    +'<sheets><sheet name="Nakládka" sheetId="1" r:id="rId1"/></sheets></workbook>';
+  const WBR='<?xml version="1.0" encoding="UTF-8" standalone="yes"?>'
+    +'<Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships">'
+    +'<Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/worksheet" Target="worksheets/sheet1.xml"/>'
+    +'<Relationship Id="rId2" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/styles" Target="styles.xml"/>'
+    +'</Relationships>';
+  const SH='<?xml version="1.0" encoding="UTF-8" standalone="yes"?>'
+    +'<worksheet xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main">'
+    +svXml
+    +'<cols>'
+    +'<col min="1" max="1" width="8" customWidth="1"/>'
+    +'<col min="2" max="2" width="50" customWidth="1"/>'
+    +'<col min="3" max="3" width="26" customWidth="1"/>'
+    +'</cols>'
+    +'<sheetData>'+sr+'</sheetData>'
+    +afXml
+    +mcXml
+    +'</worksheet>';
+
+  const zip=makeZip([
+    ['[Content_Types].xml',CT],['_rels/.rels',R],
+    ['xl/workbook.xml',WB],['xl/_rels/workbook.xml.rels',WBR],
+    ['xl/styles.xml',ST],['xl/worksheets/sheet1.xml',SH]
+  ]);
+  const poleIds=currentLoadPoles.map(function(id){return id.replace(/[\/:*?"<>|]/g,'').trim();}).join('-');
+  const fname='Nakládka ('+poleIds+').xlsx';
+  const blob=new Blob([zip],{type:'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'});
+  const a=document.createElement('a');
+  a.href=URL.createObjectURL(blob);a.download=fname;a.click();URL.revokeObjectURL(a.href);
+}
+
+function resetDetail(){
+  selIdx = -1;
+  document.getElementById('detHead').innerHTML =
+    `<span style="color:#7a9abf;font-size:13px;text-align:center;line-height:1.6">Kliknite na stožiar<br>pre detailné informácie</span>`;
+  document.getElementById('detBody').innerHTML = '';
+  updateAllHighlights();
+}
+
+// ══════════════════════════════════════════════
+//  EVENT HANDLERS
+// ══════════════════════════════════════════════
+let _txStart = 0, _tyStart = 0;
+
+let activeCrossing=-1;
+function resetCrossings(){
+  activeCrossing=-1;
+  document.querySelectorAll('.cross-grp').forEach(el=>el.classList.remove('cx-active','cx-dimmed'));
+}
+document.querySelectorAll('[data-crossing]').forEach(g=>{
+  const ci=parseInt(g.getAttribute('data-crossing'));
+  const tapCross=()=>{
+    if(activeCrossing===ci){ resetCrossings(); }
+    else {
+      activeCrossing=ci;
+      document.querySelectorAll('.cross-grp').forEach(el=>{
+        const idx=parseInt(el.getAttribute('data-crossing'));
+        el.classList.toggle('cx-active',idx===ci);
+        el.classList.toggle('cx-dimmed',idx!==ci);
+      });
+    }
+  };
+  g.addEventListener('click',e=>{ e.stopPropagation(); tapCross(); });
+  g.addEventListener('touchstart',e=>{
+    _txStart=e.touches[0].clientX; _tyStart=e.touches[0].clientY;
+  },{passive:true});
+  g.addEventListener('touchend',e=>{
+    const dx=Math.abs(e.changedTouches[0].clientX-_txStart);
+    const dy=Math.abs(e.changedTouches[0].clientY-_tyStart);
+    if(dx<12&&dy<12){ e.stopPropagation(); e.preventDefault(); tapCross(); }
+  },{passive:false});
+});
+
+document.querySelectorAll('[data-pole]').forEach(a => {
+  const idx = parseInt(a.getAttribute('data-pole'));
+  const tap = () => {
+    if(loadMode){
+      togglePoleSelection(idx);
+    } else {
+      showDetail(idx);
+      setTimeout(() => {
+        const det = document.querySelector('.det-panel');
+        if(det){
+            const y = det.getBoundingClientRect().top + window.pageYOffset - 8;
+            try{ window.scrollTo({top:y, behavior:'smooth'}); }catch(e){ window.scrollTo(0,y); }
+          }
+      }, 80);
+    }
+  };
+  a.addEventListener('click', e => { e.preventDefault(); tap(); });
+  a.addEventListener('touchstart', e => {
+    _txStart = e.touches[0].clientX;
+    _tyStart = e.touches[0].clientY;
+  }, {passive:true});
+  a.addEventListener('touchend', e => {
+    const dx = Math.abs(e.changedTouches[0].clientX - _txStart);
+    const dy = Math.abs(e.changedTouches[0].clientY - _tyStart);
+    if(dx < 12 && dy < 12){ e.preventDefault(); tap(); }
+  }, {passive:false});
+});
+
+document.getElementById('svgWrap').addEventListener('click', e => {
+  if(!e.target.closest('[data-pole]')){ resetDetail(); resetCrossings(); }
+});
+document.getElementById('svgWrap').addEventListener('touchend', e => {
+  if(!e.target.closest('[data-pole]')){
+    const dx = Math.abs(e.changedTouches[0].clientX - _txStart);
+    const dy = Math.abs(e.changedTouches[0].clientY - _tyStart);
+    if(dx < 12 && dy < 12){ resetDetail(); resetCrossings(); }
+  }
+}, {passive:true});
+
+// no pole pre-selected — wait for user click
+</script>
+<button class="btn-restore-overlay" id="btnRestoreOverlay" onclick="showOverlay()">&#128230; <span id="restoreCount">0</span> sto&#382;iare</button>
+</body>
+</html>
