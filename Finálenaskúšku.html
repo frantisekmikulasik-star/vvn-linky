@@ -2250,6 +2250,7 @@ const POLES = [
   }
 ];
 const CROSSINGS = [{"id":1774965171878,"fromPole":"15a","toPole":"16a","typeId":"vn22","note":""},{"id":1774974077962,"fromPole":"25a","toPole":"26a","typeId":"vn22","note":""},{"id":1774974088468,"fromPole":"24a","toPole":"25a","typeId":"rail","note":""},{"id":1774974249845,"fromPole":"21a","toPole":"22a","typeId":"highway","note":"D1"},{"id":1774974351005,"fromPole":"17a","toPole":"18a","typeId":"river","note":""},{"id":1774974392053,"fromPole":"11a","toPole":"12a","typeId":"road","note":"V.Kostoľany–Pečeňady"},{"id":1774974436899,"fromPole":"6a","toPole":"7a","typeId":"vvn400","note":"Podkrižovanie"}];
+const CROSS_TYPES_DATA = [{"id":"vn22","label":"VN 22kV","icon":"⚡","color":"#f59e0b","dash":"4,3"},{"id":"vn35","label":"VN 35kV","icon":"⚡","color":"#fb923c","dash":"4,3"},{"id":"vvn110","label":"VVN 110kV","icon":"🔶","color":"#f97316","dash":"6,3"},{"id":"vvn400","label":"VVN 400kV","icon":"🔴","color":"#ef4444","dash":"6,3"},{"id":"nn","label":"NN 0.4kV","icon":"💡","color":"#a3e635","dash":"2,3"},{"id":"road","label":"Cesta","icon":"🛣","color":"#60a5fa","dash":"5,2"},{"id":"highway","label":"Diaľnica","icon":"🛤","color":"#ef4444","dash":"7,3"},{"id":"rail","label":"Železnica ŽSR","icon":"🚂","color":"#a78bfa","dash":"8,3"},{"id":"river","label":"Vodný tok / rieka","icon":"🌊","color":"#38bdf8","dash":"3,3"},{"id":"gas","label":"Plynovod","icon":"🔥","color":"#fb923c","dash":"5,3"},{"id":"tele","label":"Telekomunikácie","icon":"📡","color":"#34d399","dash":"3,2"},{"id":"cable","label":"Kábel (podzemný)","icon":"🔌","color":"#84cc16","dash":"2,2"},{"id":"other","label":"Iné","icon":"◈","color":"#9ab8d8","dash":"3,3"}];
 
 const TOTAL       = 7162.8;
 const BASE_CHAIN  = 3;
@@ -2641,6 +2642,21 @@ function updateLoadOverlay(){
   const warnSection = warnHtml ? `<div style="margin-top:10px;border-top:1px solid rgba(255,255,255,0.07);padding-top:8px">
     <div style="font-size:9px;font-weight:700;letter-spacing:1.5px;color:#5a7898;text-transform:uppercase;margin-bottom:5px">Upozornenia &amp; Poznámky</div>
     ${warnHtml}</div>` : '';
+  const poleIdSet = new Set(currentLoadPoles);
+  const relCrossings = CROSSINGS.filter(function(c){ return poleIdSet.has(c.fromPole) || poleIdSet.has(c.toPole); });
+  let crossHtml = '';
+  relCrossings.forEach(function(c){
+    const ct = CROSS_TYPES_DATA.find(function(t){return t.id===c.typeId;}) || {label:c.typeId, icon:'⚠', color:'#ef4444'};
+    const lbl = c.note ? ct.label+': '+c.note : ct.label;
+    crossHtml += `<div style="margin:4px 0;padding:5px 9px;background:rgba(239,68,68,0.08);border-left:3px solid ${ct.color};border-radius:0 4px 4px 0;display:flex;align-items:center;gap:7px">
+      <span style="font-size:13px">${ct.icon}</span>
+      <span style="font-size:11px;font-weight:700;color:${ct.color}">${lbl}</span>
+      <span style="font-size:10px;color:#5a7898;margin-left:auto">${c.fromPole} &rarr; ${c.toPole}</span>
+    </div>`;
+  });
+  const crossSection = crossHtml ? `<div style="margin-top:10px;border-top:1px solid rgba(255,255,255,0.07);padding-top:8px">
+    <div style="font-size:9px;font-weight:700;letter-spacing:1.5px;color:#ef4444;text-transform:uppercase;margin-bottom:5px">Prekážky</div>
+    ${crossHtml}</div>` : '';
   const html2 = `
     <div class="naklad-overlay-head">
       <span class="naklad-overlay-title">📦 Nakladanie — ${selectedForLoad.size} stožiar${selectedForLoad.size===1?'':'e'}</span>
@@ -2655,6 +2671,7 @@ function updateLoadOverlay(){
         <thead><tr><th>Celkom</th><th>Komponent</th><th>Číslo</th></tr></thead>
         <tbody>${rows}</tbody>
       </table>
+      ${crossSection}
       ${warnSection}
     </div>`;
   if(!overlay){
@@ -2699,6 +2716,21 @@ function buildNakladanieHTML(){
     '<p>Stoziare: ' + poleList + (route ? '  &middot;  ' + route : '') + '</p>',
     '<table><thead><tr><th style="width:70px">Ks</th><th>Komponent</th><th style="width:140px">JK cislo</th></tr></thead>',
     '<tbody>' + trs + '</tbody></table>',
+    (function(){
+      var pids=new Set(currentLoadPoles);
+      var relCr=CROSSINGS.filter(function(c){return pids.has(c.fromPole)||pids.has(c.toPole);});
+      if(!relCr.length) return '';
+      var crows='';
+      relCr.forEach(function(c){
+        var ct=CROSS_TYPES_DATA.find(function(t){return t.id===c.typeId;})||{label:c.typeId,icon:'!',color:'#ef4444'};
+        var lbl=c.note?ct.label+': '+c.note:ct.label;
+        crows+='<tr style="background:#fff8f8"><td style="padding:5px 10px;font-size:13px">'+ct.icon+'</td>'
+          +'<td style="padding:5px 10px;font-weight:700;color:#b91c1c">'+lbl+'</td>'
+          +'<td style="padding:5px 10px;font-size:11px;color:#888">'+c.fromPole+' &rarr; '+c.toPole+'</td></tr>';
+      });
+      return '<h3 style="margin-top:22px;margin-bottom:8px;font-size:14px;font-weight:800;color:#b91c1c">&#9888; Prek&#225;&#382;ky</h3>'
+        +'<table><thead><tr><th></th><th>Typ</th><th>Stožiare</th></tr></thead><tbody>'+crows+'</tbody></table>';
+    })(),
     (function(){
       let wtr = '';
       currentLoadPoles.forEach(function(id){
@@ -2811,6 +2843,20 @@ function downloadTxtNakladanie(){
     const even=i%2===0;
     sr+='<row r="'+r+'" ht="18" customHeight="1">'+nc(0,r,p.total,even?5:6)+scRich(1,r,p.name,p.otoceny===true,even?7:8)+sc(2,r,p.jk||'',even?9:10)+'</row>';r++;
   });
+
+  // Prekážky
+  var pids2=new Set(currentLoadPoles);
+  var relCr2=CROSSINGS.filter(function(c){return pids2.has(c.fromPole)||pids2.has(c.toPole);});
+  if(relCr2.length){
+    sr+='<row r="'+r+'" ht="6" customHeight="1"></row>';r++;
+    sr+='<row r="'+r+'" ht="22" customHeight="1">'+sc(0,r,'Prekážky',4)+sc(1,r,'',4)+sc(2,r,'',4)+'</row>';
+    mc.push('A'+r+':C'+r);r++;
+    relCr2.forEach(function(c){
+      var ct2=CROSSINGS&&CROSS_TYPES_DATA.find(function(t){return t.id===c.typeId;})||{label:c.typeId,icon:'!'};
+      var lbl2=c.note?ct2.label+': '+c.note:ct2.label;
+      sr+='<row r="'+r+'" ht="18" customHeight="1">'+sc(0,r,'',0)+sc(1,r,ct2.icon+' '+lbl2,11)+sc(2,r,c.fromPole+' → '+c.toPole,8)+'</row>';r++;
+    });
+  }
 
   // Upozornenia a Poznámky
   var warnPoles=currentLoadPoles.map(function(id){return POLES.find(function(x){return x.id===id;});}).filter(function(p){return p&&((p.warn||'').trim()||(p.notes||[]).some(function(n){return (n||'').trim();}));});
@@ -2964,6 +3010,40 @@ let activeCrossing=-1;
 function resetCrossings(){
   activeCrossing=-1;
   document.querySelectorAll('.cross-grp').forEach(el=>el.classList.remove('cx-active','cx-dimmed'));
+  resetDetail();
+}
+function showCrossingDetail(ci){
+  const c=CROSSINGS[ci];
+  if(!c) return;
+  const ct=CROSS_TYPES_DATA.find(t=>t.id===c.typeId)||{label:c.typeId,icon:'⚠',color:'#f97316'};
+  const lbl=c.note?ct.label+': '+c.note:ct.label;
+  document.getElementById('detHead').innerHTML=`
+    <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap">
+      <span style="font-size:36px;line-height:1">${ct.icon}</span>
+      <div>
+        <div style="font-size:16px;font-weight:900;color:${ct.color}">${ct.label}</div>
+        <div style="font-size:11px;color:#7a9abf;margin-top:2px">Prekážka v poli</div>
+      </div>
+    </div>`;
+  document.getElementById('detBody').innerHTML=`
+    <div style="margin-bottom:12px;border-radius:8px;overflow:hidden;border:2px solid ${ct.color}44">
+      <div style="background:linear-gradient(135deg,${ct.color}22,${ct.color}0d);padding:10px 13px;border-bottom:1px solid ${ct.color}33">
+        <div style="font-size:11px;color:#7a9abf;text-transform:uppercase;letter-spacing:1px;margin-bottom:4px">Typ prekážky</div>
+        <div style="font-size:15px;font-weight:800;color:${ct.color}">${ct.icon} ${lbl}</div>
+      </div>
+      <div style="padding:10px 13px;background:rgba(10,20,38,0.6)">
+        <div style="font-size:11px;color:#7a9abf;text-transform:uppercase;letter-spacing:1px;margin-bottom:6px">Stožiare</div>
+        <div style="display:flex;align-items:center;gap:8px">
+          <span style="background:rgba(255,255,255,0.07);border:1px solid ${ct.color}55;border-radius:6px;padding:5px 10px;font-size:14px;font-weight:800;color:#e8f4ff">${c.fromPole}</span>
+          <span style="color:${ct.color};font-size:18px;font-weight:700">&#8594;</span>
+          <span style="background:rgba(255,255,255,0.07);border:1px solid ${ct.color}55;border-radius:6px;padding:5px 10px;font-size:14px;font-weight:800;color:#e8f4ff">${c.toPole}</span>
+        </div>
+      </div>
+      ${c.note?`<div style="padding:8px 13px;border-top:1px solid ${ct.color}22;background:rgba(10,20,38,0.4)">
+        <div style="font-size:10px;color:#7a9abf;text-transform:uppercase;letter-spacing:1px;margin-bottom:3px">Poznámka</div>
+        <div style="font-size:12px;color:#c8d6e8;font-style:italic">${c.note}</div>
+      </div>`:''}
+    </div>`;
 }
 document.querySelectorAll('[data-crossing]').forEach(g=>{
   const ci=parseInt(g.getAttribute('data-crossing'));
@@ -2976,6 +3056,8 @@ document.querySelectorAll('[data-crossing]').forEach(g=>{
         el.classList.toggle('cx-active',idx===ci);
         el.classList.toggle('cx-dimmed',idx!==ci);
       });
+      selIdx=-1;
+      showCrossingDetail(ci);
     }
   };
   g.addEventListener('click',e=>{ e.stopPropagation(); tapCross(); });
