@@ -353,19 +353,19 @@ const POLES = [
       {
         "n": 1,
         "name": "Vidlica s okom nastaviteľná",
-        "jk": "231 547",
+        "jk": "231547",
         "otoceny": null
       },
       {
         "n": 2,
         "name": "Dvojité oko krížové",
-        "jk": "231 407",
+        "jk": "231407",
         "otoceny": null
       },
       {
         "n": 2,
         "name": "Rozperka",
-        "jk": "233 417",
+        "jk": "233417",
         "otoceny": null
       },
       {
@@ -2624,6 +2624,22 @@ function updateLoadOverlay(){
       <td><span style="font-family:Consolas;font-size:11px;color:#c8d6e8">${p.jk}</span></td>
     </tr>`;
   });
+  let warnHtml = '';
+  sortedIdx.forEach(i => {
+    const wp = POLES[i];
+    if(!wp) return;
+    const wt = (wp.warn||'').trim();
+    const wns = (wp.notes||[]).filter(n=>(n||'').trim());
+    if(!wt && !wns.length) return;
+    warnHtml += `<div style="margin:4px 0;padding:6px 9px;background:rgba(251,191,36,0.08);border-left:3px solid #f59e0b;border-radius:0 4px 4px 0">`;
+    warnHtml += `<span style="font-size:10px;font-weight:800;color:#f7a600">${wp.id}</span>`;
+    if(wt) warnHtml += `<div style="font-size:11px;color:#fca5a5;margin-top:2px">⚠ ${wt}</div>`;
+    wns.forEach(n => { warnHtml += `<div style="font-size:11px;color:#94a3b8;margin-top:1px">📝 ${n}</div>`; });
+    warnHtml += `</div>`;
+  });
+  const warnSection = warnHtml ? `<div style="margin-top:10px;border-top:1px solid rgba(255,255,255,0.07);padding-top:8px">
+    <div style="font-size:9px;font-weight:700;letter-spacing:1.5px;color:#5a7898;text-transform:uppercase;margin-bottom:5px">Upozornenia &amp; Poznámky</div>
+    ${warnHtml}</div>` : '';
   const html2 = `
     <div class="naklad-overlay-head">
       <span class="naklad-overlay-title">📦 Nakladanie — ${selectedForLoad.size} stožiar${selectedForLoad.size===1?'':'e'}</span>
@@ -2638,6 +2654,7 @@ function updateLoadOverlay(){
         <thead><tr><th>Celkom</th><th>Komponent</th><th>Číslo</th></tr></thead>
         <tbody>${rows}</tbody>
       </table>
+      ${warnSection}
     </div>`;
   if(!overlay){
     overlay = document.createElement('div');
@@ -2681,6 +2698,20 @@ function buildNakladanieHTML(){
     '<p>Stoziare: ' + poleList + (route ? '  &middot;  ' + route : '') + '</p>',
     '<table><thead><tr><th style="width:70px">Ks</th><th>Komponent</th><th style="width:140px">JK cislo</th></tr></thead>',
     '<tbody>' + trs + '</tbody></table>',
+    (function(){
+      let wtr = '';
+      currentLoadPoles.forEach(function(id){
+        const pp = POLES.find(function(x){return x.id===id;});
+        if(!pp) return;
+        const wt = (pp.warn||'').trim();
+        const wns = (pp.notes||[]).filter(function(n){return (n||'').trim();});
+        if(!wt && !wns.length) return;
+        wtr += '<tr style="background:#fffbeb"><td colspan="3" style="padding:6px 10px;font-weight:800;color:#92400e;font-size:12px;border-top:2px solid #fcd34d">' + id + '</td></tr>';
+        if(wt) wtr += '<tr style="background:#fffbeb"><td colspan="3" style="padding:3px 10px 3px 22px;color:#b45309;font-size:12px">&#9888; ' + wt + '</td></tr>';
+        wns.forEach(function(n){ wtr += '<tr style="background:#fafaf5"><td colspan="3" style="padding:3px 10px 3px 22px;color:#555;font-size:12px">&#128221; ' + n + '</td></tr>'; });
+      });
+      return wtr ? '<h3 style="margin-top:22px;margin-bottom:8px;font-size:14px;font-weight:800;color:#92400e">&#9888; Upozornenia &amp; Pozn&#225;mky</h3><table><tbody>' + wtr + '</tbody></table>' : '';
+    })(),
     '</body></html>'
   ].join('');
 }
@@ -2780,6 +2811,25 @@ function downloadTxtNakladanie(){
     sr+='<row r="'+r+'" ht="18" customHeight="1">'+nc(0,r,p.total,even?5:6)+scRich(1,r,p.name,p.otoceny===true,even?7:8)+sc(2,r,p.jk||'',even?9:10)+'</row>';r++;
   });
 
+  // Upozornenia a Poznámky
+  var warnPoles=currentLoadPoles.map(function(id){return POLES.find(function(x){return x.id===id;});}).filter(function(p){return p&&((p.warn||'').trim()||(p.notes||[]).some(function(n){return (n||'').trim();}));});
+  if(warnPoles.length){
+    sr+='<row r="'+r+'" ht="6" customHeight="1"></row>';r++;
+    sr+='<row r="'+r+'" ht="22" customHeight="1">'+sc(0,r,'Upozornenia a Poznámky',4)+sc(1,r,'',4)+sc(2,r,'',4)+'</row>';
+    mc.push('A'+r+':C'+r);r++;
+    warnPoles.forEach(function(pole){
+      sr+='<row r="'+r+'" ht="18" customHeight="1">'+sc(0,r,pole.id,11)+sc(1,r,'',11)+sc(2,r,'',11)+'</row>';
+      mc.push('A'+r+':C'+r);r++;
+      if((pole.warn||'').trim()){
+        sr+='<row r="'+r+'" ht="18" customHeight="1">'+sc(0,r,'',0)+sc(1,r,'! '+xe(pole.warn),8)+sc(2,r,'',8)+'</row>';
+        mc.push('B'+r+':C'+r);r++;
+      }
+      (pole.notes||[]).filter(function(n){return (n||'').trim();}).forEach(function(n){
+        sr+='<row r="'+r+'" ht="18" customHeight="1">'+sc(0,r,'',0)+sc(1,r,'- '+xe(n),8)+sc(2,r,'',8)+'</row>';
+        mc.push('B'+r+':C'+r);r++;
+      });
+    });
+  }
 
   const mcXml=mc.length?'<mergeCells count="'+mc.length+'">'+mc.map(function(ref){return '<mergeCell ref="'+ref+'"/>';}).join('')+'</mergeCells>':'';
   const freezeCell='A'+(headerRow+1);
